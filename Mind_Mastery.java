@@ -73,14 +73,6 @@ public class Mind_Mastery implements ActionListener {
         mainMenuButtons.setLayout(new BoxLayout(mainMenuButtons, BoxLayout.Y_AXIS));
         
         mainButtons = new JButton[] {new JButton("Begin Adventure"), new JButton("How To Play"), new JButton("Credits"), new JButton("Exit")};
-//         begin = new JButton("Begin Adventure");
-//         instr = new JButton("How to Play");
-//         cred = new JButton("Credits");
-//         exit = new JButton("Exit");
-//         loadButton(begin);
-//         loadButton(instr);
-//         loadButton(cred);
-//         loadButton(exit);
 
         mainMenuButtons.add(Box.createVerticalStrut(6*screenSize.height/17));
         for (int i = 0; i < mainButtons.length; i++) loadMainButton(i);

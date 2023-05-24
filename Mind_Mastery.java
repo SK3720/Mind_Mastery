@@ -21,9 +21,15 @@ public class Mind_Mastery implements ActionListener {
     // JFrame to hold all content
     private JFrame frame;
     Drawing draw;
-    
-    // variable to hold screen size
-    Dimension screenSize;
+
+
+    /** 
+    <-------May 24------->
+      > deprecated screenSize in favour of a set size application
+      Contributor: Caleb Chue
+
+    */
+    final int SCREEN_WIDTH = 1000, SCREEN_HEIGHT = 650;
     int locx, locy;
     
     /** 
@@ -51,23 +57,24 @@ public class Mind_Mastery implements ActionListener {
     
     // level select
     JPanel levelPanel;
+    JButton learningLevelButton, mazeLevelButton, actionLevelButton;
     
     // credits
     JPanel credPanel;
     
-    // maze level
-    int[][] obs;
-    JPanel mazePanel;
+    // learning/maze level
     int[] player;
+    int[][] obs;
     final int[] playerSize = {50, 50};
+    
+    // action level
+    
+    
     
     // constructor
     public Mind_Mastery() {
         frame = new JFrame("Mind Mastery");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        
-        // getting the size of the screen (source: https://stackoverflow.com/questions/8141865/java-how-to-get-the-screen-dimensions-from-a-graphics-object)
-        screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
         // loading all panels, buttons, content of the main menu
         load();
@@ -90,15 +97,21 @@ public class Mind_Mastery implements ActionListener {
       > added loading of main frame, sizing, and display
       Contributor: Caleb Chue
     
+    <-------May 24------->
+      > added loading of level select buttons
+      > added outer JFrame loading certain panels
+      Contributor: Caleb Chue
+
+    
     */ 
     private void load() {
+        
         // drawing 
         draw = new Drawing();
         draw.addMouseListener(new ClickHandler());
         drawPanel = new JPanel();
-        draw.setPreferredSize(new Dimension(screenSize.width, screenSize.height));
+        draw.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
         drawPanel.add(draw);
-        drawPanel.setVisible(false);
         
         // main menu
         mainMenu = new JPanel();
@@ -110,23 +123,49 @@ public class Mind_Mastery implements ActionListener {
                                      new JButton("Credits"), 
                                      new JButton("Exit")};
 
-        mainMenuButtons.add(Box.createVerticalStrut(6*screenSize.height/17));
+        mainMenuButtons.add(Box.createVerticalStrut(6*SCREEN_HEIGHT/17));
         for (int i = 0; i < mainButtons.length; i++) loadMainButton(i);
         
         mainMenu.add(mainMenuButtons);
-        mainMenu.setVisible(false);
         
-        // maze level
-        mazePanel = new JPanel();
-
+        // level select
+        levelPanel = new JPanel();
+        learningLevelButton = new JButton("Learning");
+        mazeLevelButton = new JButton("Maze");
+        actionLevelButton = new JButton("Action");
+        levelPanel.add(learningLevelButton);
+        levelPanel.add(mazeLevelButton);
+        levelPanel.add(actionLevelButton);
+        learningLevelButton.addActionListener(this);
+        mazeLevelButton.addActionListener(this);
+        actionLevelButton.addActionListener(this);
+        
 
         // finish setup        
         frame.add(drawPanel);
         frame.add(mainMenu);
+        frame.add(levelPanel);
         
-        frame.setExtendedState(Frame.MAXIMIZED_BOTH);
-        frame.setSize(screenSize.width, screenSize.height);
+        frame.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
         frame.setVisible(true);
+        
+        reset();
+    }
+    
+    
+    /** 
+    Private method to reset the frame, setting all panels invisible
+    
+    <-------May 24------->
+      > created method, set main menu, level select, drawing, 
+        learning level, and maze level panels to be invisible
+      Contributor: Caleb Chue
+
+    */
+    private void reset() {
+        mainMenu.setVisible(false);
+        levelPanel.setVisible(false);
+        drawPanel.setVisible(false);
         
     }
     
@@ -145,12 +184,12 @@ public class Mind_Mastery implements ActionListener {
     private void loadMainButton(int index) {
         mainButtons[index].addActionListener(this);
         mainButtons[index].setAlignmentX(Component.CENTER_ALIGNMENT);
-        Dimension size = new Dimension(screenSize.width/3, screenSize.height/10);
+        Dimension size = new Dimension(SCREEN_WIDTH/3, SCREEN_HEIGHT/10);
         mainButtons[index].setPreferredSize(size);
         mainButtons[index].setMaximumSize(size);
         mainButtons[index].setFont(new Font("Courier New", Font.PLAIN, 32));
         mainMenuButtons.add(mainButtons[index]);
-        mainMenuButtons.add(Box.createVerticalStrut(screenSize.height/18));
+        mainMenuButtons.add(Box.createVerticalStrut(SCREEN_HEIGHT/18));
     }
     
     
@@ -181,6 +220,7 @@ public class Mind_Mastery implements ActionListener {
         draw.setVisible(true);
         frame.setContentPane(drawPanel);
         frame.getContentPane().setBackground(new Color(191,215,255));
+        frame.setVisible(true);
         
         draw.repaint();
         sleep(1000);
@@ -221,6 +261,18 @@ public class Mind_Mastery implements ActionListener {
     
     
     /** 
+    Private method
+    
+    */
+    private void levelSelect() {
+        frame.setContentPane(levelPanel);
+        levelPanel.setVisible(true);
+        
+        
+    }
+    
+    
+    /** 
     Private method to handle the display of the credits screen
     */ 
     private void credits() {
@@ -237,6 +289,13 @@ public class Mind_Mastery implements ActionListener {
     
     
     /** 
+    Private method to handle the display of the learning level
+    */
+    private void learningLevel() {
+    }
+    
+    
+    /** 
     Private method to handle the display of the maze level
     
     <-------May 24------->
@@ -248,6 +307,11 @@ public class Mind_Mastery implements ActionListener {
     private void mazeLevel() {
         obs = new int[][] {{100, 100, 200, 200}};
         player = new int[] {50, 50};
+        
+        frame.setContentPane(drawPanel);
+        drawPanel.setVisible(true);
+        draw.setVisible(true);
+        draw.repaint();
     }
     
     
@@ -286,20 +350,38 @@ public class Mind_Mastery implements ActionListener {
     */ 
     public void actionPerformed(ActionEvent e) {
         // main menu
-        if (e.getSource() == mainButtons[0]) {
+        if (e.getSource() == mainButtons[0]) { // level select
             state = 2;
-            mainMenuButtons.setVisible(false);
-        } else if (e.getSource() == mainButtons[1]) {
+            reset();
+            levelSelect();
+        } else if (e.getSource() == mainButtons[1]) { // how to play
             state = 3;
-            mainMenuButtons.setVisible(false);
-        } else if (e.getSource() == mainButtons[2]) {
-            state = 11;
+            reset();
+        } else if (e.getSource() == mainButtons[2]) { // credits
+            state = 4;
+            reset();
             mazeLevel();
-            mainMenuButtons.setVisible(false);
-        } else if (e.getSource() == mainButtons[3]) {
+        } else if (e.getSource() == mainButtons[3]) { // exit button
             frame.setVisible(false);
             frame.dispose();
             System.exit(0);
+            
+        // level select
+        } else if (e.getSource() == learningLevelButton) {
+            state = 10;
+            reset();
+            learningLevel();
+            System.out.println("Learning trigger");
+        } else if (e.getSource() == mazeLevelButton) {
+            state = 11;
+            reset();
+            mazeLevel();
+            System.out.println("Maze trigger");
+        } else if (e.getSource() == actionLevelButton) {
+            state = 12;
+            reset();
+            // actionLevel();
+            System.out.println("Action trigger");
         } else if (e.getSource() == draw) {
             draw.repaint();
         }
@@ -350,25 +432,62 @@ public class Mind_Mastery implements ActionListener {
           > added placeholder graphic for all states not handled by logic structure
           Contributor: Caleb Chue
         
+        <-------May 24------->
+          > working on the drawing of the maze level
+          Contributor: Caleb Chue
+
 
         */ 
         public void paint(Graphics g) {
             if (state == 0) { // splashscreen
-                try {
-                    // drawing image (source: https://stackoverflow.com/questions/17865465/how-do-i-draw-an-image-to-a-jpanel-or-jframe)
-                    BufferedImage im = ImageIO.read(new File("FocusForge Icon.png"));
-                    int wd = im.getWidth(), ht = im.getHeight();
-                    g.drawImage(im, (screenSize.width-wd)/2, (screenSize.height-ht)/2, null);
-                    
-                    g.setColor(new Color(0, 0, 0, drawState));
-                    g.fillRect(0, 0, screenSize.width, screenSize.height);
-                } catch (IOException e) {
-                    System.out.println("Could not draw image: " + e);
-                }
+                image("FocusForge Icon.png", g);
+                g.setColor(new Color(0, 0, 0, drawState));
+                g.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
             } else if (state == 11) {
-                g.setColor(new Color(255, 0, 255));
-                g.fillRect(0, 0, screenSize.width, screenSize.height);
-                // System.out.println("should draw other >:(");
+                g.fillRect(-100, -100, SCREEN_WIDTH+100, SCREEN_HEIGHT+100);
+                
+                // drawing player
+                
+            }
+        }
+        
+        /** 
+        Private method to make drawing centered images more convenient
+        
+        Contributor: Caleb Chue
+        
+        @param path The file path to the image
+        @param g The Graphics image to draw with
+        */ 
+        private void image(String path, Graphics g) {
+            // drawing image (source: https://stackoverflow.com/questions/17865465/how-do-i-draw-an-image-to-a-jpanel-or-jframe)
+            try {
+                BufferedImage im = ImageIO.read(new File(path));
+                int wd = im.getWidth(), ht = im.getHeight();
+                g.drawImage(im, (SCREEN_WIDTH-wd)/2, (SCREEN_HEIGHT-ht)/2, null);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        /** 
+        Overloaded private method to make drawing images more convenient
+        
+        Contributor: Caleb Chue
+        
+        @param path The file path to the image
+        @param x The x coordinate of the image
+        @param y The y coordinate of the image
+        @param g The Graphics image to draw with
+        */ 
+        private void image(String path, int x, int y, Graphics g) {
+            // drawing image (source: https://stackoverflow.com/questions/17865465/how-do-i-draw-an-image-to-a-jpanel-or-jframe)
+            try {
+                BufferedImage im = ImageIO.read(new File(path));
+                int wd = im.getWidth(), ht = im.getHeight();
+                g.drawImage(im, (SCREEN_WIDTH-wd)/2, (SCREEN_HEIGHT-ht)/2, null);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }
@@ -383,4 +502,3 @@ public class Mind_Mastery implements ActionListener {
         new Mind_Mastery();
     }
 }
- 

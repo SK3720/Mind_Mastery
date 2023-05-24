@@ -55,6 +55,12 @@ public class Mind_Mastery implements ActionListener {
     // credits
     JPanel credPanel;
     
+    // maze level
+    int[][] obs;
+    JPanel mazePanel;
+    int[] player;
+    final int[] playerSize = {50, 50};
+    
     // constructor
     public Mind_Mastery() {
         frame = new JFrame("Mind Mastery");
@@ -110,6 +116,11 @@ public class Mind_Mastery implements ActionListener {
         mainMenu.add(mainMenuButtons);
         mainMenu.setVisible(false);
         
+        // maze level
+        mazePanel = new JPanel();
+
+
+        // finish setup        
         frame.add(drawPanel);
         frame.add(mainMenu);
         
@@ -226,6 +237,21 @@ public class Mind_Mastery implements ActionListener {
     
     
     /** 
+    Private method to handle the display of the maze level
+    
+    <-------May 24------->
+      > created method
+      > added redrawing on clicking on a Drawing
+      Contributor: Caleb Chue
+    
+    */
+    private void mazeLevel() {
+        obs = new int[][] {{100, 100, 200, 200}};
+        player = new int[] {50, 50};
+    }
+    
+    
+    /** 
     Private method to simplify delaying the program by a certain amout of time
     
     @param ms The number of milliseconds to delay by
@@ -267,7 +293,8 @@ public class Mind_Mastery implements ActionListener {
             state = 3;
             mainMenuButtons.setVisible(false);
         } else if (e.getSource() == mainButtons[2]) {
-            state = 4;
+            state = 11;
+            mazeLevel();
             mainMenuButtons.setVisible(false);
         } else if (e.getSource() == mainButtons[3]) {
             frame.setVisible(false);
@@ -338,7 +365,7 @@ public class Mind_Mastery implements ActionListener {
                 } catch (IOException e) {
                     System.out.println("Could not draw image: " + e);
                 }
-            } else {
+            } else if (state == 11) {
                 g.setColor(new Color(255, 0, 255));
                 g.fillRect(0, 0, screenSize.width, screenSize.height);
                 // System.out.println("should draw other >:(");

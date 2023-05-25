@@ -17,17 +17,19 @@ import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
-public class Mind_Mastery implements ActionListener {
+public class Mind_Mastery implements KeyListener, ActionListener {
     // JFrame to hold all content
     private JFrame frame;
     Drawing draw;
 
 
     /** 
+        Instance Variable Declaration
+    
     <-------May 24------->
       > deprecated screenSize in favour of a set size application
       Contributor: Caleb Chue
-
+    
     */
     final int SCREEN_WIDTH = 1000, SCREEN_HEIGHT = 650;
     int locx, locy;
@@ -65,7 +67,9 @@ public class Mind_Mastery implements ActionListener {
     // learning/maze level
     int[] player;
     int[][] obs;
+    boolean[] keysPressed;
     final int[] playerSize = {50, 50};
+    final int MOVE_DISTANCE = 5;
     
     // action level
     
@@ -102,13 +106,21 @@ public class Mind_Mastery implements ActionListener {
       > added outer JFrame loading certain panels
       Contributor: Caleb Chue
 
-    
+    <-------May 25------->
+      > added loading of keysPressed boolean array
+      Contributor: Caleb Chue
+
     */ 
     private void load() {
         
         // drawing 
         draw = new Drawing();
         draw.addMouseListener(new ClickHandler());
+        draw.addKeyListener(this);
+        
+        // focusing on the drawing (source: https://stackoverflow.com/questions/10876491/how-to-use-keylistener)
+        draw.setFocusable(true);
+        
         drawPanel = new JPanel();
         draw.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
         drawPanel.add(draw);
@@ -140,11 +152,14 @@ public class Mind_Mastery implements ActionListener {
         mazeLevelButton.addActionListener(this);
         actionLevelButton.addActionListener(this);
         
+        // movement keys
+        keysPressed = new boolean[4];
 
         // finish setup        
         frame.add(drawPanel);
         frame.add(mainMenu);
         frame.add(levelPanel);
+        frame.addKeyListener(this);
         
         frame.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
         frame.setVisible(true);
@@ -305,12 +320,15 @@ public class Mind_Mastery implements ActionListener {
     
     */
     private void mazeLevel() {
-        obs = new int[][] {{100, 100, 200, 200}};
-        player = new int[] {50, 50};
+        obs = new int[][] {{300, 300, 400, 400}};
+        player = new int[] {150, 150};
         
         frame.setContentPane(drawPanel);
         drawPanel.setVisible(true);
         draw.setVisible(true);
+        
+        // making the drawing the focus (source: https://docs.oracle.com/javase/tutorial/uiswing/misc/focus.html)
+        draw.requestFocusInWindow();
         draw.repaint();
     }
     
@@ -409,6 +427,123 @@ public class Mind_Mastery implements ActionListener {
     }
     
     /** 
+    Overridden methods to handle keyboard input
+    
+    <-------May 25------->
+      > moved keyboard handling from inside Drawing class 
+        to parent class as an implemented interface
+      Contributor: Caleb Chue
+
+    */
+    
+    public void keyTyped(KeyEvent k) {}
+    
+    public void keyPressed(KeyEvent k) {
+        char key = k.getKeyChar();
+        handleKeys(key, true);
+        System.out.println("Pressed: " + (keysPressed[0]?"W ":"") + (keysPressed[1]?"A ":"") + (keysPressed[2]?"S ":"") + (keysPressed[3]?"D ":""));
+        if (state == 10 || state == 11) handleMovement();
+        draw.repaint();
+    }
+    public void keyReleased(KeyEvent k) {
+        char key = k.getKeyChar();
+        handleKeys(key, false);
+        draw.repaint();
+    }
+    
+    private void handleKeys(char key, boolean newState) {
+        if (key == 'w' || key == 'W') {
+            keysPressed[0] = newState;
+        } else if (key == 'a' || key == 'A') {
+            keysPressed[1] = newState;
+        } else if (key == 's' || key == 'S') {
+            keysPressed[2] = newState;
+        } else if (key == 'd' || key == 'D') {
+            keysPressed[3] = newState;
+        }
+    }
+    
+    
+    /** 
+    Private method to handle the movement of the player
+    
+    <-------May 25------->
+      > added method
+      Contributor: Caleb Chue
+
+    */
+    private void handleMovement() {
+        if (keysPressed[0]) { // forward
+            if (legalMove(player[0], player[1] - MOVE_DISTANCE)) {
+                player[1] -= MOVE_DISTANCE;
+            }
+        } 
+        if (keysPressed[1]) { // left
+            if (legalMove(player[0] - MOVE_DISTANCE, player[1])) {
+                player[0] -= MOVE_DISTANCE;
+            }
+        } 
+        if (keysPressed[2]) { // down
+            if (legalMove(player[0], player[1] + MOVE_DISTANCE)) {
+                player[1] += MOVE_DISTANCE;
+            }
+        } 
+        if (keysPressed[3]) { // right
+            if (legalMove(player[0] + MOVE_DISTANCE, player[1])) {
+                player[0] += MOVE_DISTANCE;
+            }
+        }
+    } 
+
+    /** 
+    Private method to check whether the player's next move will result in a wall collision
+    
+    @param x The x coordinate of the player's location
+    @param y The y coordinate of the player's location
+    @return Whether the player's next move is legal
+    
+    <-------May 25------->
+      > added method
+      > moved out of nested class to main class
+      Contributor: Caleb Chue
+    
+    */ 
+    private boolean legalMove(int x, int y) {
+        if (x < 0 || x > SCREEN_WIDTH || y < 0 || y > SCREEN_HEIGHT) return false;
+        for (int i = -1; i < 2; i++) {
+            for (int j = -1; j < 2; j++) {
+                for (int[] ob : obs) {
+                    if (collidePointRect(x + playerSize[0]*i, y + playerSize[1]*j, ob[0], ob[1], ob[2], ob[3])) return false;
+                }
+            }
+        }
+        return true;
+    }
+    
+    
+    /** 
+    Private method to check whether a point is within a box
+    
+    @param x The x coordinate of the point
+    @param y The y coordinate of the point
+    @param x1 The x coordinate of the top left corner of the box
+    @param y1 The y coordinate of the top left corner of the box
+    @param x2 The x coordinate of the bottom right corner of the box
+    @param y2 THe y coordinate of the bottom right corner of the box
+    @return Whether the point is within the bounds of the box
+    
+    <-------May 25------->
+      > added method
+      > moved method from nested class to main class
+      Contributor: Caleb Chue
+    
+    */
+    private boolean collidePointRect(int x, int y, int x1, int y1, int x2, int y2) {
+        return x >= x1 && x <= x2 && y >= y1 && y <= y2;
+    }
+    
+    
+    /** 
     Nested class to handle drawing on a canvas-like component
     
         <-------May 24------->
@@ -417,7 +552,7 @@ public class Mind_Mastery implements ActionListener {
           Contributor: Caleb Chue
     
     */ 
-    class Drawing extends JComponent implements KeyListener {
+    class Drawing extends JComponent {
     
         /** 
         Public overridden method to paint the component, drawing
@@ -454,68 +589,16 @@ public class Mind_Mastery implements ActionListener {
                 
                 // drawing player
                 image("player.png", player[0], player[1], g);
+                g.setColor(new Color(12,50,101));
+                g.fillRect(player[0] - playerSize[0]/2, player[1] - playerSize[1]/2, playerSize[0], playerSize[1]);
                 
-                
-            }
-        }
-        
-        public void keyTyped(KeyEvent k) {}
-        public void keyPressed(KeyEvent k) {
-//             key = k.getKeyChar();
-//             if (key == 'W' || key = 'W') {
-                
-         //    }   
-        }
-        public void keyReleased(KeyEvent k) {
-        
-        }
-        
-        
-        /** 
-        Private method to check whether the player's next move will result in a wall collision
-        
-        @param x The x coordinate of the player's location
-        @param y The y coordinate of the player's location
-        @return Whether the player's next move is legal
-        
-        <-------May 25------->
-          > added method
-          Contributor: Caleb Chue
-        
-        */ 
-        private boolean legalMove(int x, int y) {
-            if (x < 0 || x > SCREEN_WIDTH || y < 0 || y > SCREEN_HEIGHT) return false;
-            for (int i = -1; i < 2; i++) {
-                for (int j = -1; j < 2; j++) {
-                    for (int[] ob : obs) {
-                        if (collidePointRect(x + playerSize[0]*i, y + playerSize[1]*j)) return false;
-                    }
+                g.setColor(new Color(255,0,0));
+                for (int[] ob : obs) {
+                    g.fillRect(ob[0], ob[1], ob[2]-ob[0], ob[3]-ob[1]);
                 }
             }
-            return true;
         }
-        
-        
-        /** 
-        Private method to check whether a point is within a box
-        
-        @param x The x coordinate of the point
-        @param y The y coordinate of the point
-        @param x1 The x coordinate of the top left corner of the box
-        @param y1 The y coordinate of the top left corner of the box
-        @param x2 The x coordinate of the bottom right corner of the box
-        @param y2 THe y coordinate of the bottom right corner of the box
-        @return Whether the point is within the bounds of the box
-        
-        <-------May 25------->
-          > added method
-          Contributor: Caleb Chue
-        
-        */
-        private boolean collidePointRect(int x, int y, int x1, int y1, int x2, int y2) {
-            return x >= x1 && x <= x2 && y >= y1 && y <= y2;
-        }
-        
+
         /** 
         Private method to make drawing centered images more convenient
         

@@ -410,15 +410,21 @@ public class Mind_Mastery implements ActionListener {
     
     /** 
     Nested class to handle drawing on a canvas-like component
+    
+        <-------May 24------->
+          > added implements KeyListener (keyboard input)
+          > added image drawing methods
+          Contributor: Caleb Chue
+    
     */ 
-    class Drawing extends JComponent {
+    class Drawing extends JComponent implements KeyListener {
     
         /** 
         Public overridden method to paint the component, drawing
         different contents based on the state of the program
         
         @param g The graphics Object to draw on
-
+        
         <-------May 16------->
           > added drawing of splashscreen, including displaying image
           > added placeholder main menu graphic
@@ -447,8 +453,67 @@ public class Mind_Mastery implements ActionListener {
                 g.fillRect(-100, -100, SCREEN_WIDTH+100, SCREEN_HEIGHT+100);
                 
                 // drawing player
+                image("player.png", player[0], player[1], g);
+                
                 
             }
+        }
+        
+        public void keyTyped(KeyEvent k) {}
+        public void keyPressed(KeyEvent k) {
+//             key = k.getKeyChar();
+//             if (key == 'W' || key = 'W') {
+                
+         //    }   
+        }
+        public void keyReleased(KeyEvent k) {
+        
+        }
+        
+        
+        /** 
+        Private method to check whether the player's next move will result in a wall collision
+        
+        @param x The x coordinate of the player's location
+        @param y The y coordinate of the player's location
+        @return Whether the player's next move is legal
+        
+        <-------May 25------->
+          > added method
+          Contributor: Caleb Chue
+        
+        */ 
+        private boolean legalMove(int x, int y) {
+            if (x < 0 || x > SCREEN_WIDTH || y < 0 || y > SCREEN_HEIGHT) return false;
+            for (int i = -1; i < 2; i++) {
+                for (int j = -1; j < 2; j++) {
+                    for (int[] ob : obs) {
+                        if (collidePointRect(x + playerSize[0]*i, y + playerSize[1]*j)) return false;
+                    }
+                }
+            }
+            return true;
+        }
+        
+        
+        /** 
+        Private method to check whether a point is within a box
+        
+        @param x The x coordinate of the point
+        @param y The y coordinate of the point
+        @param x1 The x coordinate of the top left corner of the box
+        @param y1 The y coordinate of the top left corner of the box
+        @param x2 The x coordinate of the bottom right corner of the box
+        @param y2 THe y coordinate of the bottom right corner of the box
+        @return Whether the point is within the bounds of the box
+        
+        <-------May 25------->
+          > added method
+          Contributor: Caleb Chue
+        
+        */
+        private boolean collidePointRect(int x, int y, int x1, int y1, int x2, int y2) {
+            return x >= x1 && x <= x2 && y >= y1 && y <= y2;
         }
         
         /** 
@@ -458,6 +523,11 @@ public class Mind_Mastery implements ActionListener {
         
         @param path The file path to the image
         @param g The Graphics image to draw with
+        
+        <-------May 24------->
+          > added method
+          Contributor: Caleb Chue
+        
         */ 
         private void image(String path, Graphics g) {
             // drawing image (source: https://stackoverflow.com/questions/17865465/how-do-i-draw-an-image-to-a-jpanel-or-jframe)
@@ -479,13 +549,18 @@ public class Mind_Mastery implements ActionListener {
         @param x The x coordinate of the image
         @param y The y coordinate of the image
         @param g The Graphics image to draw with
+        
+        <-------May 24------->
+          > added method
+          Contributor: Caleb Chue
+        
         */ 
         private void image(String path, int x, int y, Graphics g) {
             // drawing image (source: https://stackoverflow.com/questions/17865465/how-do-i-draw-an-image-to-a-jpanel-or-jframe)
             try {
                 BufferedImage im = ImageIO.read(new File(path));
                 int wd = im.getWidth(), ht = im.getHeight();
-                g.drawImage(im, (SCREEN_WIDTH-wd)/2, (SCREEN_HEIGHT-ht)/2, null);
+                g.drawImage(im, (x-wd)/2, (y-ht)/2, null);
             } catch (IOException e) {
                 e.printStackTrace();
             }

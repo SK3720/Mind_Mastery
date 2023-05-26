@@ -30,6 +30,11 @@ public class Mind_Mastery implements KeyListener, ActionListener {
       > deprecated screenSize in favour of a set size application
       Contributor: Caleb Chue
     
+    <-------May 26------->
+      > changed player hitbox to align with the temporary sprite
+      Contributor: Caleb Chue
+        
+    
     */
     final int SCREEN_WIDTH = 1000, SCREEN_HEIGHT = 650;
     int locx, locy;
@@ -66,9 +71,9 @@ public class Mind_Mastery implements KeyListener, ActionListener {
     
     // learning/maze level
     int[] player;
-    int[][] obs;
+    Obstacle[][] obs;
     boolean[] keysPressed;
-    final int[] playerSize = {50, 50};
+    final int[] playerSize = {18, 38};
     final int MOVE_DISTANCE = 5;
     
     // action level
@@ -165,6 +170,31 @@ public class Mind_Mastery implements KeyListener, ActionListener {
         frame.setVisible(true);
         
         reset();
+    }
+    
+    
+    private List<String> loadFromFile(String path) {
+        try {
+            Scanner sc = new Scanner(new File(path));
+            String temp = "";
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    
+    /** 
+    Private method to load and return a list of obstacles for the
+    current stage of the action or learning level
+    
+    @param stage The stage of the level to load
+    @return A List of Obstacle objects from the stage
+    */
+    private List<Obstacle> loadObstacles(int stage) {
+        List<Obstacle> obs = new ArrayList<Obstacle>();
+        
+        
+        
     }
     
     
@@ -320,7 +350,7 @@ public class Mind_Mastery implements KeyListener, ActionListener {
     
     */
     private void mazeLevel() {
-        obs = new int[][] {{300, 300, 400, 400}};
+        obs = loadObstacles(1);
         player = new int[] {150, 150};
         
         frame.setContentPane(drawPanel);
@@ -513,7 +543,7 @@ public class Mind_Mastery implements KeyListener, ActionListener {
         for (int i = -1; i < 2; i++) {
             for (int j = -1; j < 2; j++) {
                 for (int[] ob : obs) {
-                    if (collidePointRect(x + playerSize[0]*i, y + playerSize[1]*j, ob[0], ob[1], ob[2], ob[3])) return false;
+                    if (collidePointRect(x + playerSize[0]/2*i, y + playerSize[1]/2*j, ob[0], ob[1], ob[2], ob[3])) return false;
                 }
             }
         }
@@ -588,9 +618,9 @@ public class Mind_Mastery implements KeyListener, ActionListener {
                 g.fillRect(-100, -100, SCREEN_WIDTH+100, SCREEN_HEIGHT+100);
                 
                 // drawing player
-                image("player.png", player[0], player[1], g);
                 g.setColor(new Color(12,50,101));
                 g.fillRect(player[0] - playerSize[0]/2, player[1] - playerSize[1]/2, playerSize[0], playerSize[1]);
+                image("player.png", player[0], player[1], g);
                 
                 g.setColor(new Color(255,0,0));
                 for (int[] ob : obs) {
@@ -637,13 +667,17 @@ public class Mind_Mastery implements KeyListener, ActionListener {
           > added method
           Contributor: Caleb Chue
         
+        <-------May 26------->
+          > fixed method drawing in the wrong place
+          Contributor: Caleb Chue
+        
         */ 
         private void image(String path, int x, int y, Graphics g) {
             // drawing image (source: https://stackoverflow.com/questions/17865465/how-do-i-draw-an-image-to-a-jpanel-or-jframe)
             try {
                 BufferedImage im = ImageIO.read(new File(path));
                 int wd = im.getWidth(), ht = im.getHeight();
-                g.drawImage(im, (x-wd)/2, (y-ht)/2, null);
+                g.drawImage(im, x - wd/2, y - ht/2, null);
             } catch (IOException e) {
                 e.printStackTrace();
             }

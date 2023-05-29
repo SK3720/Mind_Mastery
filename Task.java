@@ -1,7 +1,10 @@
 public class Task extends Obstacle {
     
-    public Task(int x, int y, int wdt, int hgt) {
+    int type;
+    
+    public Task(int x, int y, int wdt, int hgt, int typ) {
         super(x,y,wdt,hgt);
+        type = typ;
     }
 
 

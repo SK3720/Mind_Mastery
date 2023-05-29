@@ -1,12 +1,11 @@
 public abstract class Obstacle {
-    int[] pos;
+    public int x, y, w, h;
     
-    public Obstacle(int x, int y, int wid, int hgt) {
-        pos = new int[] {x,y,wid,hgt};
-    }
-    
-    public int[] loc() {
-        return pos;
+    public Obstacle(int xPos, int yPos, int wid, int hgt) {
+        x = xPos;
+        y = yPos;
+        w = wid;
+        h = hgt;
     }
     
     public abstract void interactedBehaviour();

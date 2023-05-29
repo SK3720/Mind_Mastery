@@ -16,6 +16,7 @@ import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
+import java.util.*;
 
 public class Mind_Mastery implements KeyListener, ActionListener {
     // JFrame to hold all content
@@ -65,13 +66,13 @@ public class Mind_Mastery implements KeyListener, ActionListener {
     // level select
     JPanel levelPanel;
     JButton learningLevelButton, mazeLevelButton, actionLevelButton;
-    
+     
     // credits
     JPanel credPanel;
     
     // learning/maze level
     int[] player;
-    Obstacle[][] obs;
+    ArrayList<Obstacle> obs;
     boolean[] keysPressed;
     final int[] playerSize = {18, 38};
     final int MOVE_DISTANCE = 5;
@@ -173,13 +174,19 @@ public class Mind_Mastery implements KeyListener, ActionListener {
     }
     
     
-    private List<String> loadFromFile(String path) {
+    private ArrayList<String> loadFromFile(String path) {
+        ArrayList<String> arr = new ArrayList<String>();
         try {
             Scanner sc = new Scanner(new File(path));
             String temp = "";
+            while (sc.hasNext()) {
+                temp = sc.nextLine();
+                arr.add(temp);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return arr;
     }
     
     
@@ -190,11 +197,20 @@ public class Mind_Mastery implements KeyListener, ActionListener {
     @param stage The stage of the level to load
     @return A List of Obstacle objects from the stage
     */
-    private List<Obstacle> loadObstacles(int stage) {
-        List<Obstacle> obs = new ArrayList<Obstacle>();
+    private ArrayList<Obstacle> loadObstacles(int stage) {
+        ArrayList<Obstacle> obs = new ArrayList<Obstacle>();
+        ArrayList<String> strs = loadFromFile("leveldata-" + stage + ".txt");
+        for (String s : strs) {
+            String[] dat = s.split(" ");
+            Obstacle o;
+            if (dat[4] == 0) {
+                o = new Obstacle(dat[0], dat[1], dat[2], dat[3]);
+            } else (dat[4] >= 1) {
+                o = new Task(dat[0], dat[1], dat[2], dat[3], dat[4]);
+            }
+        }
         
-        
-        
+        return obs;
     }
     
     
@@ -542,8 +558,8 @@ public class Mind_Mastery implements KeyListener, ActionListener {
         if (x < 0 || x > SCREEN_WIDTH || y < 0 || y > SCREEN_HEIGHT) return false;
         for (int i = -1; i < 2; i++) {
             for (int j = -1; j < 2; j++) {
-                for (int[] ob : obs) {
-                    if (collidePointRect(x + playerSize[0]/2*i, y + playerSize[1]/2*j, ob[0], ob[1], ob[2], ob[3])) return false;
+                for (Obstacle ob : obs) {
+                    if (collidePointRect(x + playerSize[0]/2*i, y + playerSize[1]/2*j, ob.x, ob.y, ob.w, ob.h)) return false;
                 }
             }
         }
@@ -623,9 +639,11 @@ public class Mind_Mastery implements KeyListener, ActionListener {
                 image("player.png", player[0], player[1], g);
                 
                 g.setColor(new Color(255,0,0));
-                for (int[] ob : obs) {
-                    g.fillRect(ob[0], ob[1], ob[2]-ob[0], ob[3]-ob[1]);
+                for (Obstacle ob : obs) {
+                    g.fillRect(ob.x, ob.y, ob.w-ob.x, ob.h-ob.y);
                 }
+                
+                if (keysPressed[0] || keysPressed[1] || keysPressed[2] || keysPressed[3]) handleMovement();
             }
         }
 

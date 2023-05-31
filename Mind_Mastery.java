@@ -10,6 +10,7 @@ Description: The second version of Focus Forge's game, Mind Mastery.
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
+import javax.imageio.IIOException;
 import javax.swing.*;
 import javax.imageio.ImageIO;
 import java.io.File;
@@ -58,13 +59,13 @@ public class Mind_Mastery implements KeyListener, ActionListener {
     int drawState;
     
     // main menu buttons
-    JButton[] mainButtons;
+    JButton[] mainButtons,levelButtons;
     JButton begin, instr, cred, exit;
-    JPanel mainMenu, mainMenuButtons;
+    JPanel mainMenu, mainMenuButtons, levelMenuButtons;
     
     // level select
     JPanel levelPanel;
-    JButton learningLevelButton, mazeLevelButton, actionLevelButton;
+    JButton learningLevelButton, mazeLevelButton, actionLevelButton, LeaderboardButton;
      
     // credits
     JPanel credPanel;
@@ -115,6 +116,11 @@ public class Mind_Mastery implements KeyListener, ActionListener {
       > added loading of keysPressed boolean array
       Contributor: Caleb Chue
 
+     <-------May 31------->
+      > added leaderboard button to level select screen.
+      > formatted button positions and UI for level selection screen
+      Contributor: Shiv Kanade
+
     */ 
     private void load() {
         
@@ -141,22 +147,27 @@ public class Mind_Mastery implements KeyListener, ActionListener {
                                      new JButton("Exit")};
 
         mainMenuButtons.add(Box.createVerticalStrut(6*SCREEN_HEIGHT/17));
+
         for (int i = 0; i < mainButtons.length; i++) loadMainButton(i);
         
         mainMenu.add(mainMenuButtons);
         
-        // level select
+        // level selection menu
         levelPanel = new JPanel();
-        learningLevelButton = new JButton("Learning");
-        mazeLevelButton = new JButton("Maze");
-        actionLevelButton = new JButton("Action");
-        levelPanel.add(learningLevelButton);
-        levelPanel.add(mazeLevelButton);
-        levelPanel.add(actionLevelButton);
-        learningLevelButton.addActionListener(this);
-        mazeLevelButton.addActionListener(this);
-        actionLevelButton.addActionListener(this);
-        
+        levelMenuButtons = new JPanel();
+        levelMenuButtons.setLayout(new BoxLayout(levelMenuButtons, BoxLayout.Y_AXIS));
+
+        levelButtons = new JButton[] {new JButton("Learning"),
+                                      new JButton("Maze"),
+                                      new JButton("Action"),
+                                      new JButton("Leaderboard")};
+
+        levelMenuButtons.add(Box.createVerticalStrut(6*SCREEN_HEIGHT/17));
+
+        for (int i = 0; i < 4; i++) loadLevelButton(i);
+
+        levelPanel.add(levelMenuButtons);
+
         // movement keys
         keysPressed = new boolean[4];
 
@@ -167,6 +178,7 @@ public class Mind_Mastery implements KeyListener, ActionListener {
         frame.addKeyListener(this);
         
         frame.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+        frame.setResizable(false);
         frame.setVisible(true);
         
         reset();
@@ -250,12 +262,23 @@ public class Mind_Mastery implements KeyListener, ActionListener {
     private void loadMainButton(int index) {
         mainButtons[index].addActionListener(this);
         mainButtons[index].setAlignmentX(Component.CENTER_ALIGNMENT);
-        Dimension size = new Dimension(SCREEN_WIDTH/3, SCREEN_HEIGHT/10);
-        mainButtons[index].setPreferredSize(size);
-        mainButtons[index].setMaximumSize(size);
+        Dimension size1 = new Dimension(SCREEN_WIDTH/3, SCREEN_HEIGHT/10);
+        mainButtons[index].setPreferredSize(size1);
+        mainButtons[index].setMaximumSize(size1);
         mainButtons[index].setFont(new Font("Courier New", Font.PLAIN, 32));
         mainMenuButtons.add(mainButtons[index]);
         mainMenuButtons.add(Box.createVerticalStrut(SCREEN_HEIGHT/18));
+    }
+
+    private void loadLevelButton(int index){
+        levelButtons[index].addActionListener(this);
+        levelButtons[index].setAlignmentX(Component.CENTER_ALIGNMENT);
+        Dimension size2 = new Dimension(SCREEN_WIDTH / 3, SCREEN_HEIGHT / 10);
+        levelButtons[index].setPreferredSize(size2);
+        levelButtons[index].setMaximumSize(size2);
+        levelButtons[index].setFont(new Font("Courier New", Font.PLAIN, 32));
+        levelPanel.add(levelButtons[index]);
+        levelPanel.add(Box.createVerticalStrut(SCREEN_HEIGHT / 18));
     }
     
     
@@ -332,9 +355,8 @@ public class Mind_Mastery implements KeyListener, ActionListener {
     */
     private void levelSelect() {
         frame.setContentPane(levelPanel);
+        //levelPanel.add();
         levelPanel.setVisible(true);
-        
-        
     }
     
     
@@ -644,14 +666,7 @@ public class Mind_Mastery implements KeyListener, ActionListener {
         
         */ 
         private void image(String path, Graphics g) {
-            // drawing image (source: https://stackoverflow.com/questions/17865465/how-do-i-draw-an-image-to-a-jpanel-or-jframe)
-            try {
-                BufferedImage im = ImageIO.read(new File(path));
-                int wd = im.getWidth(), ht = im.getHeight();
-                g.drawImage(im, (SCREEN_WIDTH-wd)/2, (SCREEN_HEIGHT-ht)/2, null);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            image(path, SCREEN_WIDTH/2, SCREEN_HEIGHT/2, g);
         }
 
         /** 
@@ -676,9 +691,13 @@ public class Mind_Mastery implements KeyListener, ActionListener {
         private void image(String path, int x, int y, Graphics g) {
             // drawing image (source: https://stackoverflow.com/questions/17865465/how-do-i-draw-an-image-to-a-jpanel-or-jframe)
             try {
-                BufferedImage im = ImageIO.read(new File(path));
+                BufferedImage im = ImageIO.read(new File("images/"+path));
                 int wd = im.getWidth(), ht = im.getHeight();
                 g.drawImage(im, x - wd/2, y - ht/2, null);
+            } catch (IIOException e) {
+                System.out.println("Cannot load image from images/" + path);
+                e.printStackTrace();
+
             } catch (IOException e) {
                 e.printStackTrace();
             }

@@ -1,13 +1,23 @@
-public abstract class Obstacle {
-    public int x, y, w, h;
-    
+/** 
+Class to handle physical walls the player can bump into
+
+    <-------May 29------->
+      > separated Obstacle class into separate child classes of Hitbox
+      Contributor: Caleb Chue
+
+*/
+
+public class Obstacle extends Hitbox {
+
     public Obstacle(int xPos, int yPos, int wid, int hgt) {
-        x = xPos;
-        y = yPos;
-        w = wid;
-        h = hgt;
+        super(xPos, yPos, wid, hgt);
     }
     
-    public abstract void interactedBehaviour();
-    public abstract void proximityBehaviour();
+    public void interactedBehaviour() {
+        
+    }
+    
+    public void proximityBehaviour() {
+        
+    }
 }

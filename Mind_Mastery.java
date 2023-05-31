@@ -1,11 +1,10 @@
 /** 
 Authors: Focus Forge - Caleb Chue and Shiv Kanade
 Teacher: V. Krasteva
-Date: May 23, 2023
-Description: The first version of Focus Forge's game, Mind Mastery. 
-             It includes a fading splashscreen, and a few buttons on
-             the main menu for user navigation. More will be implemented
-             in the next version of Mind Mastery.
+Date: May 29, 2023
+Description: The second version of Focus Forge's game, Mind Mastery. 
+             This updated version holds more of a maze level, as
+             a moving player and obstacle system have been implemented
 */ 
 
 import java.awt.*;
@@ -37,7 +36,7 @@ public class Mind_Mastery implements KeyListener, ActionListener {
         
     
     */
-    final int SCREEN_WIDTH = 1000, SCREEN_HEIGHT = 650;
+    final int SCREEN_WIDTH = 1000, SCREEN_HEIGHT = 700;
     int locx, locy;
     
     /** 
@@ -72,9 +71,9 @@ public class Mind_Mastery implements KeyListener, ActionListener {
     
     // learning/maze level
     int[] player;
-    ArrayList<Obstacle> obs;
+    ArrayList<Hitbox> obs;
     boolean[] keysPressed;
-    final int[] playerSize = {18, 38};
+    public final int[] playerSize = {18, 38};
     final int MOVE_DISTANCE = 5;
     
     // action level
@@ -197,17 +196,23 @@ public class Mind_Mastery implements KeyListener, ActionListener {
     @param stage The stage of the level to load
     @return A List of Obstacle objects from the stage
     */
-    private ArrayList<Obstacle> loadObstacles(int stage) {
-        ArrayList<Obstacle> obs = new ArrayList<Obstacle>();
+    private ArrayList<Hitbox> loadObstacles(int stage) {
+        ArrayList<Hitbox> obs = new ArrayList<Hitbox>();
         ArrayList<String> strs = loadFromFile("leveldata-" + stage + ".txt");
         for (String s : strs) {
-            String[] dat = s.split(" ");
-            Obstacle o;
+            String[] spl = s.split(" ");
+            int[] dat = new int[spl.length];
+            for (int i = 0; i < spl.length; i++) dat[i] = Integer.parseInt(spl[i]);
+            Hitbox o;
             if (dat[4] == 0) {
                 o = new Obstacle(dat[0], dat[1], dat[2], dat[3]);
-            } else (dat[4] >= 1) {
+            } else if (dat[4] >= 1) {
                 o = new Task(dat[0], dat[1], dat[2], dat[3], dat[4]);
+            } else {
+                o = new Distraction(dat[0], dat[1], dat[2], dat[3]);
             }
+            o.setPlayerSize(playerSize);
+            obs.add(o);
         }
         
         return obs;
@@ -556,36 +561,13 @@ public class Mind_Mastery implements KeyListener, ActionListener {
     */ 
     private boolean legalMove(int x, int y) {
         if (x < 0 || x > SCREEN_WIDTH || y < 0 || y > SCREEN_HEIGHT) return false;
-        for (int i = -1; i < 2; i++) {
-            for (int j = -1; j < 2; j++) {
-                for (Obstacle ob : obs) {
-                    if (collidePointRect(x + playerSize[0]/2*i, y + playerSize[1]/2*j, ob.x, ob.y, ob.w, ob.h)) return false;
-                }
+        for (int i = 0; i < obs.size(); i++) {
+            if (obs.get(i) instanceof Obstacle && obs.get(i).colliding(x, y)) {
+                System.out.println("illegal " + x + " " + y + ": " + obs.get(i));
+                return false;
             }
         }
         return true;
-    }
-    
-    
-    /** 
-    Private method to check whether a point is within a box
-    
-    @param x The x coordinate of the point
-    @param y The y coordinate of the point
-    @param x1 The x coordinate of the top left corner of the box
-    @param y1 The y coordinate of the top left corner of the box
-    @param x2 The x coordinate of the bottom right corner of the box
-    @param y2 THe y coordinate of the bottom right corner of the box
-    @return Whether the point is within the bounds of the box
-    
-    <-------May 25------->
-      > added method
-      > moved method from nested class to main class
-      Contributor: Caleb Chue
-    
-    */
-    private boolean collidePointRect(int x, int y, int x1, int y1, int x2, int y2) {
-        return x >= x1 && x <= x2 && y >= y1 && y <= y2;
     }
     
     
@@ -639,8 +621,9 @@ public class Mind_Mastery implements KeyListener, ActionListener {
                 image("player.png", player[0], player[1], g);
                 
                 g.setColor(new Color(255,0,0));
-                for (Obstacle ob : obs) {
-                    g.fillRect(ob.x, ob.y, ob.w-ob.x, ob.h-ob.y);
+                for (Hitbox ob : obs) {
+                    System.out.println(ob.x + " " + ob.y + " " + ob.w + " " + ob.h);
+                    g.fillRect(ob.x, ob.y, ob.w, ob.h);
                 }
                 
                 if (keysPressed[0] || keysPressed[1] || keysPressed[2] || keysPressed[3]) handleMovement();

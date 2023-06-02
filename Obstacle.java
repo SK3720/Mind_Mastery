@@ -17,7 +17,7 @@ public class Obstacle extends Hitbox {
         
     }
     
-    public void proximityBehaviour() {
-        
+    public String proximityMessage() {
+        return null;
     }
 }

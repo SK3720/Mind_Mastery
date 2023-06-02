@@ -70,7 +70,7 @@ public abstract class Hitbox {
         return x >= x1 && x <= x2 && y >= y1 && y <= y2;
     }
     
-    
+    /** Abstract methods to be implemented by subclasses */ 
     public abstract void interactedBehaviour();
-    public abstract void proximityBehaviour();
+    public abstract String proximityMessage();
 }

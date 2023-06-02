@@ -400,6 +400,16 @@ public class Mind_Mastery implements KeyListener, ActionListener {
      Private method to handle the display of the learning level
      */
     private void learningLevel() {
+        obs = loadObstacles(0);
+        player = new int[]{150, 150};
+
+        frame.setContentPane(drawPanel);
+        drawPanel.setVisible(true);
+        draw.setVisible(true);
+
+        // making the drawing the focus (source: https://docs.oracle.com/javase/tutorial/uiswing/misc/focus.html)
+        draw.requestFocusInWindow();
+        draw.repaint();
     }
 
 
@@ -672,7 +682,13 @@ public class Mind_Mastery implements KeyListener, ActionListener {
                 }
 
                 if (keysPressed[0] || keysPressed[1] || keysPressed[2] || keysPressed[3]) handleMovement();
+            } else if (state == 10){
+                Toolkit tk = Toolkit.getDefaultToolkit();
+                Image bob = tk.getImage("images/LearningLevelMap.png");
+                g.drawImage(bob, 0,0, 1000, 700, this);
             }
+
+
         }
 
         /**

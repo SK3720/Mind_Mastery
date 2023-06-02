@@ -36,6 +36,8 @@ public class Task extends Hitbox {
     JPanel content;
     JButton[] buttons;
     JLabel[] texts;
+    JFrame frame;
+    JButton checkButton;
     final int boxW = 200, boxH = 50;
     
     public Task(int x, int y, int wdt, int hgt, int typ) {
@@ -51,8 +53,14 @@ public class Task extends Hitbox {
      > added loading drag and drop elements
      Contributor: Caleb Chue
 
+    <-------June 2------->
+     > finalized drag and drop elements
+     Contributor: Caleb Chue
+
     */
     private void load() {
+        frame = new JFrame();
+        
         if (type == 0) {
             /**
              drag and drop system
@@ -96,11 +104,30 @@ public class Task extends Hitbox {
                 texts[i].addMouseMotionListener(m);
                 texts[i].setBorder(new CompoundBorder(new LineBorder(Color.DARK_GRAY), new EmptyBorder(boxH/2, boxW/2, boxH/2, boxW/2)));
                 texts[i].setTransferHandler(new TransferImporter());
+                texts[i].setMaximumSize(new Dimension(boxW, boxH));
                 rightPanel.add(texts[i], c);
             }
             
+            JPanel filler = new JPanel();
+            Dimension fillerSize = new Dimension(100, 350);
+            filler.setPreferredSize(fillerSize);
+            filler.setMaximumSize(fillerSize);
+            
+            checkButton = new JButton("Check your answer");
+            Dimension checkSize = new Dimension(250, 50);
+            checkButton.setPreferredSize(checkSize);
+            checkButton.setMaximumSize(checkSize);
+            checkButton.addMouseListener(new MouseHandler());
+            
             content.add(leftPanel, BorderLayout.LINE_START);
+            content.add(filler, BorderLayout.CENTER);
             content.add(rightPanel, BorderLayout.LINE_END);
+            content.add(checkButton, BorderLayout.PAGE_END);
+            
+            frame.add(content);
+            frame.setSize(700, 500);
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setVisible(true);
             
         }
     }
@@ -140,6 +167,11 @@ public class Task extends Hitbox {
     class TransferImporter extends TransferHandler {
 
         @Override
+        public boolean canImport(TransferHandler.TransferSupport support) {
+            return support.isDataFlavorSupported(DataFlavor.stringFlavor);
+        }
+
+        @Override
         public boolean importData(TransferHandler.TransferSupport support) {
             boolean accept = false;
             if (canImport(support)) {
@@ -160,6 +192,37 @@ public class Task extends Hitbox {
             return accept;
         }
     }
+    
+    
+    /** 
+     Private method to check the win conditions for each task
+     */ 
+    private void checkComplete() {
+        System.out.println("check complete");
+        if (type == 0) { // task sorting
+            for (JLabel f : texts) {
+                System.out.println(f.getText());
+            }
+            if (((texts[0].getText().equals("Doing Homework") && texts[1].getText().equals("Doing Laundry")) ||
+                 (texts[0].getText().equals("Doing Homework") && texts[1].getText().equals("Doing Laundry")))
+             && ((texts[2].getText().equals("Checking Social Media") && texts[3].getText().equals("Playing Video Games")) ||
+                 (texts[3].getText().equals("Checking Social Media") && texts[2].getText().equals("Playing Video Games")))) {
+                close();
+                return;
+            }
+        }
+        System.out.println("check failed");
+    }
+    
+    
+    /** 
+     Private method to dispose of the frame once the task is closed
+     */ 
+    private void close() {
+        content.setVisible(false);
+        frame.dispose();
+     }
+    
     
     /** 
     Nested class to handle mouse events
@@ -187,7 +250,11 @@ public class Task extends Hitbox {
         public void mouseReleased(MouseEvent e) {
             
         }
-        public void mouseClicked(MouseEvent e) {}
+        public void mouseClicked(MouseEvent e) {
+            if (e.getSource() == checkButton) {
+                checkComplete();
+            }
+        }
         public void mouseEntered(MouseEvent e) {}
         public void mouseExited(MouseEvent e) {}
     }
@@ -215,19 +282,7 @@ public class Task extends Hitbox {
     
     
     
-    public JPanel getPanel() {
-        return content;
-    }
-    
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("test");
-    
-        Task t = new Task(100, 100, 200, 300, 0);
-        t.interactedBehaviour();
-        
-        frame.add(t.getPanel());
-        frame.setSize(700, 500);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setVisible(true);
+    public JFrame getFrame() {
+        return frame;
     }
 }

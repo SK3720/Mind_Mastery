@@ -9,12 +9,14 @@ Abstract class to handle interaction between a hitbox and the player
 public abstract class Hitbox {
     public int x, y, w, h;
     private int pW, pH;
+    boolean active;
     
     public Hitbox(int xPos, int yPos, int wid, int hgt) {
         x = xPos;
         y = yPos;
         w = wid;
         h = hgt;
+        active = true;
     }
     
     @Override
@@ -22,7 +24,29 @@ public abstract class Hitbox {
         return x + " " + y + " " + w + " " + h;
     }
     
+    /** 
+     Public method to enable or disable this hitbox
+     
+     @param act The value to set active to
+     */
+    public void setActive(boolean act) {
+        active = act;
+    }
     
+    /** 
+     Public get method to return whether this hitbox is active
+     
+     @return The value of active
+     */ 
+    public boolean getActive() {
+        return active;
+    }
+    
+    /** 
+     Public method to set the internal value of the player's hitbox
+     
+     @param arr The dimensions of the player's size
+     */ 
     public void setPlayerSize(int[] arr) {
         pW = arr[0];
         pH = arr[1];

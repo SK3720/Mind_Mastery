@@ -187,6 +187,15 @@ public class Mind_Mastery implements KeyListener, ActionListener {
     }
 
 
+    /** 
+    Private method to handle loading hitboxes from a file for
+    learning and action levels
+    
+    @param path The path of the file to load from
+    @return An ArrayList of Strings of each line in the file
+    
+    
+    */ 
     private ArrayList<String> loadFromFile(String path) {
         ArrayList<String> arr = new ArrayList<String>();
         try {
@@ -209,6 +218,16 @@ public class Mind_Mastery implements KeyListener, ActionListener {
 
      @param stage The stage of the level to load
      @return A List of Obstacle objects from the stage
+     
+     <-------May 26------->
+       > created method
+       Contributor: Caleb Chue
+    
+     <-------May 28------->
+       > changed file path
+       Contributor: Caleb Chue
+
+
      */
     private ArrayList<Hitbox> loadObstacles(int stage) {
         ArrayList<Hitbox> obs = new ArrayList<Hitbox>();
@@ -460,17 +479,17 @@ public class Mind_Mastery implements KeyListener, ActionListener {
             System.exit(0);
 
             // level select
-        } else if (e.getSource() == learningLevelButton) {
+        } else if (e.getSource() == levelButtons[0]) {
             state = 10;
             reset();
             learningLevel();
             System.out.println("Learning trigger");
-        } else if (e.getSource() == mazeLevelButton) {
+        } else if (e.getSource() == levelButtons[1]) {
             state = 11;
             reset();
             mazeLevel();
             System.out.println("Maze trigger");
-        } else if (e.getSource() == actionLevelButton) {
+        } else if (e.getSource() == levelButtons[2]) {
             state = 12;
             reset();
             // actionLevel();

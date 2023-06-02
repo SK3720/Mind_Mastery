@@ -28,12 +28,16 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
      Instance Variable Declaration
 
      <-------May 24------->
-     > deprecated screenSize in favour of a set size application
-     Contributor: Caleb Chue
+       > deprecated screenSize in favour of a set size application
+       Contributor: Caleb Chue
 
      <-------May 26------->
-     > changed player hitbox to align with the temporary sprite
-     Contributor: Caleb Chue
+       > changed player hitbox to align with the temporary sprite
+       Contributor: Caleb Chue
+
+     <-------June 2------->
+       > attempt to implement Runnable
+       Contributor: Caleb Chue
 
 
      */
@@ -121,6 +125,11 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
      > added leaderboard button to level select screen.
      > formatted button positions and UI for level selection screen
      Contributor: Shiv Kanade
+     
+     <-------June 2------->
+     > added loading of thread
+     Contributor: Caleb Chue
+
 
      */
     private void load() {
@@ -404,6 +413,16 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
      Private method to handle the display of the learning level
      */
     private void learningLevel() {
+        obs = loadObstacles(0);
+        player = new int[]{150, 150};
+
+        frame.setContentPane(drawPanel);
+        drawPanel.setVisible(true);
+        draw.setVisible(true);
+
+        // making the drawing the focus (source: https://docs.oracle.com/javase/tutorial/uiswing/misc/focus.html)
+        draw.requestFocusInWindow();
+        draw.repaint();
     }
 
 
@@ -600,6 +619,7 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
                 player[0] += MOVE_DISTANCE;
             }
         }
+        draw.repaint();
     }
 
     /**
@@ -682,6 +702,8 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
                 }
 
                 if (keysPressed[0] || keysPressed[1] || keysPressed[2] || keysPressed[3]) handleMovement();
+            } else if (state == 10){
+                image("images/LearningLevelMap.png", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 1000, 700, g);
             }
         }
 
@@ -699,7 +721,11 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
 
          */
         private void image(String path, Graphics g) {
-            image(path, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, g);
+            image(path, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, -1, -1, g);
+        }
+
+        private void image(String path, int x, int y, Graphics g) {
+            image(path, x, y, -1, -1, g);
         }
 
         /**
@@ -721,12 +747,15 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
          Contributor: Caleb Chue
 
          */
-        private void image(String path, int x, int y, Graphics g) {
+        private void image(String path, int x, int y, int wd, int ht, Graphics g) {
             // drawing image (source: https://stackoverflow.com/questions/17865465/how-do-i-draw-an-image-to-a-jpanel-or-jframe)
             try {
                 BufferedImage im = ImageIO.read(new File("images/" + path));
-                int wd = im.getWidth(), ht = im.getHeight();
-                g.drawImage(im, x - wd / 2, y - ht / 2, null);
+                if (wd == -1) {
+                    wd = im.getWidth();
+                    ht = im.getHeight();
+                }
+                g.drawImage(im, x - wd / 2, y - ht / 2, wd, ht, null);
             } catch (IIOException e) {
                 System.out.println("Cannot load image from images/" + path);
                 e.printStackTrace();

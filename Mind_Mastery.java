@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 import java.util.*;
 
-public class Mind_Mastery implements KeyListener, ActionListener {
+public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
     // JFrame to hold all content
     private JFrame frame;
     Drawing draw;
@@ -69,6 +69,8 @@ public class Mind_Mastery implements KeyListener, ActionListener {
 
     // credits
     JPanel credPanel;
+
+    Thread thread;
 
     // learning/maze level
     int[] player;
@@ -172,6 +174,7 @@ public class Mind_Mastery implements KeyListener, ActionListener {
 
         // movement keys
         keysPressed = new boolean[4];
+        thread = new Thread(this);
 
         // finish setup        
         frame.add(drawPanel);
@@ -181,6 +184,7 @@ public class Mind_Mastery implements KeyListener, ActionListener {
 
         frame.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
         frame.setResizable(false);
+        frame.setLocationRelativeTo(null);
         frame.setVisible(true);
 
         reset();
@@ -242,7 +246,7 @@ public class Mind_Mastery implements KeyListener, ActionListener {
             } else if (dat[4] >= 1) {
                 o = new Task(dat[0], dat[1], dat[2], dat[3], dat[4]);
             } else {
-                o = new Distraction(dat[0], dat[1], dat[2], dat[3]);
+                o = new Distraction(dat[0], dat[1], dat[2], dat[3], dat[4]);
             }
             o.setPlayerSize(playerSize);
             obs.add(o);
@@ -400,16 +404,6 @@ public class Mind_Mastery implements KeyListener, ActionListener {
      Private method to handle the display of the learning level
      */
     private void learningLevel() {
-        obs = loadObstacles(0);
-        player = new int[]{150, 150};
-
-        frame.setContentPane(drawPanel);
-        drawPanel.setVisible(true);
-        draw.setVisible(true);
-
-        // making the drawing the focus (source: https://docs.oracle.com/javase/tutorial/uiswing/misc/focus.html)
-        draw.requestFocusInWindow();
-        draw.repaint();
     }
 
 
@@ -423,6 +417,7 @@ public class Mind_Mastery implements KeyListener, ActionListener {
 
      */
     private void mazeLevel() {
+        thread.start();
         obs = loadObstacles(1);
         player = new int[]{150, 150};
 
@@ -433,6 +428,12 @@ public class Mind_Mastery implements KeyListener, ActionListener {
         // making the drawing the focus (source: https://docs.oracle.com/javase/tutorial/uiswing/misc/focus.html)
         draw.requestFocusInWindow();
         draw.repaint();
+    }
+    
+    
+    @Override
+    public void run() {
+        handleMovement();
     }
 
 
@@ -546,7 +547,7 @@ public class Mind_Mastery implements KeyListener, ActionListener {
     public void keyPressed(KeyEvent k) {
         char key = k.getKeyChar();
         handleKeys(key, true);
-        System.out.println("Pressed: " + (keysPressed[0] ? "W " : "") + (keysPressed[1] ? "A " : "") + (keysPressed[2] ? "S " : "") + (keysPressed[3] ? "D " : ""));
+        // System.out.println("Pressed: " + (keysPressed[0] ? "W " : "") + (keysPressed[1] ? "A " : "") + (keysPressed[2] ? "S " : "") + (keysPressed[3] ? "D " : ""));
         if (state == 10 || state == 11) handleMovement();
         draw.repaint();
     }
@@ -618,7 +619,6 @@ public class Mind_Mastery implements KeyListener, ActionListener {
         if (x < 0 || x > SCREEN_WIDTH || y < 0 || y > SCREEN_HEIGHT) return false;
         for (int i = 0; i < obs.size(); i++) {
             if (obs.get(i) instanceof Obstacle && obs.get(i).colliding(x, y)) {
-                System.out.println("illegal " + x + " " + y + ": " + obs.get(i));
                 return false;
             }
         }
@@ -677,18 +677,12 @@ public class Mind_Mastery implements KeyListener, ActionListener {
 
                 g.setColor(new Color(255, 0, 0));
                 for (Hitbox ob : obs) {
-                    System.out.println(ob.x + " " + ob.y + " " + ob.w + " " + ob.h);
+                    // System.out.println(ob.x + " " + ob.y + " " + ob.w + " " + ob.h);
                     g.fillRect(ob.x, ob.y, ob.w, ob.h);
                 }
 
                 if (keysPressed[0] || keysPressed[1] || keysPressed[2] || keysPressed[3]) handleMovement();
-            } else if (state == 10){
-                Toolkit tk = Toolkit.getDefaultToolkit();
-                Image bob = tk.getImage("images/LearningLevelMap.png");
-                g.drawImage(bob, 0,0, 1000, 700, this);
             }
-
-
         }
 
         /**

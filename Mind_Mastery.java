@@ -244,7 +244,7 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
      */
     private ArrayList<Hitbox> loadObstacles(int stage) {
         ArrayList<Hitbox> obs = new ArrayList<Hitbox>();
-        ArrayList<String> strs = loadFromFile("leveldata-" + stage + ".txt");
+        ArrayList<String> strs = loadFromFile("leveldata/leveldata-" + stage + ".txt");
         for (String s : strs) {
             String[] spl = s.split(" ");
             int[] dat = new int[spl.length];
@@ -255,10 +255,10 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
             } else if (dat[4] >= 1) {
                 o = new Task(dat[0], dat[1], dat[2], dat[3], dat[4]);
             } else {
-                o = new Distraction(dat[0], dat[1], dat[2], dat[3], dat[4]);
+                //o = new Distraction(dat[0], dat[1], dat[2], dat[3], dat[4]);
             }
-            o.setPlayerSize(playerSize);
-            obs.add(o);
+            //o.setPlayerSize(playerSize);
+            //obs.add(o);
         }
 
         return obs;
@@ -703,7 +703,7 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
 
                 if (keysPressed[0] || keysPressed[1] || keysPressed[2] || keysPressed[3]) handleMovement();
             } else if (state == 10){
-                image("images/LearningLevelMap.png", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 1000, 700, g);
+                image("LearningLevelMap.png", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 1000, 700, g);
             }
         }
 

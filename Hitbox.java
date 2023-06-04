@@ -61,11 +61,11 @@ public abstract class Hitbox {
     @param y The y-coordinate of the player
     @return Whether the player collides with the obstacle
     */ 
-    public boolean colliding(int pX, int pY) {
+    public boolean colliding(double pX, double pY) {
         for (int i = -1; i < 2; i++) {
             for (int j = -1; j < 2; j++) {
                 if (collidePointRect(pX + pW/2*i, pY + pH/2*j, x, y, x+w, y+h)) {
-                    System.out.println("Collision: " + (pX + pW/2*i) + " " + (pY + pH/2*j) + " " + x + " " + y + " " + (x+w) + " " + (y+h));
+                    // System.out.println("Collision: " + (pX + pW/2*i) + " " + (pY + pH/2*j) + " " + x + " " + y + " " + (x+w) + " " + (y+h));
                     return true;
                 }
             }
@@ -90,7 +90,7 @@ public abstract class Hitbox {
       Contributor: Caleb Chue
     
     */
-    private boolean collidePointRect(int x, int y, int x1, int y1, int x2, int y2) {
+    private boolean collidePointRect(double x, double y, double x1, double y1, double x2, double y2) {
         return x >= x1 && x <= x2 && y >= y1 && y <= y2;
     }
     

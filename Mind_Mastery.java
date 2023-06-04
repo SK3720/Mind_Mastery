@@ -77,11 +77,11 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
     Thread thread;
 
     // learning/maze level
-    int[] player;
+    double[] player;
     ArrayList<Hitbox> obs;
     boolean[] keysPressed;
     public final int[] playerSize = {18, 38};
-    final int MOVE_DISTANCE = 5;
+    final double MOVE_DISTANCE = 1;
 
     // action level
 
@@ -413,8 +413,9 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
      Private method to handle the display of the learning level
      */
     private void learningLevel() {
+        thread.start();
         obs = loadObstacles(0);
-        player = new int[]{150, 150};
+        player = new double[]{150, 150};
 
         frame.setContentPane(drawPanel);
         drawPanel.setVisible(true);
@@ -438,7 +439,7 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
     private void mazeLevel() {
         thread.start();
         obs = loadObstacles(1);
-        player = new int[]{150, 150};
+        player = new double[]{150, 150};
 
         frame.setContentPane(drawPanel);
         drawPanel.setVisible(true);
@@ -450,6 +451,10 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
     }
     
     
+    /** 
+    Overridden method to run the program thread
+    
+    */ 
     @Override
     public void run() {
         handleMovement();
@@ -457,7 +462,7 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
 
 
     /**
-     Private method to simplify delaying the program by a certain amout of time
+     Private method to simplify delaying the program by a certain amount of time
 
      @param ms The number of milliseconds to delay by
 
@@ -472,7 +477,6 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
         } catch (Exception e) {
         }
     }
-
 
     /**
      Public overridden method to handle events from various sources
@@ -635,7 +639,7 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
      Contributor: Caleb Chue
 
      */
-    private boolean legalMove(int x, int y) {
+    private boolean legalMove(double x, double y) {
         if (x < 0 || x > SCREEN_WIDTH || y < 0 || y > SCREEN_HEIGHT) return false;
         for (int i = 0; i < obs.size(); i++) {
             if (obs.get(i) instanceof Obstacle && obs.get(i).colliding(x, y)) {
@@ -689,11 +693,8 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
                 g.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
             } else if (state == 11) {
                 g.fillRect(-100, -100, SCREEN_WIDTH + 100, SCREEN_HEIGHT + 100);
-
-                // drawing player
-                g.setColor(new Color(12, 50, 101));
-                g.fillRect(player[0] - playerSize[0] / 2, player[1] - playerSize[1] / 2, playerSize[0], playerSize[1]);
-                image("player.png", player[0], player[1], g);
+                
+                drawPlayer(g);
 
                 g.setColor(new Color(255, 0, 0));
                 for (Hitbox ob : obs) {
@@ -704,8 +705,19 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
                 if (keysPressed[0] || keysPressed[1] || keysPressed[2] || keysPressed[3]) handleMovement();
             } else if (state == 10){
                 image("LearningLevelMap.png", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 1000, 700, g);
+                drawPlayer(g);
             }
         }
+        
+        /** 
+        Private method to draw the player on screen
+        */ 
+        private void drawPlayer(Graphics g) {
+            g.setColor(new Color(12, 50, 101));
+            g.fillRect((int)(player[0] - playerSize[0] / 2), (int)(player[1] - playerSize[1] / 2), playerSize[0], playerSize[1]);
+            image("player.png", player[0], player[1], g);
+        }
+        
 
         /**
          Private method to make drawing centered images more convenient
@@ -724,7 +736,7 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
             image(path, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, -1, -1, g);
         }
 
-        private void image(String path, int x, int y, Graphics g) {
+        private void image(String path, double x, double y, Graphics g) {
             image(path, x, y, -1, -1, g);
         }
 
@@ -747,7 +759,7 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
          Contributor: Caleb Chue
 
          */
-        private void image(String path, int x, int y, int wd, int ht, Graphics g) {
+        private void image(String path, double x, double y, double wd, double ht, Graphics g) {
             // drawing image (source: https://stackoverflow.com/questions/17865465/how-do-i-draw-an-image-to-a-jpanel-or-jframe)
             try {
                 BufferedImage im = ImageIO.read(new File("images/" + path));
@@ -755,7 +767,7 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
                     wd = im.getWidth();
                     ht = im.getHeight();
                 }
-                g.drawImage(im, x - wd / 2, y - ht / 2, wd, ht, null);
+                g.drawImage(im, (int)(x - wd / 2), (int)(y - ht / 2), (int)wd, (int)ht, null);
             } catch (IIOException e) {
                 System.out.println("Cannot load image from images/" + path);
                 e.printStackTrace();

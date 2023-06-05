@@ -23,7 +23,7 @@ public class Trigger extends Hitbox {
     }
     public String proximityMessage() {
         // learning sign 1
-        if (id == 0) return "Welcome to the Learning Area";
+        if (id == 0) return "Welcome to the Learning Area! \n Head to the Red House to begin.";
         
         if (id == 1) return "wow";
         

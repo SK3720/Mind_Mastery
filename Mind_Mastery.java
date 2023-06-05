@@ -414,23 +414,22 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
      Private method to handle the display of the instructions screen
      */
     private void instructions() {
-
+        
     }
 
 
-    /**
-     Private method to handle the display of the learning level
-     */
-
-
 
     /**
-     Private method to handle the display of the maze level
+     Private method to handle the display of any given level
 
-     <-------May 24------->
-     > created method
-     > added redrawing on clicking on a Drawing
-     Contributor: Caleb Chue
+    <-------May 24------->
+      > created method
+      > added redrawing on clicking on a Drawing
+      Contributor: Caleb Chue
+
+    <-------June 5------->
+      > merged level loading into one method
+      Contributor: Caleb Chue
 
      */
     private void loadLevel() {

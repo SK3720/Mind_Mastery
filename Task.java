@@ -96,7 +96,7 @@ public class Task extends Hitbox {
             JPanel rightPanel = new JPanel();
             rightPanel.setLayout(new GridBagLayout());
             for (int i = 0; i < labels.length; i++) {
-                c.insets = new Insets(i > 0 ? boxH/3 : 0, 0, 0, 0);
+                c.insets = new Insets(i == 2 ? boxH : i > 0 ? boxH/3 : 0, 0, 0, 0);
                 c.gridy = i*2;
                 texts[i] = new JLabel("");
                 MouseHandler m = new MouseHandler();
@@ -124,12 +124,76 @@ public class Task extends Hitbox {
             content.add(rightPanel, BorderLayout.LINE_END);
             content.add(checkButton, BorderLayout.PAGE_END);
             
-            frame.add(content);
-            frame.setSize(700, 500);
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.setVisible(true);
+        } else if (type == 1) {
+            /**
+             drag and drop system
+             (source: https://stackoverflow.com/questions/28844574/drag-and-drop-from-jbutton-to-jcomponent-in-java) 
+             */
+        
+            content = new JPanel();
+            
+            buttons = new JButton[4];
+            JPanel leftPanel = new JPanel();
+            leftPanel.setLayout(new GridBagLayout());
+            GridBagConstraints c = new GridBagConstraints();
+            c.gridx = 0;
+            c.weightx = 0.5;
+            c.fill = GridBagConstraints.HORIZONTAL;
+            
+            String[] labels = {"Doing Homework", "Playing Video Games", "Doing Laundry", "Checking Social Media"};
+            for (int i = 0; i < labels.length; i++) {
+                c.insets = new Insets(i > 0 ? boxH/2 : 0, 0, 0, 0);
+                c.gridy = i*2;
+                buttons[i] = new JButton(labels[i]);
+                MouseHandler m = new MouseHandler();
+                buttons[i].addMouseListener(m);
+                buttons[i].addMouseMotionListener(m);
+                buttons[i].setPreferredSize(new Dimension(boxW, boxH));
+                buttons[i].setMaximumSize(new Dimension(boxW, boxH));
+                buttons[i].setTransferHandler(new TransferExporter(labels[i]));
+                
+                leftPanel.add(buttons[i], c);
+            }
+            
+            texts = new JLabel[2];
+            JPanel rightPanel = new JPanel();
+            rightPanel.setLayout(new GridBagLayout());
+            for (int i = 0; i < texts.length; i++) {
+                c.insets = new Insets(i == 2 ? boxH : i > 0 ? boxH/3 : 0, 0, 0, 0);
+                c.gridy = i*2;
+                texts[i] = new JLabel("");
+                MouseHandler m = new MouseHandler();
+                texts[i].addMouseListener(m);
+                texts[i].addMouseMotionListener(m);
+                texts[i].setBorder(new CompoundBorder(new LineBorder(Color.DARK_GRAY), new EmptyBorder(boxH/2, boxW/2, boxH/2, boxW/2)));
+                texts[i].setTransferHandler(new TransferImporter());
+                texts[i].setMaximumSize(new Dimension(boxW, boxH));
+                rightPanel.add(texts[i], c);
+            }
+            
+            JPanel filler = new JPanel();
+            Dimension fillerSize = new Dimension(100, 350);
+            filler.setPreferredSize(fillerSize);
+            filler.setMaximumSize(fillerSize);
+            
+            checkButton = new JButton("Check your answer");
+            Dimension checkSize = new Dimension(250, 50);
+            checkButton.setPreferredSize(checkSize);
+            checkButton.setMaximumSize(checkSize);
+            checkButton.addMouseListener(new MouseHandler());
+            
+            content.add(leftPanel, BorderLayout.LINE_START);
+            content.add(filler, BorderLayout.CENTER);
+            content.add(rightPanel, BorderLayout.LINE_END);
+            content.add(checkButton, BorderLayout.PAGE_END);
             
         }
+
+        frame.add(content);
+        frame.setSize(700, 500);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
+        
     }
     
     class TransferExporter extends TransferHandler {
@@ -210,6 +274,8 @@ public class Task extends Hitbox {
                 close();
                 return;
             }
+        } else if (type == 1) {
+            
         }
         System.out.println("check failed");
     }
@@ -285,5 +351,10 @@ public class Task extends Hitbox {
     
     public JFrame getFrame() {
         return frame;
+    }
+    
+    public static void main(String[] args) {
+        Task t = new Task(0,0,0,0,1);
+        t.interactedBehaviour();
     }
 }

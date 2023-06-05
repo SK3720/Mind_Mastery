@@ -13,10 +13,7 @@ public class Obstacle extends Hitbox {
         super(xPos, yPos, wid, hgt);
     }
     
-    public void interactedBehaviour() {
-        
-    }
-    
+    public String interactedBehaviour() { return ""; }
     public String proximityMessage() {
         return null;
     }

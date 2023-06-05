@@ -270,8 +270,9 @@ public class Task extends Hitbox {
       Contributor: Caleb Chue
 
     */ 
-    public void interactedBehaviour() {
+    public String interactedBehaviour() {
         load();
+        return "";
     }
     public String proximityMessage() {
         if (type == 0) return "Open Agenda Planner";

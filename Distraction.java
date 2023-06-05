@@ -6,8 +6,8 @@ public class Distraction extends Hitbox {
         type = typ;
     }
     
-    public void interactedBehaviour() {
-        
+    public String interactedBehaviour() {
+        return "deduct";
     }
     
     public String proximityMessage() {

@@ -22,6 +22,8 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
     // JFrame to hold all content
     private JFrame frame;
     Drawing draw;
+    
+    boolean debug = true;
 
 
     /**
@@ -81,16 +83,13 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
     ArrayList<Hitbox> obs;
     boolean[] keysPressed;
     public final int[] playerSize = {18, 38};
-    final double MOVE_DISTANCE = 1;
+    final double MOVE_DISTANCE = 4;
 
     // action level
 
 
     // constructor
     public Mind_Mastery() {
-        frame = new JFrame("Mind Mastery");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
         // loading all panels, buttons, content of the main menu
         load();
 
@@ -184,8 +183,12 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
         // movement keys
         keysPressed = new boolean[4];
         thread = new Thread(this);
+        thread.start();
 
-        // finish setup        
+        // finish setup
+        frame = new JFrame("Mind Mastery");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
         frame.add(drawPanel);
         frame.add(mainMenu);
         frame.add(levelPanel);
@@ -229,7 +232,6 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
      Private method to load and return a list of obstacles for the
      current stage of the action or learning level
 
-     @param stage The stage of the level to load
      @return A List of Obstacle objects from the stage
      
      <-------May 26------->
@@ -240,28 +242,35 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
        > changed file path
        Contributor: Caleb Chue
 
+    <-------June 4------->
+       > changed file path again
+       > made method dependent on state
+       Contributor: Caleb Chue
 
      */
-    private ArrayList<Hitbox> loadObstacles(int stage) {
-        ArrayList<Hitbox> obs = new ArrayList<Hitbox>();
-        ArrayList<String> strs = loadFromFile("leveldata/leveldata-" + stage + ".txt");
+    private ArrayList<Hitbox> loadObstacles() {
+        ArrayList<Hitbox> tobs = new ArrayList<Hitbox>();
+        ArrayList<String> strs = loadFromFile("leveldata/leveldata-" + (state / 10) + "-" + (state % 10) + ".txt");
         for (String s : strs) {
-            String[] spl = s.split(" ");
+            String[] spl = s.strip().split(" ");
+            if (spl.length == 0 || spl[0].equals("") || spl[0].equals("//") || spl[0].equals("#")) continue;
             int[] dat = new int[spl.length];
             for (int i = 0; i < spl.length; i++) dat[i] = Integer.parseInt(spl[i]);
             Hitbox o;
-            if (dat[4] == 0) {
+            if (dat[dat.length-1] == 0) {
                 o = new Obstacle(dat[0], dat[1], dat[2], dat[3]);
-            } else if (dat[4] >= 1) {
+            } else if (dat[dat.length-1] == 1) {
                 o = new Task(dat[0], dat[1], dat[2], dat[3], dat[4]);
+            } else if (dat[dat.length-1] == 2) {
+                o = new Distraction(dat[0], dat[1], dat[2], dat[3], dat[4]);
             } else {
-                //o = new Distraction(dat[0], dat[1], dat[2], dat[3], dat[4]);
+                o = new Trigger(dat[0], dat[1], dat[2], dat[3], dat[4]);
             }
-            //o.setPlayerSize(playerSize);
-            //obs.add(o);
+            o.setPlayerSize(playerSize);
+            tobs.add(o);
         }
 
-        return obs;
+        return tobs;
     }
 
 
@@ -412,19 +421,7 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
     /**
      Private method to handle the display of the learning level
      */
-    private void learningLevel() {
-        thread.start();
-        obs = loadObstacles(0);
-        player = new double[]{150, 150};
 
-        frame.setContentPane(drawPanel);
-        drawPanel.setVisible(true);
-        draw.setVisible(true);
-
-        // making the drawing the focus (source: https://docs.oracle.com/javase/tutorial/uiswing/misc/focus.html)
-        draw.requestFocusInWindow();
-        draw.repaint();
-    }
 
 
     /**
@@ -436,10 +433,12 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
      Contributor: Caleb Chue
 
      */
-    private void mazeLevel() {
-        thread.start();
-        obs = loadObstacles(1);
-        player = new double[]{150, 150};
+    private void loadLevel() {
+        obs = loadObstacles();
+        if (state == 10) player = new double[] {50, 175};
+        else if (state == 11) player = new double[] {100, 100};
+        
+        else if (state == 20) player = new double[]{150, 150};
 
         frame.setContentPane(drawPanel);
         drawPanel.setVisible(true);
@@ -451,13 +450,27 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
     }
     
     
+    private ArrayList<Hitbox> collidingHitboxes() {
+        ArrayList<Hitbox> out = new ArrayList<Hitbox>();
+        for (Hitbox h : obs) {
+            if (h.colliding(player[0], player[1])) out.add(h);
+        }
+        return out;
+    }
+    
+    
+    private void handlePlayer() {
+        handleMovement();
+    }
+    
     /** 
     Overridden method to run the program thread
-    
     */ 
     @Override
     public void run() {
-        handleMovement();
+        handlePlayer();
+        draw.repaint();
+        if (debug) System.out.println("Pressed: " + (keysPressed[0] ? "W " : "") + (keysPressed[1] ? "A " : "") + (keysPressed[2] ? "S " : "") + (keysPressed[3] ? "D " : ""));
     }
 
 
@@ -506,7 +519,6 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
         } else if (e.getSource() == mainButtons[2]) { // credits
             state = 4;
             reset();
-            mazeLevel();
         } else if (e.getSource() == mainButtons[3]) { // exit button
             frame.setVisible(false);
             frame.dispose();
@@ -516,18 +528,18 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
         } else if (e.getSource() == levelButtons[0]) {
             state = 10;
             reset();
-            learningLevel();
-            System.out.println("Learning trigger");
+            loadLevel();
+            if (debug) System.out.println("Learning trigger");
         } else if (e.getSource() == levelButtons[1]) {
-            state = 11;
+            state = 20;
             reset();
-            mazeLevel();
-            System.out.println("Maze trigger");
+            loadLevel();
+            if (debug) System.out.println("Maze trigger");
         } else if (e.getSource() == levelButtons[2]) {
-            state = 12;
+            state = 30;
             reset();
-            // actionLevel();
-            System.out.println("Action trigger");
+            loadLevel();
+            if (debug) System.out.println("Action trigger");
         } else if (e.getSource() == draw) {
             draw.repaint();
         }
@@ -550,9 +562,25 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
         public void mouseClicked(MouseEvent e) {
             locx = e.getX();
             locy = e.getY();
-            // draw.repaint();
+            if (debug) System.out.println(locx + " " + locy);
         }
     }
+    
+    
+    /** 
+    
+    */ 
+    private void interact(Hitbox h) {
+        System.out.println("interacted with " + h);
+        String[] ins = h.interactedBehaviour().split(" ");
+        if (ins.length == 0) return;
+        
+        if (ins[0].equals("goto")) {
+            state = Integer.parseInt(ins[1]);
+            loadLevel();
+        }
+    }
+    
 
     /**
      Overridden methods to handle keyboard input
@@ -564,21 +592,22 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
 
      */
 
-    public void keyTyped(KeyEvent k) {
-    }
+    public void keyTyped(KeyEvent k) {}
 
     public void keyPressed(KeyEvent k) {
         char key = k.getKeyChar();
         handleKeys(key, true);
-        // System.out.println("Pressed: " + (keysPressed[0] ? "W " : "") + (keysPressed[1] ? "A " : "") + (keysPressed[2] ? "S " : "") + (keysPressed[3] ? "D " : ""));
-        if (state == 10 || state == 11) handleMovement();
+        if (key == 'p') debug = !debug;
+        if (key == 'e') if (collidingHitboxes().size() > 0) interact(collidingHitboxes().get(0));
+        
+        if (debug) System.out.println("Pressed: " + (keysPressed[0] ? "W " : "") + (keysPressed[1] ? "A " : "") + (keysPressed[2] ? "S " : "") + (keysPressed[3] ? "D " : ""));
+        handlePlayer();
         draw.repaint();
     }
 
     public void keyReleased(KeyEvent k) {
         char key = k.getKeyChar();
         handleKeys(key, false);
-        draw.repaint();
     }
 
     private void handleKeys(char key, boolean newState) {
@@ -623,7 +652,6 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
                 player[0] += MOVE_DISTANCE;
             }
         }
-        draw.repaint();
     }
 
     /**
@@ -691,22 +719,45 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
                 image("FocusForge Icon.png", g);
                 g.setColor(new Color(0, 0, 0, drawState));
                 g.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-            } else if (state == 11) {
-                g.fillRect(-100, -100, SCREEN_WIDTH + 100, SCREEN_HEIGHT + 100);
-                
-                drawPlayer(g);
+            } else if (state >= 10) {
+                if (state < 20) {
+                    if (state == 10)
+                        image("LearningLevelMap.png", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 1000, 700, g);
+                    drawPlayer(g);
+                } else if (state < 30) {
 
-                g.setColor(new Color(255, 0, 0));
+                    g.fillRect(-100, -100, SCREEN_WIDTH + 100, SCREEN_HEIGHT + 100);
+                    
+                    drawPlayer(g);
+    //                 if (keysPressed[0] || keysPressed[1] || keysPressed[2] || keysPressed[3]) handlePlayer();
+                }
+                
+                ArrayList<Hitbox> playerColliding = collidingHitboxes();
+                
                 for (Hitbox ob : obs) {
-                    // System.out.println(ob.x + " " + ob.y + " " + ob.w + " " + ob.h);
-                    g.fillRect(ob.x, ob.y, ob.w, ob.h);
+                    if (debug) {
+                        g.setColor(new Color(rand(256), rand(256), rand(256), 128));
+                        // System.out.println(ob.x + " " + ob.y + " " + ob.w + " " + ob.h);
+                        g.fillRect(ob.x, ob.y, ob.w, ob.h);
+                    }
+                    
+                    if (playerColliding.contains(ob)) {
+                        g.setColor(Color.WHITE);
+                        g.setFont(new Font("Arial", Font.BOLD, 16));
+                        String mess = ob.proximityMessage();
+                        g.drawString(mess, ob.x + ob.w/2 - 4*mess.length(), ob.y+(ob.h/2));
+                    }
                 }
 
-                if (keysPressed[0] || keysPressed[1] || keysPressed[2] || keysPressed[3]) handleMovement();
-            } else if (state == 10){
-                image("LearningLevelMap.png", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 1000, 700, g);
-                drawPlayer(g);
+
             }
+            
+            g.setColor(Color.RED);
+            g.drawString(state + "", SCREEN_WIDTH-30, 30);
+        }
+        
+        private int rand(int lim) {
+            return (int)(Math.random()*lim);
         }
         
         /** 
@@ -716,6 +767,8 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
             g.setColor(new Color(12, 50, 101));
             g.fillRect((int)(player[0] - playerSize[0] / 2), (int)(player[1] - playerSize[1] / 2), playerSize[0], playerSize[1]);
             image("player.png", player[0], player[1], g);
+            g.setColor(Color.RED);
+            g.fillRect((int)player[0], (int)player[1], 5, 5);
         }
         
 

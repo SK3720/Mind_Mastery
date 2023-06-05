@@ -63,8 +63,8 @@ public abstract class Hitbox {
     */ 
     public boolean colliding(double pX, double pY) {
         for (int i = -1; i < 2; i++) {
-            for (int j = -1; j < 2; j++) {
-                if (collidePointRect(pX + pW/2*i, pY + pH/2*j, x, y, x+w, y+h)) {
+            for (int j = -3; j < 4; j++) {
+                if (collidePointRect(pX + pW/2*i, pY + pH/7*j, x, y, x+w, y+h)) {
                     // System.out.println("Collision: " + (pX + pW/2*i) + " " + (pY + pH/2*j) + " " + x + " " + y + " " + (x+w) + " " + (y+h));
                     return true;
                 }
@@ -95,6 +95,6 @@ public abstract class Hitbox {
     }
     
     /** Abstract methods to be implemented by subclasses */ 
-    public abstract void interactedBehaviour();
+    public abstract String interactedBehaviour();
     public abstract String proximityMessage();
 }

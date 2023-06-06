@@ -452,14 +452,12 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
             playerSize = new int[] {20, 50};
         }
         obs = loadObstacles();
-<<<<<<< Updated upstream
-=======
+
         if (state == 10) player = new double[] {50, 175};
         else if (state == 11) player = new double[] {100, 100};
 
         else if (state == 20) player = new double[]{495, 630};
 
->>>>>>> Stashed changes
         frame.setContentPane(drawPanel);
         drawPanel.setVisible(true);
         draw.setVisible(true);

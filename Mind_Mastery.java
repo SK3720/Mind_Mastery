@@ -27,6 +27,7 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
 
 
     /**
+    /**
      Instance Variable Declaration
 
      <-------May 24------->
@@ -82,8 +83,8 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
     double[] player;
     ArrayList<Hitbox> obs;
     boolean[] keysPressed;
-    public final int[] playerSize = {18, 38};
-    final double MOVE_DISTANCE = 4;
+    public final int[] playerSize = {22, 40};
+    final double MOVE_DISTANCE = 10;
 
     // action level
 
@@ -725,10 +726,12 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
                         image("LearningLevelMap.png", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 1000, 700, g);
                     drawPlayer(g);
                 } else if (state < 30) {
-
-                    g.fillRect(-100, -100, SCREEN_WIDTH + 100, SCREEN_HEIGHT + 100);
-
-                    drawPlayer(g);
+                    if (state == 20){
+                        image("FocusForgeMazeLevel.png", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 20, 1000, 700, g);
+                        drawPlayer(g);
+                    }
+                    //g.fillRect(-100, -100, SCREEN_WIDTH + 100, SCREEN_HEIGHT + 100);
+                    //drawPlayer(g);
     //                 if (keysPressed[0] || keysPressed[1] || keysPressed[2] || keysPressed[3]) handlePlayer();
                 }
 
@@ -749,8 +752,6 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
                             g.drawString(mess[i], ob.x + ob.w/2 - 4*mess[i].length(), ob.y+ob.h-60+20*i) ;
                     }
                 }
-
-
             }
             
             g.setColor(Color.RED);
@@ -767,9 +768,9 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
         private void drawPlayer(Graphics g) {
             g.setColor(new Color(12, 50, 101));
             g.fillRect((int)(player[0] - playerSize[0] / 2), (int)(player[1] - playerSize[1] / 2), playerSize[0], playerSize[1]);
-            image("player.png", player[0], player[1], g);
-            g.setColor(Color.RED);
-            g.fillRect((int)player[0], (int)player[1], 5, 5);
+            image("FocusForgeMainCharacter.png", player[0], player[1], g);
+            //g.setColor(Color.RED);
+            //g.fillRect((int)player[0], (int)player[1], 5, 5);
         }
         
 

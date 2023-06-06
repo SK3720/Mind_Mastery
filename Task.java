@@ -36,6 +36,7 @@ public class Task extends Hitbox {
     JPanel content;
     JButton[] buttons;
     JLabel[] texts;
+    int[] vars;
     JFrame frame;
     JButton checkButton;
     boolean complete;
@@ -138,34 +139,53 @@ public class Task extends Hitbox {
         
             content = new JPanel();
             
-            buttons = new JButton[4];
+            buttons = new JButton[5];
             JPanel leftPanel = new JPanel();
             leftPanel.setLayout(new GridBagLayout());
+            JPanel topPanel = new JPanel();
+            topPanel.setLayout(new GridBagLayout());
             GridBagConstraints c = new GridBagConstraints();
-            c.gridx = 0;
+            c.gridx = 1;
             c.weightx = 0.5;
             c.fill = GridBagConstraints.HORIZONTAL;
             
-            String[] labels = {"Doing Homework", "Playing Video Games", "Doing Laundry", "Checking Social Media"};
+            vars = new int[] {rand(30) + 15, rand(20) + 10, rand(2) - 1, rand(20) + 10, rand(10) + 3, rand(2) - 1, rand(4) + 3, rand(5) + 2, rand(3) - 1};
+            
+            topPanel.add(new JLabel("Math Homework"));
+            String[] labels = {String.format("1. %d + %d = %d", vars[0], vars[1], vars[0] + vars[1] + vars[2]), 
+                               String.format("2. %d - %d = %d", vars[3], vars[4], vars[3] - vars[4] + vars[5]), 
+                               String.format("3. %d x %d = %d", vars[6], vars[7], vars[6] * (vars[7] + vars[8])),
+                               "True", "False"};
             for (int i = 0; i < labels.length; i++) {
-                c.insets = new Insets(i > 0 ? boxH/2 : 0, 0, 0, 0);
-                c.gridy = i*2;
-                buttons[i] = new JButton(labels[i]);
-                MouseHandler m = new MouseHandler();
-                buttons[i].addMouseListener(m);
-                buttons[i].addMouseMotionListener(m);
-                buttons[i].setPreferredSize(new Dimension(boxW, boxH));
-                buttons[i].setMaximumSize(new Dimension(boxW, boxH));
-                buttons[i].setTransferHandler(new TransferExporter(labels[i]));
-                
-                leftPanel.add(buttons[i], c);
+                if (i >= 3) {
+                    c.insets = new Insets(i > 0 ? boxH/2 : 0, 0, 0, 0);
+                    c.gridy = i*2;
+                    buttons[i] = new JButton(labels[i]);
+                    MouseHandler m = new MouseHandler();
+                    buttons[i].addMouseListener(m);
+                    buttons[i].addMouseMotionListener(m);
+                    buttons[i].setPreferredSize(new Dimension(boxW, boxH));
+                    buttons[i].setMaximumSize(new Dimension(boxW, boxH));
+                    buttons[i].setTransferHandler(new TransferExporter(labels[i]));
+                    
+                    leftPanel.add(buttons[i], c);
+                } else {
+                    c.insets = new Insets(0, 0, 0, 0);
+                    c.gridx = i*2;
+                    c.gridy = 1;
+                    JLabel text = new JLabel(labels[i]);
+                    text.setPreferredSize(new Dimension(boxW, boxH));
+                    text.setMaximumSize(new Dimension(boxW, boxH));
+                    
+                    topPanel.add(text, c);
+                }
             }
             
-            texts = new JLabel[2];
+            texts = new JLabel[3];
             JPanel rightPanel = new JPanel();
             rightPanel.setLayout(new GridBagLayout());
             for (int i = 0; i < texts.length; i++) {
-                c.insets = new Insets(i == 2 ? boxH : i > 0 ? boxH/3 : 0, 0, 0, 0);
+                c.insets = new Insets(i > 0 ? boxH/3 : 0, 0, 0, 0);
                 c.gridy = i*2;
                 texts[i] = new JLabel("");
                 MouseHandler m = new MouseHandler();
@@ -188,6 +208,7 @@ public class Task extends Hitbox {
             checkButton.setMaximumSize(checkSize);
             checkButton.addMouseListener(new MouseHandler());
             
+            content.add(topPanel, BorderLayout.PAGE_START);
             content.add(leftPanel, BorderLayout.LINE_START);
             content.add(filler, BorderLayout.CENTER);
             content.add(rightPanel, BorderLayout.LINE_END);
@@ -282,7 +303,12 @@ public class Task extends Hitbox {
                 return;
             }
         } else if (type == 1) {
-            
+            if (texts[0].getText().equals("True") == (vars[0] + vars[1] == vars[0] + vars[1] + vars[2])
+             && texts[1].getText().equals("True") == (vars[3] - vars[4] == vars[3] - vars[4] + vars[5])
+             && texts[2].getText().equals("True") == (vars[6] * vars[7] == vars[6] * (vars[7] + vars[8]))) {
+                close();
+                return;
+             }
         }
         System.out.println("check failed");
     }
@@ -355,6 +381,10 @@ public class Task extends Hitbox {
         else if (type == 1) return "Do Math Homework";
         
         else return "Unnamed Task";
+    }
+    
+    private int rand(int lim) {
+        return (int)(Math.random()*lim);
     }
     
     public boolean isComplete() {

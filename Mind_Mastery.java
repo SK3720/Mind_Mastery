@@ -585,9 +585,9 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
             for (Hitbox h : collidingHitboxes()) {
                 if (h instanceof Task && e.getSource() == ((Task)h).getFrame()) {
                     System.out.println("ack");
-                    //if (fr.isComplete()) { // reward for completing task
-                        //score += 500;
-                    //}
+                    if (h.getActive()) { // reward for completing task
+                        score += 500;
+                    }
                 }
             }
         }

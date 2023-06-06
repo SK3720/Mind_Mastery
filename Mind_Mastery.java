@@ -785,9 +785,9 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
 
                 for (Hitbox ob : obs) {
                     if (debug) {
-                        g.setColor(new Color(rand(256), rand(256), rand(256), 128));
+                        //g.setColor(new Color(rand(256), rand(256), rand(256), 128));
                         // System.out.println(ob.x + " " + ob.y + " " + ob.w + " " + ob.h);
-                        g.fillRect(ob.x, ob.y, ob.w, ob.h);
+                        //g.fillRect(ob.x, ob.y, ob.w, ob.h);
                     }
 
                     if (playerColliding.contains(ob)) {
@@ -812,14 +812,14 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
         Private method to draw the player on screen
         */ 
         private void drawPlayer(Graphics g) {
-            g.setColor(new Color(12, 50, 101));
-            g.fillRect((int)(player[0] - playerSize[0] / 2), (int)(player[1] - playerSize[1] / 2), playerSize[0], playerSize[1]);
+            //g.setColor(new Color(12, 50, 101));
+            //g.fillRect((int)(player[0] - playerSize[0] / 2), (int)(player[1] - playerSize[1] / 2), playerSize[0], playerSize[1]);
             System.out.println((int)(player[0] - playerSize[0] / 2) + " " + (int)(player[1] - playerSize[1] / 2) + " " + playerSize[0] + " " + playerSize[1]);
-//             int pWid = 20, pHgt = 50;
-//             if (state == 11 || state == 12) {
-//                 pWid = 40;
-//                 pHgt = 125;
-//             }
+            //int pWid = 20, pHgt = 50;
+            //if (state == 11 || state == 12) {
+            //pWid = 40;
+            //pHgt = 125;
+            //}
             
             image("FocusForgeMainCharacter.png", player[0], player[1], playerSize[0], playerSize[1], g);
             

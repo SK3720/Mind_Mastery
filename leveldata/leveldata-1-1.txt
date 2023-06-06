@@ -1,1 +1,13 @@
-// learning level: learning center
+// learning level: red house
+
+# bookshelf
+655 25 295 105 0
+
+# table plant
+710 420 210 80 0
+
+# broom task
+440 15 55 85 2 1
+
+# couch
+150 490 150 40 0

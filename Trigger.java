@@ -16,8 +16,8 @@ public class Trigger extends Hitbox {
     }
     
     public String interactedBehaviour() {
-    
-        if (id == 5) return "goto 11";
+        if (id == 2) return "goto 11";
+        if (id == 5) return "goto 12";
         else if (id == 10) return "goto 0";
         return "";
     }
@@ -27,8 +27,9 @@ public class Trigger extends Hitbox {
         
         if (id == 1) return "wow";
         
+        if (id == 2) return "Enter the Red House";
         
         if (id == 5) return "Enter the learning center";
-        return null;
+        return "";
     }
 }

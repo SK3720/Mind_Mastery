@@ -38,12 +38,17 @@ public class Task extends Hitbox {
     JLabel[] texts;
     JFrame frame;
     JButton checkButton;
+    boolean complete;
+    WindowAdapter window;
+    
     final int boxW = 200, boxH = 50;
     
-    public Task(int x, int y, int wdt, int hgt, int typ) {
+    public Task(int x, int y, int wdt, int hgt, int typ, WindowAdapter wind) {
         super(x,y,wdt,hgt);
         type = typ;
         content = new JPanel();
+        complete = false;
+        window = wind;
     }
     
     /** 
@@ -59,14 +64,13 @@ public class Task extends Hitbox {
 
     */
     private void load() {
-        frame = new JFrame();
-        
         if (type == 0) {
             /**
              drag and drop system
              (source: https://stackoverflow.com/questions/28844574/drag-and-drop-from-jbutton-to-jcomponent-in-java) 
              */
-        
+            frame = new JFrame("Ordering Tasks");
+            
             content = new JPanel();
             
             buttons = new JButton[4];
@@ -129,6 +133,8 @@ public class Task extends Hitbox {
              drag and drop system
              (source: https://stackoverflow.com/questions/28844574/drag-and-drop-from-jbutton-to-jcomponent-in-java) 
              */
+            
+            frame = new JFrame("Completing Math Homework");
         
             content = new JPanel();
             
@@ -189,6 +195,7 @@ public class Task extends Hitbox {
             
         }
 
+        frame.addWindowListener(window);
         frame.add(content);
         frame.setSize(700, 500);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -285,6 +292,7 @@ public class Task extends Hitbox {
      Private method to dispose of the frame once the task is closed
      */ 
     private void close() {
+        complete = true;
         content.setVisible(false);
         frame.dispose();
      }
@@ -337,24 +345,33 @@ public class Task extends Hitbox {
 
     */ 
     public String interactedBehaviour() {
+        if (complete) return "";
         load();
         return "";
     }
     public String proximityMessage() {
+        if (complete) return "";
         if (type == 0) return "Open Agenda Planner";
         else if (type == 1) return "Do Math Homework";
         
         else return "Unnamed Task";
     }
     
-    
+    public boolean isComplete() {
+        return complete;
+    }
     
     public JFrame getFrame() {
         return frame;
     }
     
     public static void main(String[] args) {
-        Task t = new Task(0,0,0,0,1);
+        Task t = new Task(0,0,0,0,1,new WindowAdapter() {
+            @Override 
+            public void windowClosing(WindowEvent e) {
+                System.out.println("Print thing");
+            }
+        });
         t.interactedBehaviour();
     }
 }

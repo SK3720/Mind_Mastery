@@ -85,6 +85,8 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
     boolean[] keysPressed;
     public final int[] playerSize = {20, 50};
     final double MOVE_DISTANCE = 10;
+    
+    int score;
 
     // action level
 
@@ -261,7 +263,7 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
             if (dat[dat.length-1] == 0) {
                 o = new Obstacle(dat[0], dat[1], dat[2], dat[3]);
             } else if (dat[dat.length-1] == 1) {
-                o = new Task(dat[0], dat[1], dat[2], dat[3], dat[4]);
+                o = new Task(dat[0], dat[1], dat[2], dat[3], dat[4], new WindowDetector());
             } else if (dat[dat.length-1] == 2) {
                 o = new Distraction(dat[0], dat[1], dat[2], dat[3], dat[4]);
             } else {
@@ -285,10 +287,10 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
 
      */
     private void reset() {
+        score = 0;
         mainMenu.setVisible(false);
         levelPanel.setVisible(false);
         drawPanel.setVisible(false);
-
     }
 
 
@@ -567,6 +569,30 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
         }
     }
 
+    /**
+     Nested class to handle mouse events
+     */
+    class WindowDetector extends WindowAdapter {
+
+        /**
+         Public overridden method to log the location of the last mouse click
+
+         @param e The last mouse event
+         */
+        public void windowClosing(WindowEvent e) {
+            JFrame fr;
+            System.out.println(e.getSource());
+            for (Hitbox h : collidingHitboxes()) {
+                if (h instanceof Task && e.getSource() == ((Task)h).getFrame()) {
+                    System.out.println("ack");
+                    if (fr.isComplete()) { // reward for completing task
+                        score += 500;
+                    }
+                }
+            }
+        }
+    }
+
 
     /**
 
@@ -596,6 +622,7 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
     public void keyTyped(KeyEvent k) {}
 
     public void keyPressed(KeyEvent k) {
+        if (state < 10) return;
         char key = k.getKeyChar();
         handleKeys(key, true);
         if (key == 'p') debug = !debug;

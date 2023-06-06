@@ -27,6 +27,17 @@ Class to handle the hitboxes of tasks
       > integrated drag and drop elements from Stack Overflow source
       Contributor: Caleb Chue
 
+    <-------June 4------->
+      > finished agenda planning task
+      Contributor: Caleb Chue
+
+    <-------June 5------->
+      > finished math homework task
+      Contributor: Caleb Chue
+
+    <-------June 6------->
+      > started on sweeping task
+      Contributor: Caleb Chue
 
 */ 
 
@@ -37,12 +48,18 @@ public class Task extends Hitbox {
     JButton[] buttons;
     JLabel[] texts;
     int[] vars;
+    int[][] floorGrid;
     JFrame frame;
     JButton checkButton;
     boolean complete;
+    Drawing draw;
     WindowAdapter window;
     
+    final int FRAME_WIDTH = 700, FRAME_HEIGHT = 500;
+    
     final int boxW = 200, boxH = 50;
+    
+    final int BRUSH_SIZE = 5;
     
     public Task(int x, int y, int wdt, int hgt, int typ, WindowAdapter wind) {
         super(x,y,wdt,hgt);
@@ -151,7 +168,10 @@ public class Task extends Hitbox {
             
             vars = new int[] {rand(30) + 15, rand(20) + 10, rand(2) - 1, rand(20) + 10, rand(10) + 3, rand(2) - 1, rand(4) + 3, rand(5) + 2, rand(3) - 1};
             
-            topPanel.add(new JLabel("Math Homework"));
+            JLabel title = new JLabel("Math Homework");
+            title.setFont(new Font("Arial", Font.BOLD, 24));
+            c.insets = new Insets(10, 300, 0, 0);
+            topPanel.add(title);
             String[] labels = {String.format("1. %d + %d = %d", vars[0], vars[1], vars[0] + vars[1] + vars[2]), 
                                String.format("2. %d - %d = %d", vars[3], vars[4], vars[3] - vars[4] + vars[5]), 
                                String.format("3. %d x %d = %d", vars[6], vars[7], vars[6] * (vars[7] + vars[8])),
@@ -214,14 +234,52 @@ public class Task extends Hitbox {
             content.add(rightPanel, BorderLayout.LINE_END);
             content.add(checkButton, BorderLayout.PAGE_END);
             
+        } else if (type == 2) {
+            frame = new JFrame("Sweeping the Floor");
+            content = new JPanel();
+
+            draw = new Drawing();
+            draw.setFocusable(true);
+            MouseHandler m = new MouseHandler();
+            draw.addMouseListener(m);
+            draw.addMouseMotionListener(m);
+            draw.setPreferredSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
+            
+            floorGrid = new int[50][35];
+            for (int row = 0; row < floorGrid.length; row++) {
+                for (int col = 0; col < floorGrid[row].length; col++) {
+                    floorGrid[row][col] = 1+rand(3);
+                }
+            }
+            
+            content.add(draw);
+            draw.setVisible(true);
+            draw.repaint();
+
+            frame.setContentPane(content);
         }
 
         frame.addWindowListener(window);
-        frame.add(content);
-        frame.setSize(700, 500);
+        frame.setSize(FRAME_WIDTH, FRAME_HEIGHT);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
         
+    }
+    
+    class Drawing extends JComponent {
+        public void paint(Graphics g) {
+            g.setColor(new Color(156, 90, 25));
+            g.fillRect(0,0,700,500);
+            
+            if (type == 2) {
+                for (int row = 0; row < floorGrid.length; row++) {
+                    for (int col = 0; col < floorGrid[row].length; col++) {
+                        g.setColor(new Color(223, 223, 223, 63*floorGrid[row][col]));
+                        g.fillOval(100 + 10*row, 50 + 10*col, 7+rand(9), 10+rand(5));
+                    }
+                }
+            }
+        }
     }
     
     class TransferExporter extends TransferHandler {
@@ -309,6 +367,16 @@ public class Task extends Hitbox {
                 close();
                 return;
              }
+        } else if (type == 2) {
+            for (int[] row : floorGrid) {
+                for (int col : row) {
+                    if (col > 0) return;
+                }
+            }
+            
+            try{Thread.sleep(400);}catch(Exception e){}
+            close();
+            return;
         }
         System.out.println("check failed");
     }
@@ -335,12 +403,32 @@ public class Task extends Hitbox {
     class MouseHandler implements MouseMotionListener, MouseListener {
     
         public void mouseDragged(MouseEvent e) {
-            for (int i = 0; i < buttons.length; i++) {
-                if (e.getSource() == buttons[i]) {
-                    TransferHandler handle = buttons[i].getTransferHandler();
-                    handle.exportAsDrag(buttons[i], e, TransferHandler.COPY);
+            if (type == 0 || type == 1) {
+                for (int i = 0; i < buttons.length; i++) {
+                    if (e.getSource() == buttons[i]) {
+                        TransferHandler handle = buttons[i].getTransferHandler();
+                        handle.exportAsDrag(buttons[i], e, TransferHandler.COPY);
+                    }
                 }
+            } else if (type == 2) {
+                int tempX = e.getX();
+                int tempY = e.getY();
+                System.out.println(tempX + " " + tempY);
+                tempX = (tempX - 100) / 10;
+                tempY = (tempY - 50) / 10;
+                int locX, locY;
+                
+                for (int i = -BRUSH_SIZE/2; i <= BRUSH_SIZE/2; i++) {
+                    for (int j = -BRUSH_SIZE/2; j <= BRUSH_SIZE/2; j++) {
+                        locX = tempX + i;
+                        locY = tempY + j;
+                        if (locX < 0 || locY < 0 || locX >= floorGrid.length || locY >= floorGrid[0].length) continue;
+                        if (floorGrid[locX][locY] > 0) floorGrid[locX][locY] -= 1;
+                    }
+                }
+                checkComplete();
             }
+            draw.repaint();
         }
         public void mouseMoved(MouseEvent e) {}
         
@@ -351,6 +439,7 @@ public class Task extends Hitbox {
             
         }
         public void mouseClicked(MouseEvent e) {
+            System.out.println("click");
             if (e.getSource() == checkButton) {
                 checkComplete();
             }
@@ -396,7 +485,7 @@ public class Task extends Hitbox {
     }
     
     public static void main(String[] args) {
-        Task t = new Task(0,0,0,0,1,new WindowAdapter() {
+        Task t = new Task(0,0,0,0,2,new WindowAdapter() {
             @Override 
             public void windowClosing(WindowEvent e) {
                 System.out.println("Print thing");

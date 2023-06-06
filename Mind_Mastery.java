@@ -83,7 +83,7 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
     double[] player;
     ArrayList<Hitbox> obs;
     boolean[] keysPressed;
-    public final int[] playerSize = {20, 50};
+    public int[] playerSize;
     final double MOVE_DISTANCE = 6;
     
     int score;
@@ -182,6 +182,7 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
         for (int i = 0; i < 4; i++) loadLevelButton(i);
 
         levelPanel.add(levelMenuButtons);
+        playerSize = new int[] {20, 50};
 
         // movement keys
         keysPressed = new boolean[4];
@@ -437,11 +438,20 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
 
      */
     private void loadLevel() {
+        if (state == 10) {
+            player = new double[] {50, 175};
+            playerSize = new int[] {20, 50};
+        } else if (state == 11) {
+            player = new double[] {475, 500};
+            playerSize = new int[] {50, 125};
+        } else if (state == 12) {
+            player = new double[] {475, 500};
+            playerSize = new int[] {50, 125};
+        } else if (state == 20) {
+            player = new double[] {150, 150};
+            playerSize = new int[] {20, 50};
+        }
         obs = loadObstacles();
-        if (state == 10) player = new double[] {50, 175};
-        else if (state == 11) player = new double[] {100, 100};
-
-        else if (state == 20) player = new double[]{150, 150};
 
         frame.setContentPane(drawPanel);
         drawPanel.setVisible(true);
@@ -751,6 +761,10 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
                 if (state < 20) {
                     if (state == 10)
                         image("LearningLevelMap.png", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 1000, 700, g);
+                    if (state == 11)
+                        image("FocusForgeLearningLevelHouseRoom.png", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 25, 1000, 675, g);
+                    if (state == 12)
+                        image("FocusForgeLearningLevelRoom.png", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 25, 1000, 675, g);
                     drawPlayer(g);
                 } else if (state < 30) {
                     if (state == 20){
@@ -793,11 +807,18 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
         Private method to draw the player on screen
         */ 
         private void drawPlayer(Graphics g) {
-            //g.setColor(new Color(12, 50, 101));
-            //g.fillRect((int)(player[0] - playerSize[0] / 2), (int)(player[1] - playerSize[1] / 2), playerSize[0], playerSize[1]);
-            image("FocusForgeMainCharacter.png", player[0], player[1], g);
-            //g.setColor(Color.RED);
-            //g.fillRect((int)player[0], (int)player[1], 5, 5);
+            g.setColor(new Color(12, 50, 101));
+            g.fillRect((int)(player[0] - playerSize[0] / 2), (int)(player[1] - playerSize[1] / 2), playerSize[0], playerSize[1]);
+            int pWid = 20, pHgt = 50;
+            if (state == 11 || state == 12) {
+                pWid = 50;
+                pHgt = 125;
+            }
+            
+            image("FocusForgeMainCharacter.png", player[0], player[1], pWid, pHgt, g);
+            
+            g.setColor(Color.RED);
+            g.fillRect((int)player[0], (int)player[1], 5, 5);
         }
         
 

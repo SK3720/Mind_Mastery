@@ -1,0 +1,67 @@
+# Blue Table with Computer
+127 4 134 47 0
+# Left Wall
+14 3 6 660 0
+# Top Wall
+22 1 953 3 0
+# Right Wall
+976 4 5 655 0
+# Bottom Wall
+20 655 953 5 0
+# Chair
+40 111 50 32 0
+# TV Set
+207 129 177 34 0
+297 43 50 30 0
+# Couch
+431 88 60 130 0
+228 252 148 31 0
+24 311 114 30 0
+# Cactus
+420 290 50 40 0
+# Big Cactus
+148 358 67 75 0
+# Blue Table
+265 435 149 55 0
+# Chair
+39 540 48 22 0
+# Plant
+104 556 28 30 0
+# Shelf
+150 554 150 41 0
+# Chair
+374 583 48 16 0
+# Detailed TV
+227 366 204 10 0
+# Shelf
+516 437 147 36 0
+# Sofa
+699 437 60 139 0
+# Coffee Table
+833 459 74 48 0
+# Small Antenna TV
+787 611 165 36 0
+# Chair
+593 348 50 22 0
+# Blue Table
+685 291 146 44 0
+# Beige Table
+585 191 84 64 0
+# Plant
+845 302 30 42 0
+# Beige Task Table
+881 184 86 101 0
+# Plant
+547 145 39 53 0
+# Shelf
+587 60 149 31 0
+# Block
+587 95 3 39 0
+# Chair
+715 182 51 23 0
+# TV Set
+807 7 34 204 0
+# Cat
+841 64 134 13 0
+# Sign
+537 557 86 42 0

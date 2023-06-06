@@ -84,7 +84,7 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
     ArrayList<Hitbox> obs;
     boolean[] keysPressed;
     public final int[] playerSize = {20, 50};
-    final double MOVE_DISTANCE = 10;
+    final double MOVE_DISTANCE = 6;
     
     int score;
 
@@ -585,9 +585,9 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
             for (Hitbox h : collidingHitboxes()) {
                 if (h instanceof Task && e.getSource() == ((Task)h).getFrame()) {
                     System.out.println("ack");
-                    if (fr.isComplete()) { // reward for completing task
-                        score += 500;
-                    }
+                    //if (fr.isComplete()) { // reward for completing task
+                        //score += 500;
+                    //}
                 }
             }
         }

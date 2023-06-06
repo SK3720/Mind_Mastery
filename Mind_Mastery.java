@@ -83,7 +83,7 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
     double[] player;
     ArrayList<Hitbox> obs;
     boolean[] keysPressed;
-    public final int[] playerSize = {22, 40};
+    public final int[] playerSize = {20, 50};
     final double MOVE_DISTANCE = 10;
 
     // action level
@@ -766,8 +766,8 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
         Private method to draw the player on screen
         */ 
         private void drawPlayer(Graphics g) {
-            g.setColor(new Color(12, 50, 101));
-            g.fillRect((int)(player[0] - playerSize[0] / 2), (int)(player[1] - playerSize[1] / 2), playerSize[0], playerSize[1]);
+            //g.setColor(new Color(12, 50, 101));
+            //g.fillRect((int)(player[0] - playerSize[0] / 2), (int)(player[1] - playerSize[1] / 2), playerSize[0], playerSize[1]);
             image("FocusForgeMainCharacter.png", player[0], player[1], g);
             //g.setColor(Color.RED);
             //g.fillRect((int)player[0], (int)player[1], 5, 5);

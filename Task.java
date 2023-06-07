@@ -467,9 +467,9 @@ public class Task extends Hitbox {
     public String proximityMessage() {
         if (complete) return "";
         if (type == 0) return "Open Agenda Planner";
-        else if (type == 1) return "Do Math Homework";
+        if (type == 1) return "Do Math Homework";
         
-        else return "Unnamed Task";
+        return "Unnamed Task";
     }
     
     private int rand(int lim) {

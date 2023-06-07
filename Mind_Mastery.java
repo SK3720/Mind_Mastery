@@ -869,9 +869,9 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
 
                 for (Hitbox ob : obs) {
                     if (debug) {
-                        //g.setColor(new Color(rand(256), rand(256), rand(256), 128));
-                        //System.out.println(ob.x + " " + ob.y + " " + ob.w + " " + ob.h);
-                        //g.fillRect(ob.x, ob.y, ob.w, ob.h);
+                        g.setColor(new Color(rand(256), rand(256), rand(256), 128));
+                        System.out.println(ob.x + " " + ob.y + " " + ob.w + " " + ob.h);
+                        g.fillRect(ob.x, ob.y, ob.w, ob.h);
                     }
 
                     if (playerColliding.contains(ob) && interacting == 0) {

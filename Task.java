@@ -115,6 +115,8 @@ public class Task extends Hitbox {
             }
             
             texts = new JLabel[4];
+            Color corr = new Color(175, 255, 166), incorr = new Color(242, 162, 162);
+            
             JPanel rightPanel = new JPanel();
             rightPanel.setLayout(new GridBagLayout());
             for (int i = 0; i < labels.length; i++) {
@@ -122,6 +124,7 @@ public class Task extends Hitbox {
                 c.gridy = i*2;
                 texts[i] = new JLabel("");
                 MouseHandler m = new MouseHandler();
+                
                 texts[i].addMouseListener(m);
                 texts[i].addMouseMotionListener(m);
                 texts[i].setBorder(new CompoundBorder(new LineBorder(Color.DARK_GRAY), new EmptyBorder(boxH/2, boxW/2, boxH/2, boxW/2)));
@@ -256,9 +259,9 @@ public class Task extends Hitbox {
             draw.setVisible(true);
             draw.repaint();
 
-            frame.setContentPane(content);
         }
 
+        frame.setContentPane(content);
         frame.addWindowListener(window);
         frame.setSize(FRAME_WIDTH, FRAME_HEIGHT);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -268,10 +271,14 @@ public class Task extends Hitbox {
     
     class Drawing extends JComponent {
         public void paint(Graphics g) {
-            g.setColor(new Color(156, 90, 25));
-            g.fillRect(0,0,700,500);
-            
             if (type == 2) {
+                g.setColor(new Color(156, 90, 25));
+                g.fillRect(0,0,700,500);
+                
+                g.setColor(Color.WHITE);
+                g.setFont(new Font("Arial", Font.BOLD, 15));
+                g.drawString("Drag your mouse over all the dust to sweep the floor!", 150, 40);
+                
                 for (int row = 0; row < floorGrid.length; row++) {
                     for (int col = 0; col < floorGrid[row].length; col++) {
                         g.setColor(new Color(223, 223, 223, 63*floorGrid[row][col]));
@@ -427,8 +434,8 @@ public class Task extends Hitbox {
                     }
                 }
                 checkComplete();
+                draw.repaint();
             }
-            draw.repaint();
         }
         public void mouseMoved(MouseEvent e) {}
         

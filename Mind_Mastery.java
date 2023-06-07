@@ -437,7 +437,7 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
             player = new double[]{50, 175};
             playerSize = new int[]{20, 50};
         } else if (state == 11) {
-            player = new double[]{475, 550};
+            player = new double[]{475, 500};
             playerSize = new int[]{45, 120};
         } else if (state == 12) {
             player = new double[]{475, 500};
@@ -448,18 +448,13 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
             player = new double[]{426, 170};
             playerSize = new int[]{20, 50};
         } else if (state == 20) {
-            player = new double[]{150, 150};
+            player = new double[]{150, 140};
             playerSize = new int[]{20, 50};
         } else if (state == 30) {
             player = new double[]{150, 150};
             playerSize = new int[]{20, 50};
         }
         obs = loadObstacles();
-
-        if (state == 10) player = new double[]{50, 175};
-        else if (state == 11) player = new double[]{100, 100};
-
-        else if (state == 20) player = new double[]{495, 630};
 
         frame.setContentPane(drawPanel);
         drawPanel.setVisible(true);
@@ -660,10 +655,6 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
         char key = k.getKeyChar();
         handleKeys(key, true);
         if (key == 'p') debug = !debug;
-        if (key == 'e') if (collidingHitboxes().size() > 0) interact(collidingHitboxes().get(0));
-
-        if (debug)
-            System.out.println("Pressed: " + (keysPressed[0] ? "W " : "") + (keysPressed[1] ? "A " : "") + (keysPressed[2] ? "S " : "") + (keysPressed[3] ? "D " : ""));
         if (key == 'e') {
             if (interacting > 0) interacting -= 1;
             else if (collidingHitboxes().size() > 0) interact(collidingHitboxes().get(0));
@@ -869,9 +860,9 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
 
                 for (Hitbox ob : obs) {
                     if (debug) {
-                        //g.setColor(new Color(rand(256), rand(256), rand(256), 128));
-                        //System.out.println(ob.x + " " + ob.y + " " + ob.w + " " + ob.h);
-                        //g.fillRect(ob.x, ob.y, ob.w, ob.h);
+                        g.setColor(new Color(rand(256), rand(256), rand(256), 128));
+                        // System.out.println(ob.x + " " + ob.y + " " + ob.w + " " + ob.h);
+                        g.fillRect(ob.x, ob.y, ob.w, ob.h);
                     }
 
                     if (playerColliding.contains(ob) && interacting == 0) {

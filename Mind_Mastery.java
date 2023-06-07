@@ -75,7 +75,7 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
     JButton learningLevelButton, mazeLevelButton, actionLevelButton, LeaderboardButton;
 
     // credits
-    JPanel credPanel;
+    JPanel credPanel, instrPanel;
 
     Thread thread;
 
@@ -410,7 +410,11 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
      Private method to handle the display of the credits screen
      */
     private void credits() {
-        frame.setContentPane(credPanel);
+        drawPanel.setVisible(true);
+        draw.setVisible(true);
+        frame.setContentPane(drawPanel);
+        frame.getContentPane().setBackground(new Color(191, 215, 255));
+        frame.setVisible(true);
     }
 
 
@@ -418,7 +422,11 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
      Private method to handle the display of the instructions screen
      */
     private void instructions() {
-
+        drawPanel.setVisible(true);
+        draw.setVisible(true);
+        frame.setContentPane(drawPanel);
+        frame.getContentPane().setBackground(new Color(191, 215, 255));
+        frame.setVisible(true);
     }
 
 
@@ -534,9 +542,11 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
         } else if (e.getSource() == mainButtons[1]) { // how to play
             state = 3;
             reset();
+            instructions();
         } else if (e.getSource() == mainButtons[2]) { // credits
             state = 4;
             reset();
+            credits();
         } else if (e.getSource() == mainButtons[3]) { // exit button
             frame.setVisible(false);
             frame.dispose();
@@ -762,6 +772,62 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
                 image("FocusForge Icon.png", g);
                 g.setColor(new Color(0, 0, 0, drawState));
                 g.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+            } else if (state == 3) {
+                Color mainMenuBG = new Color(40, 87, 173);
+                g.setColor(mainMenuBG);
+                g.fillRoundRect (50, 30, 900, 600,50, 50);
+                g.setColor(Color.WHITE);
+                g.setFont(new Font("Arial", Font.BOLD, 22));
+                g.drawString("Learning Level: ", 75, 85);
+                g.setFont(new Font("Arial", Font.PLAIN, 20));
+                g.drawString("The Learning Level allows you to navigate the map (Using keyboard controls", 250, 83);
+                g.drawString("W,A,S, & D). By interacting with characters on screen, an opportunity to",250,111);
+                g.drawString("learn about the impacts of Attention Disorders is presented. Signs will also",250,139);
+                g.drawString("be available around the map as a guide to locations as well as for instructions.",250,166);
+
+                g.setFont(new Font("Arial", Font.BOLD, 22));
+                g.drawString("Maze Level: ", 75, 274);
+                g.setFont(new Font("Arial", Font.PLAIN, 20));
+                g.drawString("The Maze Level provides you with an interesting and engaging way to apply", 250, 273);
+                g.drawString("the knowledge gained throughout the learning level. By navigating a maze",250,300);
+                g.drawString("completed. Arrows will indicate the tasks within and completing tasks which",250,327);
+                g.drawString("test knowledge acquired, the maze level can be the maze.", 250, 354);
+
+                g.setFont(new Font("Arial", Font.BOLD, 22));
+                g.drawString("Escape Level: ", 75, 464);
+                g.setFont(new Font("Arial", Font.PLAIN, 20));
+                g.drawString("ok", 250, 463);
+                g.drawString("ok",250,490);
+                g.drawString("ok",250,517);
+                g.drawString("ok", 250, 544);
+            } else if (state == 4){
+                Color mainMenuBG = new Color(40, 87, 173);
+                g.setColor(mainMenuBG);
+                g.fillRoundRect (50, 30, 900, 600,50, 50);
+                g.setColor(Color.WHITE);
+                g.setFont(new Font("Arial", Font.BOLD, 22));
+                g.drawString("Learning Level: ", 75, 85);
+                g.setFont(new Font("Arial", Font.PLAIN, 20));
+                g.drawString("ok", 250, 83);
+                g.drawString("ok",250,111);
+                g.drawString("ok",250,139);
+                g.drawString("ok",250,166);
+
+                g.setFont(new Font("Arial", Font.BOLD, 22));
+                g.drawString("Maze Level: ", 75, 274);
+                g.setFont(new Font("Arial", Font.PLAIN, 20));
+                g.drawString("ok", 250, 273);
+                g.drawString("ok",250,300);
+                g.drawString("ok",250,327);
+                g.drawString("ok", 250, 354);
+
+                g.setFont(new Font("Arial", Font.BOLD, 22));
+                g.drawString("Escape Level: ", 75, 464);
+                g.setFont(new Font("Arial", Font.PLAIN, 20));
+                g.drawString("ok", 250, 463);
+                g.drawString("ok",250,490);
+                g.drawString("ok",250,517);
+                g.drawString("ok", 250, 544);
             } else if (state >= 10) {
                 if (state < 20) {
                     if (state == 10)
@@ -776,9 +842,6 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
                         image("FocusForgeMazeLevel.png", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 20, 1000, 700, g);
                         drawPlayer(g);
                     }
-                    //g.fillRect(-100, -100, SCREEN_WIDTH + 100, SCREEN_HEIGHT + 100);
-                    //drawPlayer(g);
-    //                 if (keysPressed[0] || keysPressed[1] || keysPressed[2] || keysPressed[3]) handlePlayer();
                 }
 
                 ArrayList<Hitbox> playerColliding = collidingHitboxes();

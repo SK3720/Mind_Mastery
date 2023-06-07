@@ -84,6 +84,8 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
     final double MOVE_DISTANCE = 6;
 
     int score;
+    int interacting;
+    Hitbox source;
 
     // action level
 
@@ -131,7 +133,7 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
      */
     private void load() {
 
-        // drawing 
+        // drawing
         draw = new Drawing();
         draw.addMouseListener(new ClickHandler());
         draw.addKeyListener(this);
@@ -439,6 +441,11 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
         } else if (state == 12) {
             player = new double[]{475, 500};
             playerSize = new int[]{45, 120};
+            player = new double[] {475, 500};
+            playerSize = new int[] {45, 120};
+        } else if (state == 13) {
+            player = new double[] {426, 170};
+            playerSize = new int[] {20, 50};
         } else if (state == 20) {
             player = new double[]{150, 150};
             playerSize = new int[]{20, 50};
@@ -615,12 +622,17 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
      */
     private void interact(Hitbox h) {
         System.out.println("interacted with " + h);
-        String[] ins = h.interactedBehaviour().split(" ");
+        String original = h.interactedBehaviour();
+        String[] ins = original.split(" ");
         if (ins.length == 0) return;
 
         if (ins[0].equals("goto")) {
             state = Integer.parseInt(ins[1]);
             loadLevel();
+        } else if (ins[0].equals("paragraph")) {
+            ins = original.split("\n");
+            interacting = ins.length - 1;
+            source = h;
         }
     }
 
@@ -651,6 +663,12 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
 
         if (debug)
             System.out.println("Pressed: " + (keysPressed[0] ? "W " : "") + (keysPressed[1] ? "A " : "") + (keysPressed[2] ? "S " : "") + (keysPressed[3] ? "D " : ""));
+        if (key == 'e') {
+            if (interacting > 0) interacting -= 1;
+            else if (collidingHitboxes().size() > 0) interact(collidingHitboxes().get(0));
+        }
+
+        if (debug) System.out.println("Pressed: " + (keysPressed[0] ? "W " : "") + (keysPressed[1] ? "A " : "") + (keysPressed[2] ? "S " : "") + (keysPressed[3] ? "D " : ""));
         handlePlayer();
         draw.repaint();
     }
@@ -769,7 +787,7 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
                 g.setColor(mainMenuBG);
                 g.fillRoundRect(50, 30, 900, 600, 50, 50);
                 g.setColor(Color.WHITE);
-                g.setFont(new Font("Arial", Font.BOLD, 22));
+                g.setFont(new Font("Arial", Font.BOLD,22));
                 g.drawString("Learning Level: ", 75, 85);
                 g.setFont(new Font("Arial", Font.PLAIN, 20));
 
@@ -828,7 +846,7 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
                 g.drawString("ok", 250, 544);
             } else if (state >= 10) {
                 if (state < 20) {
-                    if (state == 10)
+                    if (state == 10 || state == 13)
                         image("LearningLevelMap.png", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 1000, 700, g);
                     if (state == 11)
                         image("FocusForgeLearningLevelHouseRoom.png", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 25, 1000, 675, g);
@@ -850,13 +868,14 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
                 for (Hitbox ob : obs) {
                     if (debug) {
                         //g.setColor(new Color(rand(256), rand(256), rand(256), 128));
-                        // System.out.println(ob.x + " " + ob.y + " " + ob.w + " " + ob.h);
+                        //System.out.println(ob.x + " " + ob.y + " " + ob.w + " " + ob.h);
                         //g.fillRect(ob.x, ob.y, ob.w, ob.h);
                     }
 
-                    if (playerColliding.contains(ob)) {
+                    if (playerColliding.contains(ob) && interacting == 0) {
                         g.setColor(Color.WHITE);
                         g.setFont(new Font("Arial", Font.BOLD, 16));
+                        System.out.println("interacted w/" + ob);
                         String[] mess = ob.proximityMessage().split("\n");
                         for (int i = 0; i < mess.length; i++)
                             g.drawString(mess[i], ob.x + ob.w / 2 - 4 * mess[i].length(), ob.y + ob.h - 60 + 20 * i);
@@ -866,6 +885,20 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
 
             g.setColor(Color.RED);
             g.drawString(state + "", SCREEN_WIDTH - 30, 30);
+            g.drawString(state + "", SCREEN_WIDTH-30, 30);
+
+            if (interacting > 0) {
+                g.setColor(Color.WHITE);
+                g.setFont(new Font("Arial", Font.BOLD, 18));
+
+                String[] message = source.toString().split(" ");
+                int[] messageLoc = new int[4];
+                for (int i = 0; i < 4; i++) messageLoc[i] = Integer.parseInt(message[i]);
+
+                message = source.interactedBehaviour().split("\n");
+
+                g.drawString(message[message.length - interacting], (messageLoc[0] + messageLoc[2] - message[message.length - interacting].length()*3) / 2, messageLoc[1]);
+            }
         }
 
         private int rand(int lim) {

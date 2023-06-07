@@ -17,10 +17,13 @@ public class Trigger extends Hitbox {
     
     public String interactedBehaviour() {
         if (id == 2) return "goto 11";
+        if (id == 3) return "paragraph \nOh hi, didn't see you there. *sigh*\nSchool hasn't been too good for me...\nI can't focus in class and it's really bringing down my grades.\nI need a better way to focus in the future...";
+        if (id == 4) return "goto 13";
         if (id == 5) return "goto 12";
-        else if (id == 10) return "goto 0";
+        if (id == 10) return "goto 0";
         return "";
     }
+    
     public String proximityMessage() {
         // learning sign 1
         if (id == 0) return "Welcome to the Learning Area! \n Head to the Red House to begin.";
@@ -29,7 +32,12 @@ public class Trigger extends Hitbox {
         
         if (id == 2) return "Enter the Red House";
         
+        if (id == 3) return "Talk to James";
+        
+        if (id == 4) return "Exit the Red House";
+        
         if (id == 5) return "Enter the learning center";
+        
         return "";
     }
 }

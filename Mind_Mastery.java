@@ -15,49 +15,47 @@ import javax.swing.*;
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
 import java.util.*;
 
 public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
     // JFrame to hold all content
     private JFrame frame;
     Drawing draw;
-    
+
     boolean debug = true;
 
 
     /**
-    /**
-     Instance Variable Declaration
-
-     <-------May 24------->
-       > deprecated screenSize in favour of a set size application
-       Contributor: Caleb Chue
-
-     <-------May 26------->
-       > changed player hitbox to align with the temporary sprite
-       Contributor: Caleb Chue
-
-     <-------June 2------->
-       > attempt to implement Runnable
-       Contributor: Caleb Chue
-
-
+     * /**
+     * Instance Variable Declaration
+     * <p>
+     * <-------May 24------->
+     * > deprecated screenSize in favour of a set size application
+     * Contributor: Caleb Chue
+     * <p>
+     * <-------May 26------->
+     * > changed player hitbox to align with the temporary sprite
+     * Contributor: Caleb Chue
+     * <p>
+     * <-------June 2------->
+     * > attempt to implement Runnable
+     * Contributor: Caleb Chue
      */
     final int SCREEN_WIDTH = 1000, SCREEN_HEIGHT = 700;
     int locx, locy;
 
     /**
-     States:
-     0: splashscreen
-     1: main menu
-     2: level select
-     3: instructions
-     4: credits
-
-     10: learning level
-     11: maze level
-     12: action level */
+     * States:
+     * 0: splashscreen
+     * 1: main menu
+     * 2: level select
+     * 3: instructions
+     * 4: credits
+     * <p>
+     * 10: learning level
+     * 11: maze level
+     * 12: action level
+     */
 
     int state;
 
@@ -79,13 +77,12 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
 
     Thread thread;
 
-    // learning/maze level
     double[] player;
     ArrayList<Hitbox> obs;
     boolean[] keysPressed;
     public int[] playerSize;
     final double MOVE_DISTANCE = 6;
-    
+
     int score;
 
     // action level
@@ -105,34 +102,32 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
 
 
     /**
-     Private method to load content for the main menu, splashscreen,
-     level select, instruction, and credits screen, and buttons
-     for user navigation between pages
-
-     <-------May 17------->
-     > added loading of drawing and drawing panel, main menu and associated buttons
-     > added loading of main frame, sizing, and display
-     Contributor: Caleb Chue
-
-     <-------May 24------->
-     > added loading of level select buttons
-     > added outer JFrame loading certain panels
-     Contributor: Caleb Chue
-
-     <-------May 25------->
-     > added loading of keysPressed boolean array
-     Contributor: Caleb Chue
-
-     <-------May 31------->
-     > added leaderboard button to level select screen.
-     > formatted button positions and UI for level selection screen
-     Contributor: Shiv Kanade
-     
-     <-------June 2------->
-     > added loading of thread
-     Contributor: Caleb Chue
-
-
+     * Private method to load content for the main menu, splashscreen,
+     * level select, instruction, and credits screen, and buttons
+     * for user navigation between pages
+     * <p>
+     * <-------May 17------->
+     * > added loading of drawing and drawing panel, main menu and associated buttons
+     * > added loading of main frame, sizing, and display
+     * Contributor: Caleb Chue
+     * <p>
+     * <-------May 24------->
+     * > added loading of level select buttons
+     * > added outer JFrame loading certain panels
+     * Contributor: Caleb Chue
+     * <p>
+     * <-------May 25------->
+     * > added loading of keysPressed boolean array
+     * Contributor: Caleb Chue
+     * <p>
+     * <-------May 31------->
+     * > added leaderboard button to level select screen.
+     * > formatted button positions and UI for level selection screen
+     * Contributor: Shiv Kanade
+     * <p>
+     * <-------June 2------->
+     * > added loading of thread
+     * Contributor: Caleb Chue
      */
     private void load() {
 
@@ -182,7 +177,7 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
         for (int i = 0; i < 4; i++) loadLevelButton(i);
 
         levelPanel.add(levelMenuButtons);
-        playerSize = new int[] {20, 50};
+        playerSize = new int[]{20, 50};
 
         // movement keys
         keysPressed = new boolean[4];
@@ -197,30 +192,30 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
         frame.add(mainMenu);
         frame.add(levelPanel);
         frame.addKeyListener(this);
+        frame.setFocusTraversalKeysEnabled(false);
 
         frame.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
         frame.setResizable(false);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
+        frame.setFocusable(true);
 
         reset();
     }
 
 
-    /** 
-    Private method to handle loading hitboxes from a file for
-    learning and action levels
-    
-    @param path The path of the file to load from
-    @return An ArrayList of Strings of each line in the file
-    
-    
-    */ 
+    /**
+     * Private method to handle loading hitboxes from a file for
+     * learning and action levels
+     *
+     * @param path The path of the file to load from
+     * @return An ArrayList of Strings of each line in the file
+     */
     private ArrayList<String> loadFromFile(String path) {
         ArrayList<String> arr = new ArrayList<String>();
         try {
             Scanner sc = new Scanner(new File(path));
-            String temp = "";
+            String temp;
             while (sc.hasNext()) {
                 temp = sc.nextLine();
                 arr.add(temp);
@@ -233,24 +228,23 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
 
 
     /**
-     Private method to load and return a list of obstacles for the
-     current stage of the action or learning level
-
-     @return A List of Obstacle objects from the stage
-     
-     <-------May 26------->
-       > created method
-       Contributor: Caleb Chue
-    
-     <-------May 28------->
-       > changed file path
-       Contributor: Caleb Chue
-
-    <-------June 4------->
-       > changed file path again
-       > made method dependent on state
-       Contributor: Caleb Chue
-
+     * Private method to load and return a list of obstacles for the
+     * current stage of the action or learning level
+     *
+     * @return A List of Obstacle objects from the stage
+     * <p>
+     * <-------May 26------->
+     * > created method
+     * Contributor: Caleb Chue
+     * <p>
+     * <-------May 28------->
+     * > changed file path
+     * Contributor: Caleb Chue
+     * <p>
+     * <-------June 4------->
+     * > changed file path again
+     * > made method dependent on state
+     * Contributor: Caleb Chue
      */
     private ArrayList<Hitbox> loadObstacles() {
         ArrayList<Hitbox> tobs = new ArrayList<Hitbox>();
@@ -261,11 +255,11 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
             int[] dat = new int[spl.length];
             for (int i = 0; i < spl.length; i++) dat[i] = Integer.parseInt(spl[i]);
             Hitbox o;
-            if (dat[dat.length-1] == 0) {
+            if (dat[dat.length - 1] == 0) {
                 o = new Obstacle(dat[0], dat[1], dat[2], dat[3]);
-            } else if (dat[dat.length-1] == 1) {
+            } else if (dat[dat.length - 1] == 1) {
                 o = new Task(dat[0], dat[1], dat[2], dat[3], dat[4], new WindowDetector());
-            } else if (dat[dat.length-1] == 2) {
+            } else if (dat[dat.length - 1] == 2) {
                 o = new Distraction(dat[0], dat[1], dat[2], dat[3], dat[4]);
             } else {
                 o = new Trigger(dat[0], dat[1], dat[2], dat[3], dat[4]);
@@ -279,13 +273,12 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
 
 
     /**
-     Private method to reset the frame, setting all panels invisible
-
-     <-------May 24------->
-     > created method, set main menu, level select, drawing,
-     learning level, and maze level panels to be invisible
-     Contributor: Caleb Chue
-
+     * Private method to reset the frame, setting all panels invisible
+     * <p>
+     * <-------May 24------->
+     * > created method, set main menu, level select, drawing,
+     * learning level, and maze level panels to be invisible
+     * Contributor: Caleb Chue
      */
     private void reset() {
         score = 0;
@@ -296,15 +289,14 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
 
 
     /**
-     Private method to simplify loading new buttons on the main menu
-
-     @param index The index of the button within the array of JButtons
-
-
-     <-------May 18------->
-     > added loading of JButtons for convenience
-     Contributor: Caleb Chue
-
+     * Private method to simplify loading new buttons on the main menu
+     *
+     * @param index The index of the button within the array of JButtons
+     *              <p>
+     *              <p>
+     *              <-------May 18------->
+     *              > added loading of JButtons for convenience
+     *              Contributor: Caleb Chue
      */
     private void loadMainButton(int index) {
         mainButtons[index].addActionListener(this);
@@ -330,24 +322,22 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
 
 
     /**
-     Private method to handle the displaying of the splashscreen, including the delays for it
-
-     <-------May 16------->
-     > added displaying of splashscreen
-     > added fade out code
-     Contributor: Caleb Chue
-
-     <-------May 18------->
-     > after integration to JPanel and individual panel, the
-     splashscreen wouldn't fade in and would not show on screen
-     > fixed issues, fades out properly
-     Contributor: Caleb Chue
-
-     <-------May 23------->
-     > changed background color of splashscreen
-     Contributor: Shiv Kanade
-
-
+     * Private method to handle the displaying of the splashscreen, including the delays for it
+     * <p>
+     * <-------May 16------->
+     * > added displaying of splashscreen
+     * > added fade out code
+     * Contributor: Caleb Chue
+     * <p>
+     * <-------May 18------->
+     * > after integration to JPanel and individual panel, the
+     * splashscreen wouldn't fade in and would not show on screen
+     * > fixed issues, fades out properly
+     * Contributor: Caleb Chue
+     * <p>
+     * <-------May 23------->
+     * > changed background color of splashscreen
+     * Contributor: Shiv Kanade
      */
     private void splashScreen() {
         // splashscreen
@@ -370,18 +360,16 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
 
 
     /**
-     Private method to handle the display of the main menu
-
-     <-------May 18------->
-     > added buttons and visibility
-     Contributor: Caleb Chue
-
-     <-------May 19------->
-     > changed background color of main menu
-     > made main menu panel appear on top as content pane
-     Contributor: Caleb Chue
-
-
+     * Private method to handle the display of the main menu
+     * <p>
+     * <-------May 18------->
+     * > added buttons and visibility
+     * Contributor: Caleb Chue
+     * <p>
+     * <-------May 19------->
+     * > changed background color of main menu
+     * > made main menu panel appear on top as content pane
+     * Contributor: Caleb Chue
      */
     private void mainMenu() {
         frame.setContentPane(mainMenu);
@@ -396,8 +384,7 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
     }
 
     /**
-     Private method
-
+     * Private method
      */
     private void levelSelect() {
         frame.setContentPane(levelPanel);
@@ -407,7 +394,7 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
 
 
     /**
-     Private method to handle the display of the credits screen
+     * Private method to handle the display of the credits screen
      */
     private void credits() {
         drawPanel.setVisible(true);
@@ -419,7 +406,7 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
 
 
     /**
-     Private method to handle the display of the instructions screen
+     * Private method to handle the display of the instructions screen
      */
     private void instructions() {
         drawPanel.setVisible(true);
@@ -434,35 +421,35 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
      Private method to handle the display of the learning level
      */
 
-
-
     /**
-     Private method to handle the display of the maze level
-
-     <-------May 24------->
-     > created method
-     > added redrawing on clicking on a Drawing
-     Contributor: Caleb Chue
-
+     * Private method to handle the display of the maze level
+     * <p>
+     * <-------May 24------->
+     * > created method
+     * > added redrawing on clicking on a Drawing
+     * Contributor: Caleb Chue
      */
     private void loadLevel() {
         if (state == 10) {
-            player = new double[] {50, 175};
-            playerSize = new int[] {20, 50};
+            player = new double[]{50, 175};
+            playerSize = new int[]{20, 50};
         } else if (state == 11) {
-            player = new double[] {475, 550};
-            playerSize = new int[] {45, 120};
+            player = new double[]{475, 550};
+            playerSize = new int[]{45, 120};
         } else if (state == 12) {
-            player = new double[] {475, 500};
-            playerSize = new int[] {45, 120};
+            player = new double[]{475, 500};
+            playerSize = new int[]{45, 120};
         } else if (state == 20) {
-            player = new double[] {150, 150};
-            playerSize = new int[] {20, 50};
+            player = new double[]{150, 150};
+            playerSize = new int[]{20, 50};
+        } else if (state == 30) {
+            player = new double[]{150, 150};
+            playerSize = new int[]{20, 50};
         }
         obs = loadObstacles();
 
-        if (state == 10) player = new double[] {50, 175};
-        else if (state == 11) player = new double[] {100, 100};
+        if (state == 10) player = new double[]{50, 175};
+        else if (state == 11) player = new double[]{100, 100};
 
         else if (state == 20) player = new double[]{495, 630};
 
@@ -490,25 +477,25 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
     }
 
     /**
-    Overridden method to run the program thread
-    */
+     * Overridden method to run the program thread
+     */
     @Override
     public void run() {
         handlePlayer();
         draw.repaint();
-        if (debug) System.out.println("Pressed: " + (keysPressed[0] ? "W " : "") + (keysPressed[1] ? "A " : "") + (keysPressed[2] ? "S " : "") + (keysPressed[3] ? "D " : ""));
+        if (debug)
+            System.out.println("Pressed: " + (keysPressed[0] ? "W " : "") + (keysPressed[1] ? "A " : "") + (keysPressed[2] ? "S " : "") + (keysPressed[3] ? "D " : ""));
     }
 
 
     /**
-     Private method to simplify delaying the program by a certain amount of time
-
-     @param ms The number of milliseconds to delay by
-
-     <-------May 16------->
-     > added method to help sleep the program
-     Contributor: Caleb Chue
-
+     * Private method to simplify delaying the program by a certain amount of time
+     *
+     * @param ms The number of milliseconds to delay by
+     *           <p>
+     *           <-------May 16------->
+     *           > added method to help sleep the program
+     *           Contributor: Caleb Chue
      */
     public void sleep(int ms) {
         try {
@@ -518,23 +505,23 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
     }
 
     /**
-     Public overridden method to handle events from various sources
-
-     @param e An action event to handle
-
-     <-------May 16------->
-     > added exit button
-     > added redrawing on clicking on a Drawing
-     Contributor: Caleb Chue
-
-     <-------May 17------->
-     > added functionality to other buttons from main menu,
-     such as level select, instructions, and credits
-     Contributor: Caleb Chue
-
+     * Public overridden method to handle events from various sources
+     *
+     * @param e An action event to handle
+     *          <p>
+     *          <-------May 16------->
+     *          > added exit button
+     *          > added redrawing on clicking on a Drawing
+     *          Contributor: Caleb Chue
+     *          <p>
+     *          <-------May 17------->
+     *          > added functionality to other buttons from main menu,
+     *          such as level select, instructions, and credits
+     *          Contributor: Caleb Chue
      */
     public void actionPerformed(ActionEvent e) {
         // main menu
+
         if (e.getSource() == mainButtons[0]) { // level select
             state = 2;
             reset();
@@ -568,24 +555,28 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
             reset();
             loadLevel();
             if (debug) System.out.println("Action trigger");
+        } else if (e.getSource() == levelButtons[3]) {
+            state = 40;
+            reset();
+            loadLeaderboard();
         } else if (e.getSource() == draw) {
             draw.repaint();
         }
-
-
-        // draw.repaint();
     }
 
+    public void loadLeaderboard() {
+        Leaderboard LeaderboardCurrent = new Leaderboard();
+    }
 
     /**
-     Nested class to handle mouse events
+     * Nested class to handle mouse events
      */
     class ClickHandler extends MouseAdapter {
 
         /**
-         Public overridden method to log the location of the last mouse click
-
-         @param e The last mouse event
+         * Public overridden method to log the location of the last mouse click
+         *
+         * @param e The last mouse event
          */
         public void mouseClicked(MouseEvent e) {
             locx = e.getX();
@@ -595,20 +586,20 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
     }
 
     /**
-     Nested class to handle mouse events
+     * Nested class to handle mouse events
      */
     class WindowDetector extends WindowAdapter {
 
         /**
-         Public overridden method to log the location of the last mouse click
-
-         @param e The last mouse event
+         * Public overridden method to log the location of the last mouse click
+         *
+         * @param e The last mouse event
          */
         public void windowClosing(WindowEvent e) {
             JFrame fr;
             System.out.println(e.getSource());
             for (Hitbox h : collidingHitboxes()) {
-                if (h instanceof Task && e.getSource() == ((Task)h).getFrame()) {
+                if (h instanceof Task && e.getSource() == ((Task) h).getFrame()) {
                     System.out.println("ack");
                     if (h.getActive()) { // reward for completing task
                         score += 500;
@@ -620,8 +611,8 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
 
 
     /**
-
-    */
+     *
+     */
     private void interact(Hitbox h) {
         System.out.println("interacted with " + h);
         String[] ins = h.interactedBehaviour().split(" ");
@@ -635,25 +626,31 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
 
 
     /**
-     Overridden methods to handle keyboard input
-
-     <-------May 25------->
-     > moved keyboard handling from inside Drawing class
-     to parent class as an implemented interface
-     Contributor: Caleb Chue
-
+     * Overridden methods to handle keyboard input
+     * <p>
+     * <-------May 25------->
+     * > moved keyboard handling from inside Drawing class
+     * to parent class as an implemented interface
+     * Contributor: Caleb Chue
      */
 
-    public void keyTyped(KeyEvent k) {}
+    public void keyTyped(KeyEvent k) {
+    }
 
     public void keyPressed(KeyEvent k) {
-        if (state < 10) return;
+        if (state == 2 || state == 3 || state == 4) {
+            if (k.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                    reset();
+                    mainMenu();
+            }
+        } else if (state < 10) return;
         char key = k.getKeyChar();
         handleKeys(key, true);
         if (key == 'p') debug = !debug;
         if (key == 'e') if (collidingHitboxes().size() > 0) interact(collidingHitboxes().get(0));
-        
-        if (debug) System.out.println("Pressed: " + (keysPressed[0] ? "W " : "") + (keysPressed[1] ? "A " : "") + (keysPressed[2] ? "S " : "") + (keysPressed[3] ? "D " : ""));
+
+        if (debug)
+            System.out.println("Pressed: " + (keysPressed[0] ? "W " : "") + (keysPressed[1] ? "A " : "") + (keysPressed[2] ? "S " : "") + (keysPressed[3] ? "D " : ""));
         handlePlayer();
         draw.repaint();
     }
@@ -677,12 +674,11 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
 
 
     /**
-     Private method to handle the movement of the player
-
-     <-------May 25------->
-     > added method
-     Contributor: Caleb Chue
-
+     * Private method to handle the movement of the player
+     * <p>
+     * <-------May 25------->
+     * > added method
+     * Contributor: Caleb Chue
      */
     private void handleMovement() {
         if (keysPressed[0]) { // forward
@@ -708,17 +704,16 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
     }
 
     /**
-     Private method to check whether the player's next move will result in a wall collision
-
-     @param x The x coordinate of the player's location
-     @param y The y coordinate of the player's location
-     @return Whether the player's next move is legal
-
-     <-------May 25------->
-     > added method
-     > moved out of nested class to main class
-     Contributor: Caleb Chue
-
+     * Private method to check whether the player's next move will result in a wall collision
+     *
+     * @param x The x coordinate of the player's location
+     * @param y The y coordinate of the player's location
+     * @return Whether the player's next move is legal
+     * <p>
+     * <-------May 25------->
+     * > added method
+     * > moved out of nested class to main class
+     * Contributor: Caleb Chue
      */
     private boolean legalMove(double x, double y) {
         if (x < 0 || x > SCREEN_WIDTH || y < 0 || y > SCREEN_HEIGHT) return false;
@@ -732,40 +727,37 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
 
 
     /**
-     Nested class to handle drawing on a canvas-like component
-
-     <-------May 24------->
-     > added implements KeyListener (keyboard input)
-     > added image drawing methods
-     Contributor: Caleb Chue
-
+     * Nested class to handle drawing on a canvas-like component
+     * <p>
+     * <-------May 24------->
+     * > added implements KeyListener (keyboard input)
+     * > added image drawing methods
+     * Contributor: Caleb Chue
      */
     class Drawing extends JComponent {
 
         /**
-         Public overridden method to paint the component, drawing
-         different contents based on the state of the program
-
-         @param g The graphics Object to draw on
-
-         <-------May 16------->
-         > added drawing of splashscreen, including displaying image
-         > added placeholder main menu graphic
-         Contributor: Caleb Chue
-
-         <-------May 17------->
-         > removed placeholder graphic
-         Contributor: Caleb Chue
-
-         <-------May 18------->
-         > added placeholder graphic for all states not handled by logic structure
-         Contributor: Caleb Chue
-
-         <-------May 24------->
-         > working on the drawing of the maze level
-         Contributor: Caleb Chue
-
-
+         * Public overridden method to paint the component, drawing
+         * different contents based on the state of the program
+         *
+         * @param g The graphics Object to draw on
+         *          <p>
+         *          <-------May 16------->
+         *          > added drawing of splashscreen, including displaying image
+         *          > added placeholder main menu graphic
+         *          Contributor: Caleb Chue
+         *          <p>
+         *          <-------May 17------->
+         *          > removed placeholder graphic
+         *          Contributor: Caleb Chue
+         *          <p>
+         *          <-------May 18------->
+         *          > added placeholder graphic for all states not handled by logic structure
+         *          Contributor: Caleb Chue
+         *          <p>
+         *          <-------May 24------->
+         *          > working on the drawing of the maze level
+         *          Contributor: Caleb Chue
          */
         public void paint(Graphics g) {
             if (state == 0) { // splashscreen
@@ -775,58 +767,64 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
             } else if (state == 3) {
                 Color mainMenuBG = new Color(40, 87, 173);
                 g.setColor(mainMenuBG);
-                g.fillRoundRect (50, 30, 900, 600,50, 50);
+                g.fillRoundRect(50, 30, 900, 600, 50, 50);
                 g.setColor(Color.WHITE);
                 g.setFont(new Font("Arial", Font.BOLD, 22));
                 g.drawString("Learning Level: ", 75, 85);
                 g.setFont(new Font("Arial", Font.PLAIN, 20));
+
+                g.drawString("Press Escape to return to the Main Menu", 315, 610);
+
                 g.drawString("The Learning Level allows you to navigate the map (Using keyboard controls", 250, 83);
-                g.drawString("W,A,S, & D). By interacting with characters on screen, an opportunity to",250,111);
-                g.drawString("learn about the impacts of Attention Disorders is presented. Signs will also",250,139);
-                g.drawString("be available around the map as a guide to locations as well as for instructions.",250,166);
+                g.drawString("W,A,S, & D). By interacting with characters on screen, an opportunity to", 250, 111);
+                g.drawString("learn about the impacts of Attention Disorders is presented. Signs will also", 250, 139);
+                g.drawString("be available around the map as a guide to locations as well as for instructions.", 250, 166);
 
                 g.setFont(new Font("Arial", Font.BOLD, 22));
                 g.drawString("Maze Level: ", 75, 274);
                 g.setFont(new Font("Arial", Font.PLAIN, 20));
                 g.drawString("The Maze Level provides you with an interesting and engaging way to apply", 250, 273);
-                g.drawString("the knowledge gained throughout the learning level. By navigating a maze",250,300);
-                g.drawString("completed. Arrows will indicate the tasks within and completing tasks which",250,327);
+                g.drawString("the knowledge gained throughout the learning level. By navigating a maze", 250, 300);
+                g.drawString("completed. Arrows will indicate the tasks within and completing tasks which", 250, 327);
                 g.drawString("test knowledge acquired, the maze level can be the maze.", 250, 354);
 
                 g.setFont(new Font("Arial", Font.BOLD, 22));
                 g.drawString("Escape Level: ", 75, 464);
                 g.setFont(new Font("Arial", Font.PLAIN, 20));
                 g.drawString("ok", 250, 463);
-                g.drawString("ok",250,490);
-                g.drawString("ok",250,517);
+                g.drawString("ok", 250, 490);
+                g.drawString("ok", 250, 517);
                 g.drawString("ok", 250, 544);
-            } else if (state == 4){
+            } else if (state == 4) {
                 Color mainMenuBG = new Color(40, 87, 173);
                 g.setColor(mainMenuBG);
-                g.fillRoundRect (50, 30, 900, 600,50, 50);
+                g.fillRoundRect(50, 30, 900, 600, 50, 50);
                 g.setColor(Color.WHITE);
                 g.setFont(new Font("Arial", Font.BOLD, 22));
-                g.drawString("Learning Level: ", 75, 85);
+                g.drawString("Credit Level: ", 75, 85);
                 g.setFont(new Font("Arial", Font.PLAIN, 20));
+
+                g.drawString("Press Escape to return to the Main Menu", 315, 610);
+
                 g.drawString("ok", 250, 83);
-                g.drawString("ok",250,111);
-                g.drawString("ok",250,139);
-                g.drawString("ok",250,166);
+                g.drawString("ok", 250, 111);
+                g.drawString("ok", 250, 139);
+                g.drawString("ok", 250, 166);
 
                 g.setFont(new Font("Arial", Font.BOLD, 22));
                 g.drawString("Maze Level: ", 75, 274);
                 g.setFont(new Font("Arial", Font.PLAIN, 20));
                 g.drawString("ok", 250, 273);
-                g.drawString("ok",250,300);
-                g.drawString("ok",250,327);
+                g.drawString("ok", 250, 300);
+                g.drawString("ok", 250, 327);
                 g.drawString("ok", 250, 354);
 
                 g.setFont(new Font("Arial", Font.BOLD, 22));
                 g.drawString("Escape Level: ", 75, 464);
                 g.setFont(new Font("Arial", Font.PLAIN, 20));
                 g.drawString("ok", 250, 463);
-                g.drawString("ok",250,490);
-                g.drawString("ok",250,517);
+                g.drawString("ok", 250, 490);
+                g.drawString("ok", 250, 517);
                 g.drawString("ok", 250, 544);
             } else if (state >= 10) {
                 if (state < 20) {
@@ -838,10 +836,13 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
                         image("FocusForgeLearningLevelRoom.png", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 25, 1000, 675, g);
                     drawPlayer(g);
                 } else if (state < 30) {
-                    if (state == 20){
+                    if (state == 20) {
                         image("FocusForgeMazeLevel.png", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 20, 1000, 700, g);
                         drawPlayer(g);
                     }
+                } else if (state == 30) {
+                    image("FocusForgeActionLevel.png", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 20, 1000, 700, g);
+                    drawPlayer(g);
                 }
 
                 ArrayList<Hitbox> playerColliding = collidingHitboxes();
@@ -858,51 +859,50 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
                         g.setFont(new Font("Arial", Font.BOLD, 16));
                         String[] mess = ob.proximityMessage().split("\n");
                         for (int i = 0; i < mess.length; i++)
-                            g.drawString(mess[i], ob.x + ob.w/2 - 4*mess[i].length(), ob.y+ob.h-60+20*i) ;
+                            g.drawString(mess[i], ob.x + ob.w / 2 - 4 * mess[i].length(), ob.y + ob.h - 60 + 20 * i);
                     }
                 }
             }
-            
+
             g.setColor(Color.RED);
-            g.drawString(state + "", SCREEN_WIDTH-30, 30);
+            g.drawString(state + "", SCREEN_WIDTH - 30, 30);
         }
-        
+
         private int rand(int lim) {
-            return (int)(Math.random()*lim);
+            return (int) (Math.random() * lim);
         }
-        
-        /** 
-        Private method to draw the player on screen
-        */ 
+
+        /**
+         * Private method to draw the player on screen
+         */
         private void drawPlayer(Graphics g) {
             //g.setColor(new Color(12, 50, 101));
             //g.fillRect((int)(player[0] - playerSize[0] / 2), (int)(player[1] - playerSize[1] / 2), playerSize[0], playerSize[1]);
-            System.out.println((int)(player[0] - playerSize[0] / 2) + " " + (int)(player[1] - playerSize[1] / 2) + " " + playerSize[0] + " " + playerSize[1]);
+            System.out.println((int) (player[0] - playerSize[0] / 2) + " " + (int) (player[1] - playerSize[1] / 2) + " " + playerSize[0] + " " + playerSize[1]);
             //int pWid = 20, pHgt = 50;
             //if (state == 11 || state == 12) {
             //pWid = 40;
             //pHgt = 125;
             //}
-            
+
             image("FocusForgeMainCharacter.png", player[0], player[1], playerSize[0], playerSize[1], g);
-            
+
             g.setColor(Color.RED);
-            g.fillRect((int)player[0], (int)player[1], 5, 5);
+            g.fillRect((int) player[0], (int) player[1], 5, 5);
         }
-        
+
 
         /**
-         Private method to make drawing centered images more convenient
-
-         Contributor: Caleb Chue
-
-         @param path The file path to the image
-         @param g The Graphics image to draw with
-
-         <-------May 24------->
-         > added method
-         Contributor: Caleb Chue
-
+         * Private method to make drawing centered images more convenient
+         * <p>
+         * Contributor: Caleb Chue
+         *
+         * @param path The file path to the image
+         * @param g    The Graphics image to draw with
+         *             <p>
+         *             <-------May 24------->
+         *             > added method
+         *             Contributor: Caleb Chue
          */
         private void image(String path, Graphics g) {
             image(path, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, -1, -1, g);
@@ -913,23 +913,22 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
         }
 
         /**
-         Overloaded private method to make drawing images more convenient
-
-         Contributor: Caleb Chue
-
-         @param path The file path to the image
-         @param x The x coordinate of the image
-         @param y The y coordinate of the image
-         @param g The Graphics image to draw with
-
-         <-------May 24------->
-         > added method
-         Contributor: Caleb Chue
-
-         <-------May 26------->
-         > fixed method drawing in the wrong place
-         Contributor: Caleb Chue
-
+         * Overloaded private method to make drawing images more convenient
+         * <p>
+         * Contributor: Caleb Chue
+         *
+         * @param path The file path to the image
+         * @param x    The x coordinate of the image
+         * @param y    The y coordinate of the image
+         * @param g    The Graphics image to draw with
+         *             <p>
+         *             <-------May 24------->
+         *             > added method
+         *             Contributor: Caleb Chue
+         *             <p>
+         *             <-------May 26------->
+         *             > fixed method drawing in the wrong place
+         *             Contributor: Caleb Chue
          */
         private void image(String path, double x, double y, double wd, double ht, Graphics g) {
             // drawing image (source: https://stackoverflow.com/questions/17865465/how-do-i-draw-an-image-to-a-jpanel-or-jframe)
@@ -939,7 +938,7 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
                     wd = im.getWidth();
                     ht = im.getHeight();
                 }
-                g.drawImage(im, (int)(x - wd / 2), (int)(y - ht / 2), (int)wd, (int)ht, null);
+                g.drawImage(im, (int) (x - wd / 2), (int) (y - ht / 2), (int) wd, (int) ht, null);
             } catch (IIOException e) {
                 System.out.println("Cannot load image from images/" + path);
                 e.printStackTrace();
@@ -952,9 +951,9 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
 
 
     /**
-     Main method
-
-     @param args Arguments for the application
+     * Main method
+     *
+     * @param args Arguments for the application
      */
     public static void main(String[] args) {
         new Mind_Mastery();

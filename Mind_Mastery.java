@@ -13,7 +13,9 @@ import java.awt.image.BufferedImage;
 import javax.imageio.IIOException;
 import javax.swing.*;
 import javax.imageio.ImageIO;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 
@@ -21,9 +23,8 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
     // JFrame to hold all content
     private JFrame frame;
     Drawing draw;
-
     boolean debug = true;
-
+    String username = "Shiv";
 
     /**
      * /**
@@ -441,11 +442,11 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
         } else if (state == 12) {
             player = new double[]{475, 500};
             playerSize = new int[]{45, 120};
-            player = new double[] {475, 500};
-            playerSize = new int[] {45, 120};
+            player = new double[]{475, 500};
+            playerSize = new int[]{45, 120};
         } else if (state == 13) {
-            player = new double[] {426, 170};
-            playerSize = new int[] {20, 50};
+            player = new double[]{426, 170};
+            playerSize = new int[]{20, 50};
         } else if (state == 20) {
             player = new double[]{150, 150};
             playerSize = new int[]{20, 50};
@@ -564,7 +565,7 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
             if (debug) System.out.println("Action trigger");
         } else if (e.getSource() == levelButtons[3]) {
             state = 40;
-            reset();
+            draw.dataListWriter();
             loadLeaderboard();
         } else if (e.getSource() == draw) {
             draw.repaint();
@@ -652,8 +653,8 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
     public void keyPressed(KeyEvent k) {
         if (state == 2 || state == 3 || state == 4) {
             if (k.getKeyCode() == KeyEvent.VK_ESCAPE) {
-                    reset();
-                    mainMenu();
+                reset();
+                mainMenu();
             }
         } else if (state < 10) return;
         char key = k.getKeyChar();
@@ -668,7 +669,8 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
             else if (collidingHitboxes().size() > 0) interact(collidingHitboxes().get(0));
         }
 
-        if (debug) System.out.println("Pressed: " + (keysPressed[0] ? "W " : "") + (keysPressed[1] ? "A " : "") + (keysPressed[2] ? "S " : "") + (keysPressed[3] ? "D " : ""));
+        if (debug)
+            System.out.println("Pressed: " + (keysPressed[0] ? "W " : "") + (keysPressed[1] ? "A " : "") + (keysPressed[2] ? "S " : "") + (keysPressed[3] ? "D " : ""));
         handlePlayer();
         draw.repaint();
     }
@@ -787,7 +789,7 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
                 g.setColor(mainMenuBG);
                 g.fillRoundRect(50, 30, 900, 600, 50, 50);
                 g.setColor(Color.WHITE);
-                g.setFont(new Font("Arial", Font.BOLD,22));
+                g.setFont(new Font("Arial", Font.BOLD, 22));
                 g.drawString("Learning Level: ", 75, 85);
                 g.setFont(new Font("Arial", Font.PLAIN, 20));
 
@@ -885,7 +887,7 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
 
             g.setColor(Color.RED);
             g.drawString(state + "", SCREEN_WIDTH - 30, 30);
-            g.drawString(state + "", SCREEN_WIDTH-30, 30);
+            g.drawString(state + "", SCREEN_WIDTH - 30, 30);
 
             if (interacting > 0) {
                 g.setColor(Color.WHITE);
@@ -897,7 +899,28 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
 
                 message = source.interactedBehaviour().split("\n");
 
-                g.drawString(message[message.length - interacting], (messageLoc[0] + messageLoc[2] - message[message.length - interacting].length()*3) / 2, messageLoc[1]);
+                g.drawString(message[message.length - interacting], (messageLoc[0] + messageLoc[2] - message[message.length - interacting].length() * 3) / 2, messageLoc[1]);
+            }
+        }
+
+        public void dataListWriter() {
+            File scoreFile = new File("leveldata/scoresList.txt");
+            if (scoreFile.exists())
+            //checks if the text file scoresList exists
+            {
+                try {
+                    FileWriter fileWrite = new FileWriter("leveldata/scoresList.txt", true);
+                    BufferedWriter output = new BufferedWriter(fileWrite);
+                    //If scoreList already exists, it does not create a new text file and moves on to adding the new scores and usernames
+                    output.write("\n");
+                    output.write(String.valueOf(score) + "\n");
+                    output.write(username + "\n");
+                    //This appends the scores and usernames of the two players who have just played the game to the end of the text file
+                    output.close();
+                    //closes file writer
+                } catch (IOException e) {
+                }
+                //This catches exception e
             }
         }
 

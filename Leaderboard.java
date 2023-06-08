@@ -42,10 +42,10 @@ public class Leaderboard implements ActionListener
             //Creates empty boxes outlining filled boxes
             g.setColor (Color.white);
             for(int i = 0; i<6; i++) {
-                g.fillRoundRect(103, 80+i*80, 600, 35, 25, 25);
+                g.fillRoundRect(103, 80+i*65, 600, 30, 25, 25);
             }
             g.setColor(mainMenuBG);
-            g.fillRect(397, 70, 5, 500);
+            g.fillRect(397, 120, 5, 320);
             g.setColor(Color.black);
             g.setFont(new Font("Serif", Font.BOLD, 30));
             g.drawString("Player                         Score", 225, 108);
@@ -139,8 +139,8 @@ public class Leaderboard implements ActionListener
     {
         for (int i = 0 ; i < 5 ; ++i)
         {
-            g.drawString (arr2 [i], 122, 187 + 80 * i);
-            g.drawString (String.valueOf (arr1 [i]), 415, 187 + 80 * i);
+            g.drawString (arr2 [i], 120, 170 + 65 * i);
+            g.drawString (String.valueOf (arr1 [i]), 415, 170 + 65 * i);
         }
         //This section of my code prints the arrays on the leaderboard, and displays the data
     }

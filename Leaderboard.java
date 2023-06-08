@@ -2,7 +2,6 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import java.io.*;
-import java.sql.SQLOutput;
 
 public class Leaderboard implements ActionListener
 {

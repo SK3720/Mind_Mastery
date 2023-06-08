@@ -18,8 +18,9 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
+import java.util.Timer;
 
-public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
+public class Mind_Mastery extends TimerTask implements KeyListener, ActionListener, Runnable {
     // JFrame to hold all content
     private JFrame frame;
     Drawing draw;
@@ -505,13 +506,10 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
      */
     @Override
     public void run() {
-        while (state >= 10) {
-            System.out.println("RUN");
-            handlePlayer();
-            draw.repaint();
-            sleep(100);
-//             if (debug) System.out.println("Pressed: " + (keysPressed[0] ? "W " : "") + (keysPressed[1] ? "A " : "") + (keysPressed[2] ? "S " : "") + (keysPressed[3] ? "D " : ""));
-        }
+        handlePlayer();
+        draw.repaint();
+        sleep(100);
+//          if (debug) System.out.println("Pressed: " + (keysPressed[0] ? "W " : "") + (keysPressed[1] ? "A " : "") + (keysPressed[2] ? "S " : "") + (keysPressed[3] ? "D " : ""));
     }
 
 
@@ -692,7 +690,7 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
 
         if (debug)
             System.out.println("Pressed: " + (keysPressed[0] ? "W " : "") + (keysPressed[1] ? "A " : "") + (keysPressed[2] ? "S " : "") + (keysPressed[3] ? "D " : ""));
-        if (state > 9) handlePlayer();
+//         if (state > 9) handlePlayer();
         draw.repaint();
     }
 
@@ -1044,7 +1042,7 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
      * @param args Arguments for the application
      */
     public static void main(String[] args) {
-        Thread thread = new Thread(new Mind_Mastery());
-        thread.start();
+        Timer timer = new Timer();
+        timer.schedule(new Mind_Mastery(), 0, 15);
     }
 }

@@ -923,9 +923,10 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
 
                 message = source.interactedBehaviour().split("\n");
 
-                String[] splitMessage = message[message.length - interacting].split("$");
+                String[] splitMessage = message[message.length - interacting].split(";");
                 for (int part = 0; part < splitMessage.length; part++) {
-                    g.drawString(splitMessage[part], (messageLoc[0] + messageLoc[2] - splitMessage[part].length() * 3) / 2, messageLoc[1] + (part-splitMessage.length/2)*10);
+                    System.out.println(splitMessage[part]);
+                    g.drawString(splitMessage[part], (messageLoc[0] + messageLoc[2] - splitMessage[part].length() * 9) / 2 + 200, messageLoc[1] + (part-splitMessage.length/2)*20);
                 }
             }
         }

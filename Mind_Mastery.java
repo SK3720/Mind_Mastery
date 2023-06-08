@@ -76,8 +76,6 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
     // credits
     JPanel credPanel, instrPanel;
 
-    Thread thread;
-
     double[] player;
     ArrayList<Hitbox> obs;
     boolean[] keysPressed;
@@ -184,8 +182,6 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
 
         // movement keys
         keysPressed = new boolean[4];
-        thread = new Thread(this);
-        thread.start();
 
         // finish setup
         frame = new JFrame("Mind Mastery");
@@ -447,6 +443,9 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
         } else if (state == 13) {
             player = new double[]{426, 170};
             playerSize = new int[]{20, 50};
+        } else if (state == 14) {
+            player = new double[]{445, 375};
+            playerSize = new int[]{20, 50};
         } else if (state == 20) {
             player = new double[]{150, 140};
             playerSize = new int[]{20, 50};
@@ -464,6 +463,8 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
         // making the drawing the focus (source: https://docs.oracle.com/javase/tutorial/uiswing/misc/focus.html)
         draw.requestFocusInWindow();
         draw.repaint();
+        
+        run();
     }
 
 
@@ -504,10 +505,13 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
      */
     @Override
     public void run() {
-        handlePlayer();
-        draw.repaint();
-        if (debug)
-            System.out.println("Pressed: " + (keysPressed[0] ? "W " : "") + (keysPressed[1] ? "A " : "") + (keysPressed[2] ? "S " : "") + (keysPressed[3] ? "D " : ""));
+        while (state >= 10) {
+            System.out.println("RUN");
+            handlePlayer();
+            draw.repaint();
+            sleep(100);
+//             if (debug) System.out.println("Pressed: " + (keysPressed[0] ? "W " : "") + (keysPressed[1] ? "A " : "") + (keysPressed[2] ? "S " : "") + (keysPressed[3] ? "D " : ""));
+        }
     }
 
 
@@ -688,7 +692,7 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
 
         if (debug)
             System.out.println("Pressed: " + (keysPressed[0] ? "W " : "") + (keysPressed[1] ? "A " : "") + (keysPressed[2] ? "S " : "") + (keysPressed[3] ? "D " : ""));
-        handlePlayer();
+        if (state > 9) handlePlayer();
         draw.repaint();
     }
 
@@ -872,7 +876,7 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
                 g.drawString("Click anywhere to continue...", 250, 350);
             } else if (state >= 10) {
                 if (state < 20) {
-                    if (state == 10 || state == 13)
+                    if (state == 10 || state == 13 || state == 14)
                         image("LearningLevelMap.png", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 1000, 700, g);
                     if (state == 11)
                         image("FocusForgeLearningLevelHouseRoom.png", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 25, 1000, 675, g);
@@ -1040,6 +1044,7 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
      * @param args Arguments for the application
      */
     public static void main(String[] args) {
-        new Mind_Mastery();
+        Thread thread = new Thread(new Mind_Mastery());
+        thread.start();
     }
 }

@@ -51,7 +51,6 @@ public class Task extends Hitbox {
     int[][] floorGrid;
     JFrame frame;
     JButton checkButton;
-    boolean complete;
     Drawing draw;
     WindowAdapter window;
     
@@ -65,7 +64,6 @@ public class Task extends Hitbox {
         super(x,y,wdt,hgt);
         type = typ;
         content = new JPanel();
-        complete = false;
         window = wind;
     }
     
@@ -82,7 +80,7 @@ public class Task extends Hitbox {
 
     */
     private void load() {
-        if (type == 0) {
+        if (type == 0) { // task ordering system
             /**
              drag and drop system
              (source: https://stackoverflow.com/questions/28844574/drag-and-drop-from-jbutton-to-jcomponent-in-java) 
@@ -128,6 +126,8 @@ public class Task extends Hitbox {
                 texts[i].addMouseListener(m);
                 texts[i].addMouseMotionListener(m);
                 texts[i].setBorder(new CompoundBorder(new LineBorder(Color.DARK_GRAY), new EmptyBorder(boxH/2, boxW/2, boxH/2, boxW/2)));
+                texts[i].setBackground(i < 2 ? corr : incorr);
+                
                 texts[i].setTransferHandler(new TransferImporter());
                 texts[i].setMaximumSize(new Dimension(boxW, boxH));
                 rightPanel.add(texts[i], c);
@@ -149,7 +149,7 @@ public class Task extends Hitbox {
             content.add(rightPanel, BorderLayout.LINE_END);
             content.add(checkButton, BorderLayout.PAGE_END);
             
-        } else if (type == 1) {
+        } else if (type == 1) { // math homework
             /**
              drag and drop system
              (source: https://stackoverflow.com/questions/28844574/drag-and-drop-from-jbutton-to-jcomponent-in-java) 
@@ -237,7 +237,7 @@ public class Task extends Hitbox {
             content.add(rightPanel, BorderLayout.LINE_END);
             content.add(checkButton, BorderLayout.PAGE_END);
             
-        } else if (type == 2) {
+        } else if (type == 2) { // cleaning the floor
             frame = new JFrame("Sweeping the Floor");
             content = new JPanel();
 
@@ -355,13 +355,12 @@ public class Task extends Hitbox {
      Private method to check the win conditions for each task
      */ 
     private void checkComplete() {
-        System.out.println("check complete");
         if (type == 0) { // task sorting
             for (JLabel f : texts) {
                 System.out.println(f.getText());
             }
             if (((texts[0].getText().equals("Doing Homework") && texts[1].getText().equals("Doing Laundry")) ||
-                 (texts[0].getText().equals("Doing Homework") && texts[1].getText().equals("Doing Laundry")))
+                 (texts[1].getText().equals("Doing Homework") && texts[0].getText().equals("Doing Laundry")))
              && ((texts[2].getText().equals("Checking Social Media") && texts[3].getText().equals("Playing Video Games")) ||
                  (texts[3].getText().equals("Checking Social Media") && texts[2].getText().equals("Playing Video Games")))) {
                 close();
@@ -393,7 +392,7 @@ public class Task extends Hitbox {
      Private method to dispose of the frame once the task is closed
      */ 
     private void close() {
-        complete = true;
+        setActive(false);
         content.setVisible(false);
         frame.dispose();
      }
@@ -420,7 +419,7 @@ public class Task extends Hitbox {
             } else if (type == 2) {
                 int tempX = e.getX();
                 int tempY = e.getY();
-                System.out.println(tempX + " " + tempY);
+                // System.out.println(tempX + " " + tempY);
                 tempX = (tempX - 100) / 10;
                 tempY = (tempY - 50) / 10;
                 int locX, locY;
@@ -467,12 +466,12 @@ public class Task extends Hitbox {
 
     */ 
     public String interactedBehaviour() {
-        if (complete) return "";
+        if (!getActive()) return "";
         load();
         return "";
     }
     public String proximityMessage() {
-        if (complete) return "";
+        if (!getActive()) return "";
         if (type == 0) return "Open Agenda Planner";
         if (type == 1) return "Do Math Homework";
         
@@ -483,18 +482,14 @@ public class Task extends Hitbox {
         return (int)(Math.random()*lim);
     }
     
-    public boolean isComplete() {
-        return complete;
-    }
-    
     public JFrame getFrame() {
         return frame;
     }
     
     public static void main(String[] args) {
-        Task t = new Task(0,0,0,0,2,new WindowAdapter() {
+        Task t = new Task(0,0,0,0,0,new WindowAdapter() {
             @Override 
-            public void windowClosing(WindowEvent e) {
+            public void windowClosed(WindowEvent e) {
                 System.out.println("Print thing");
             }
         });

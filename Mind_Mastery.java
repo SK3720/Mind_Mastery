@@ -454,7 +454,8 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
             player = new double[]{150, 150};
             playerSize = new int[]{20, 50};
         }
-        obs = loadObstacles();
+        if (state % 10 != 9) obs = loadObstacles();
+        else obs = new ArrayList<Hitbox>();
 
         frame.setContentPane(drawPanel);
         drawPanel.setVisible(true);
@@ -472,6 +473,25 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
             if (h.colliding(player[0], player[1])) out.add(h);
         }
         return out;
+    }
+    
+    
+    private void checkWin() {
+        int c = state/10;
+        
+        if (c == 1) {
+            
+        } else if (c == 2) {
+            for (Hitbox h : obs) {
+                if (h instanceof Task && h.getActive()) {
+                    System.out.println("failed end check: " + h);
+                    return;
+                }
+            }
+            System.out.println("end maze level");
+            state = 29;
+            loadLevel();
+        }
     }
 
 
@@ -598,14 +618,16 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
          *
          * @param e The last mouse event
          */
-        public void windowClosing(WindowEvent e) {
+        public void windowClosed(WindowEvent e) {
             JFrame fr;
-            System.out.println(e.getSource());
+            System.out.println("closed" + e.getSource());
             for (Hitbox h : collidingHitboxes()) {
                 if (h instanceof Task && e.getSource() == ((Task) h).getFrame()) {
                     System.out.println("ack");
-                    if (h.getActive()) { // reward for completing task
+                    if (!h.getActive()) { // reward for completing task
                         score += 500;
+                        checkWin();
+                        draw.repaint();
                     }
                 }
             }
@@ -850,6 +872,14 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
                     if (state == 20) {
                         image("FocusForgeMazeLevel.png", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 20, 1000, 700, g);
                         drawPlayer(g);
+                    }
+                    if (state == 29) {
+                        g.setColor(new Color(127,127,255));
+                        g.drawRect(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
+                        g.setColor(Color.WHITE);
+                        g.setFont(new Font("Arial", Font.BOLD, 32));
+                        g.drawString("Level Complete!", 350, 200);
+                        g.drawString("Click anywhere to continue...", 250, 350);
                     }
                 } else if (state == 30) {
                     image("FocusForgeActionLevel.png", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 20, 1000, 700, g);

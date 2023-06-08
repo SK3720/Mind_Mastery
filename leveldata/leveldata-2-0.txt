@@ -1,3 +1,5 @@
+// Maze level
+
 # Blue Table with Computer
 127 4 134 47 0
 # Left Wall
@@ -89,4 +91,6 @@
 # Blue table computer
 170 40 50 40 0 1
 # Broom
-949 37 25 47 0
+949 37 25 47 2 1
+# Pink table computer
+60 445 90 45 1 1

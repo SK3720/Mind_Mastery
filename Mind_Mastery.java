@@ -489,7 +489,7 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
                 }
             }
             System.out.println("end maze level");
-            state = 29;
+            state = 9;
             loadLevel();
         }
     }
@@ -605,6 +605,10 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
             locx = e.getX();
             locy = e.getY();
             if (debug) System.out.println(locx + " " + locy);
+            if (state == 9) {
+                state = 0;
+                mainMenu();
+            }
         }
     }
 
@@ -859,6 +863,13 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
                 g.drawString("ok", 250, 490);
                 g.drawString("ok", 250, 517);
                 g.drawString("ok", 250, 544);
+            } else if (state == 9) { // level complete screen
+                g.setColor(new Color(127,127,255));
+                g.drawRect(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
+                g.setColor(Color.BLACK);
+                g.setFont(new Font("Arial", Font.BOLD, 32));
+                g.drawString("Level Complete!", 350, 200);
+                g.drawString("Click anywhere to continue...", 250, 350);
             } else if (state >= 10) {
                 if (state < 20) {
                     if (state == 10 || state == 13)
@@ -872,14 +883,6 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
                     if (state == 20) {
                         image("FocusForgeMazeLevel.png", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 20, 1000, 700, g);
                         drawPlayer(g);
-                    }
-                    if (state == 29) {
-                        g.setColor(new Color(127,127,255));
-                        g.drawRect(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
-                        g.setColor(Color.WHITE);
-                        g.setFont(new Font("Arial", Font.BOLD, 32));
-                        g.drawString("Level Complete!", 350, 200);
-                        g.drawString("Click anywhere to continue...", 250, 350);
                     }
                 } else if (state == 30) {
                     image("FocusForgeActionLevel.png", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 20, 1000, 700, g);
@@ -920,7 +923,10 @@ public class Mind_Mastery implements KeyListener, ActionListener, Runnable {
 
                 message = source.interactedBehaviour().split("\n");
 
-                g.drawString(message[message.length - interacting], (messageLoc[0] + messageLoc[2] - message[message.length - interacting].length() * 3) / 2, messageLoc[1]);
+                String[] splitMessage = message[message.length - interacting].split("$");
+                for (int part = 0; part < splitMessage.length; part++) {
+                    g.drawString(splitMessage[part], (messageLoc[0] + messageLoc[2] - splitMessage[part].length() * 3) / 2, messageLoc[1] + (part-splitMessage.length/2)*10);
+                }
             }
         }
 

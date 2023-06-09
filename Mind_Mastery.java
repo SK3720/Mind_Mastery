@@ -518,7 +518,9 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
                 int[] params = {draw.rand(0)};
                 try {
                     BufferedImage img = draw.getImage("clickable-" + params[0] + ".png");
-                    obs.add(new Clickable(draw.rand(1)*1000, draw.rand(350)+50, img.getWidth(), img.getHeight(), params[0], img));
+                    Clickable c = new Clickable(draw.rand(2)*1000, draw.rand(350)+50, img.getWidth(), img.getHeight(), params[0], 0.5+Math.random(), img);
+                    c.setPlayerSize(new int[] {0,0});
+                    obs.add(c);
                 } catch (IOException e) {
                     System.out.println("Cannot load image from images/clickable-" + params[0]);
                     e.printStackTrace();
@@ -617,11 +619,11 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
     class ClickHandler extends MouseAdapter {
 
         /**
-         * Public overridden method to log the location of the last mouse click
+         * Public overridden method to log the location of the last mouse press
          *
          * @param e The last mouse event
          */
-        public void mouseClicked(MouseEvent e) {
+        public void mousePressed(MouseEvent e) {
             locx = e.getX();
             locy = e.getY();
             if (debug) System.out.println(locx + " " + locy);
@@ -629,9 +631,14 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
                 state = 0;
                 mainMenu();
             } else if (state == 30) {
-                for (Clickable c : obs) {
-                    if (c.colliding()) {
-                        
+                for (int h = 0; h < obs.size(); h++) {
+                    Clickable temp;
+                    if (obs.get(h) instanceof Clickable && (temp = (Clickable)(obs.get(h))).colliding(locx, locy)) {
+                        System.out.println("clicked!");
+                        temp.interactedBehaviour();
+                        if (!temp.getActive()) {
+                            obs.remove(h--);
+                        }
                     }
                 }
             }
@@ -896,7 +903,7 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
                 g.setFont(new Font("Arial", Font.BOLD, 32));
                 g.drawString("Level Complete!", 350, 200);
                 g.drawString("Click anywhere to continue...", 250, 350);
-            } else if (state >= 10) {
+            } else if (state >= 10 && state < 30) {
                 if (state < 20) {
                     if (state == 10 || state == 13 || state == 14)
                         image("LearningLevelMap.png", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 1000, 700, g);
@@ -910,9 +917,6 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
                         image("FocusForgeMazeLevel.png", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 20, 1000, 700, g);
                         drawPlayer(g);
                     }
-                } else if (state == 30) {
-                    image("FocusForgeActionLevel.png", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 20, 1000, 700, g);
-                    drawPlayer(g);
                 }
 
                 ArrayList<Hitbox> playerColliding = collidingHitboxes();
@@ -931,6 +935,15 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
                         String[] mess = ob.proximityMessage().split("\n");
                         for (int i = 0; i < mess.length; i++)
                             g.drawString(mess[i], ob.x + ob.w / 2 - 4 * mess[i].length(), ob.y + ob.h - 60 + 20 * i);
+                    }
+                }
+            } else if (state == 30) {
+                image("FocusForgeActionLevel.png", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 20, 1000, 700, g);
+                for (Hitbox ob : obs) {
+                    if (ob instanceof Clickable) {
+                        BufferedImage img = ((Clickable)ob).getImage();
+                        int[] loc = ob.getPos();
+                        image(img, loc[0], loc[1], g);
                     }
                 }
             }
@@ -1020,6 +1033,10 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
 
         private void image(String path, double x, double y, Graphics g) {
             image(path, x, y, -1, -1, g);
+        }
+        
+        public void image(BufferedImage img, int x, int y, Graphics g) {
+            g.drawImage(img, x, y, null);
         }
         
         /** 

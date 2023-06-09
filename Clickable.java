@@ -16,10 +16,10 @@ public class Clickable extends Hitbox {
     BufferedImage img;
     final int SPEED = 8;
     
-    public Clickable(int xPos, int yPos, int wdt, int hgt, int typ, BufferedImage im) {
+    public Clickable(int xPos, int yPos, int wdt, int hgt, int typ, double mod, BufferedImage im) {
         super(xPos, yPos, wdt, hgt);
-        if (xPos < 500) vel = new int[] {SPEED, 0};
-        else vel = new int[] {-SPEED, 0};
+        if (xPos < 500) vel = new int[] {(int)(SPEED*mod), 0};
+        else vel = new int[] {(int)(-SPEED*mod), 0};
         type = typ;
         img = im;
     }
@@ -35,8 +35,11 @@ public class Clickable extends Hitbox {
     }
     
     public String interactedBehaviour() {
-        if (type == 0) // task
+        setActive(false);
+        if (type == 0) { // task
+            
             return "add";
+        }
         
         // distraction
         return "deduct";

@@ -82,6 +82,7 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
     boolean[] keysPressed;
     public int[] playerSize;
     final double MOVE_DISTANCE = 6;
+    final int NUM_CLICKABLES = 7, OBS_LIMIT = 10;
 
     int score;
     int interacting;
@@ -510,6 +511,14 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
         draw.repaint();
         sleep(100);
 //          if (debug) System.out.println("Pressed: " + (keysPressed[0] ? "W " : "") + (keysPressed[1] ? "A " : "") + (keysPressed[2] ? "S " : "") + (keysPressed[3] ? "D " : ""));
+        if (state == 30) { // action level
+            while (obs.size() < OBS_LIMIT) {
+                // tl of comp screen: 103, 50, 886, 490
+                int[] params = {rand(NUM_CLICKABLES)};
+                BufferedImage img = getImage("clickable-" + params[0]);
+                obs.add(new Clickable(rand(1)*1000, rand(440)+50, img.width, img.height, params[0], img));
+            }
+        }
     }
 
 
@@ -954,7 +963,7 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
             }
         }
 
-        private int rand(int lim) {
+        protected int rand(int lim) {
             return (int) (Math.random() * lim);
         }
 
@@ -997,6 +1006,13 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
         private void image(String path, double x, double y, Graphics g) {
             image(path, x, y, -1, -1, g);
         }
+        
+        /** 
+         * Private method to return an image object from the specified path
+         */ 
+        private Image getImage(String path) {
+            return ImageIO.read(new File("images/" + path));
+        }
 
         /**
          * Overloaded private method to make drawing images more convenient
@@ -1019,7 +1035,7 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
         private void image(String path, double x, double y, double wd, double ht, Graphics g) {
             // drawing image (source: https://stackoverflow.com/questions/17865465/how-do-i-draw-an-image-to-a-jpanel-or-jframe)
             try {
-                BufferedImage im = ImageIO.read(new File("images/" + path));
+                BufferedImage im = getImage(path);
                 if (wd == -1) {
                     wd = im.getWidth();
                     ht = im.getHeight();
@@ -1043,6 +1059,6 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
      */
     public static void main(String[] args) {
         Timer timer = new Timer();
-        timer.schedule(new Mind_Mastery(), 0, 15);
+        timer.schedule(new Mind_Mastery(), 0, 1);
     }
 }

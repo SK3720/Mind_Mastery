@@ -1,0 +1,28 @@
+// learning level main: learning center exit
+# sign
+115 135 65 15 0
+115 140 65 45 0 3
+
+# red house
+370 25 110 85 0
+405 100 40 30 2 3
+
+# blue house
+707 240 118 95 0
+
+# yellow house
+370 460 120 85 0
+745 320 40 30 8 3
+
+# green house
+55 270 115 95 0
+
+# trees
+625 260 70 60 0
+145 345 70 60 0
+205 375 50 40 0
+
+# learning center
+320 230 210 110 0
+530 265 20 75 0
+415 320 55 50 5 3

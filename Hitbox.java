@@ -42,6 +42,16 @@ public abstract class Hitbox {
         return active;
     }
     
+    
+    /** 
+    Public method to change the location of the hitbox
+    */ 
+    public void move(int xMov, int yMov) {
+        x += xMov;
+        y += yMov;
+    }
+    
+    
     /** 
      Public method to set the internal value of the player's hitbox
      

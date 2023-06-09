@@ -33,6 +33,10 @@ public abstract class Hitbox {
         active = act;
     }
     
+    public int[] getPos() {
+        return new int[] {x,y};
+    }
+    
     /** 
      Public get method to return whether this hitbox is active
      

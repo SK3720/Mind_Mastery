@@ -513,10 +513,19 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
 //          if (debug) System.out.println("Pressed: " + (keysPressed[0] ? "W " : "") + (keysPressed[1] ? "A " : "") + (keysPressed[2] ? "S " : "") + (keysPressed[3] ? "D " : ""));
         if (state == 30) { // action level
             while (obs.size() < OBS_LIMIT) {
-                // tl of comp screen: 103, 50, 886, 490
-                int[] params = {rand(NUM_CLICKABLES)};
-                BufferedImage img = getImage("clickable-" + params[0]);
-                obs.add(new Clickable(rand(1)*1000, rand(440)+50, img.width, img.height, params[0], img));
+                // computer screen: 103, 50, 886, 490
+//                 int[] params = {draw.rand(NUM_CLICKABLES)};
+                int[] params = {draw.rand(0)};
+                try {
+                    BufferedImage img = draw.getImage("clickable-" + params[0] + ".png");
+                    obs.add(new Clickable(draw.rand(1)*1000, draw.rand(350)+50, img.getWidth(), img.getHeight(), params[0], img));
+                } catch (IOException e) {
+                    System.out.println("Cannot load image from images/clickable-" + params[0]);
+                    e.printStackTrace();
+                }
+            }
+            for (int c = 0; c < obs.size(); c++) {
+                if (((Clickable)obs.get(c)).handle()) obs.remove(c--);
             }
         }
     }
@@ -619,6 +628,12 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
             if (state == 9) {
                 state = 0;
                 mainMenu();
+            } else if (state == 30) {
+                for (Clickable c : obs) {
+                    if (c.colliding()) {
+                        
+                    }
+                }
             }
         }
     }
@@ -963,7 +978,7 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
             }
         }
 
-        protected int rand(int lim) {
+        public int rand(int lim) {
             return (int) (Math.random() * lim);
         }
 
@@ -1010,7 +1025,7 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
         /** 
          * Private method to return an image object from the specified path
          */ 
-        private Image getImage(String path) {
+        private BufferedImage getImage(String path) throws IOException {
             return ImageIO.read(new File("images/" + path));
         }
 

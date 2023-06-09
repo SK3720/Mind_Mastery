@@ -249,6 +249,7 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
      */
     private ArrayList<Hitbox> loadObstacles() {
         ArrayList<Hitbox> tobs = new ArrayList<Hitbox>();
+        if (state == 30) return tobs;
         ArrayList<String> strs = loadFromFile("leveldata/leveldata-" + (state / 10) + "-" + (state % 10) + ".txt");
         for (String s : strs) {
             String[] spl = s.strip().split(" ");
@@ -515,7 +516,7 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
             while (obs.size() < OBS_LIMIT) {
                 // computer screen: 103, 50, 886, 490
 //                 int[] params = {draw.rand(NUM_CLICKABLES)};
-                int[] params = {draw.rand(0)};
+                int[] params = {draw.rand(2)};
                 try {
                     BufferedImage img = draw.getImage("clickable-" + params[0] + ".png");
                     Clickable c = new Clickable(draw.rand(2)*1000, draw.rand(350)+50, img.getWidth(), img.getHeight(), params[0], 0.5+Math.random(), img);

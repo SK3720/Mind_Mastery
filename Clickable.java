@@ -36,13 +36,11 @@ public class Clickable extends Hitbox {
     
     public String interactedBehaviour() {
         setActive(false);
-        if (type == 0) { // task
-            
-            return "add";
-        }
+        String[] returns = {"deduct 50", "deduct 25", "add 150", "deduct 50", "add 50", "add 100", "deduct 50"};
+        if (type < returns.length) return returns[type];
         
         // distraction
-        return "deduct";
+        return "";
     }
     public String proximityMessage() { return ""; }
 }

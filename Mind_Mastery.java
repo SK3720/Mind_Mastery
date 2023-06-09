@@ -84,7 +84,7 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
     final double MOVE_DISTANCE = 6;
     final int NUM_CLICKABLES = 7, OBS_LIMIT = 10;
 
-    int score;
+    int score, time;
     int interacting;
     Hitbox source;
 
@@ -457,9 +457,11 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
         } else if (state == 30) {
             player = new double[]{150, 150};
             playerSize = new int[]{20, 50};
+            time = 300;
         }
         if (state % 10 != 9) obs = loadObstacles();
         else obs = new ArrayList<Hitbox>();
+        interacting = 0;
 
         frame.setContentPane(drawPanel);
         drawPanel.setVisible(true);
@@ -517,8 +519,8 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
         if (state == 30) { // action level
             while (obs.size() < OBS_LIMIT) {
                 // computer screen: 103, 50, 886, 490
-//                 int[] params = {draw.rand(NUM_CLICKABLES)};
-                int[] params = {draw.rand(2)};
+                int[] params = {draw.rand(NUM_CLICKABLES)};
+//                 int[] params = {draw.rand(2)};
                 try {
                     BufferedImage img = draw.getImage("clickable-" + params[0] + ".png");
                     Clickable c = new Clickable(draw.rand(2)*1000, draw.rand(350)+50, img.getWidth(), img.getHeight(), params[0], 0.5+Math.random(), img);
@@ -630,7 +632,7 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
             locx = e.getX();
             locy = e.getY();
             if (debug) System.out.println(locx + " " + locy);
-            if (state == 9) {
+            if (state == 9 || state == 31) {
                 state = 0;
                 mainMenu();
             } else if (state == 30) {
@@ -638,7 +640,10 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
                     Clickable temp;
                     if (obs.get(h) instanceof Clickable && (temp = (Clickable)(obs.get(h))).colliding(locx, locy)) {
                         System.out.println("clicked!");
-                        temp.interactedBehaviour();
+                        String[] ins = temp.interactedBehaviour().split(" ");
+                        if (ins[0].equals("add")) score += Integer.parseInt(ins[1]);
+                        else if (ins[0].equals("deduct")) score -= Integer.parseInt(ins[1]);
+                        
                         if (!temp.getActive()) {
                             obs.remove(h--);
                         }
@@ -899,13 +904,13 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
                 g.drawString("ok", 250, 490);
                 g.drawString("ok", 250, 517);
                 g.drawString("ok", 250, 544);
-            } else if (state == 9) { // level complete screen
+            } else if (state == 9 || state == 31) { // level complete screen
                 g.setColor(new Color(127,127,255));
                 g.drawRect(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
                 g.setColor(Color.BLACK);
                 g.setFont(new Font("Arial", Font.BOLD, 32));
                 g.drawString("Level Complete!", 350, 200);
-                g.drawString("Click anywhere to continue...", 250, 350);
+                g.drawString("Click anywhere to continue...", 250, 450);
             } else if (state >= 10 && state < 30) {
                 if (state < 20) {
                     if (state == 10 || state == 13 || state == 14)
@@ -949,11 +954,19 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
                         image(img, loc[0], loc[1], g);
                     }
                 }
+                g.setColor(Color.RED);
+                g.setFont(new Font("Arial", Font.BOLD, 30));
+                g.drawString(score + " " + (time / 10), 30, 30);
+                time--;
+                if (time <= 0) {
+                    state = 31;
+                    return;
+                }
             }
-
-            g.setColor(Color.RED);
-            g.drawString(state + "", SCREEN_WIDTH - 30, 30);
-            g.drawString(state + "", SCREEN_WIDTH - 30, 30);
+            
+            if (state == 31) {
+                g.drawString("Score: " + score, SCREEN_WIDTH/3, SCREEN_HEIGHT/2);
+            }
 
             if (interacting > 0) {
                 g.setColor(Color.WHITE);

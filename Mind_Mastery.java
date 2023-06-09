@@ -182,6 +182,8 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
         levelPanel.add(levelMenuButtons);
         playerSize = new int[]{20, 50};
 
+        interacting = -1;
+
         // movement keys
         keysPressed = new boolean[4];
 

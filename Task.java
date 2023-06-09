@@ -113,7 +113,7 @@ public class Task extends Hitbox {
             }
             
             texts = new JLabel[4];
-            Color corr = new Color(175, 255, 166), incorr = new Color(242, 162, 162);
+            Color corr = new Color(50, 168, 82), incorr = new Color(231, 141, 141);
             
             JPanel rightPanel = new JPanel();
             rightPanel.setLayout(new GridBagLayout());
@@ -125,7 +125,7 @@ public class Task extends Hitbox {
                 
                 texts[i].addMouseListener(m);
                 texts[i].addMouseMotionListener(m);
-                texts[i].setBorder(new CompoundBorder(new LineBorder(Color.DARK_GRAY), new EmptyBorder(boxH/2, boxW/2, boxH/2, boxW/2)));
+                texts[i].setBorder(new CompoundBorder(new LineBorder(i < 2 ? corr : incorr), new EmptyBorder(boxH/2, boxW/2, boxH/2, boxW/2)));
                 texts[i].setBackground(i < 2 ? corr : incorr);
                 
                 texts[i].setTransferHandler(new TransferImporter());

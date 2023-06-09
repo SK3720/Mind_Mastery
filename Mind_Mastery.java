@@ -73,6 +73,7 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
     // level select
     JPanel levelPanel;
     JButton learningLevelButton, mazeLevelButton, actionLevelButton, LeaderboardButton;
+    Leaderboard leaderboard;
 
     // credits
     JPanel credPanel, instrPanel;
@@ -615,7 +616,7 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
     }
 
     public void loadLeaderboard() {
-        Leaderboard LeaderboardCurrent = new Leaderboard();
+        LeaderboardCurrent = new Leaderboard();
     }
 
     /**

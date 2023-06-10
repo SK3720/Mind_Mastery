@@ -875,41 +875,25 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
             g.setFont(new Font("Arial", Font.BOLD, 22));
             g.drawString("Escape Level: ", 75, 464);
             g.setFont(new Font("Arial", Font.PLAIN, 20));
-            g.drawString("ok", 250, 463);
-            g.drawString("ok", 250, 490);
-            g.drawString("ok", 250, 517);
-            g.drawString("ok", 250, 544);
+            g.drawString("The Escape Level offers an exciting and challenging gameplay session where", 250, 463);
+            g.drawString("you must gain as many points as possible under a time limit. Objects will be", 250, 490);
+            g.drawString("travelling across the screen at different speeds, and the objects which are", 250, 517);
+            g.drawString("beneficial should be selected, such as 'Creating a Schedule'. Objects such as", 250, 544);
+            g.drawString("Objects such as a Phone will result in points being deducted.", 250, 571);
          } else if (state == 4) {
             Color mainMenuBG = new Color(40, 87, 173);
             g.setColor(mainMenuBG);
             g.fillRoundRect(50, 30, 900, 600, 50, 50);
             g.setColor(Color.WHITE);
             g.setFont(new Font("Arial", Font.BOLD, 22));
-            g.drawString("Credit Level: ", 75, 85);
+            g.drawString("Mind Mastery", 425, 85);
             g.setFont(new Font("Arial", Font.PLAIN, 20));
          
             g.drawString("Press Escape to return to the Main Menu", 315, 610);
          
-            g.drawString("ok", 250, 83);
-            g.drawString("ok", 250, 111);
-            g.drawString("ok", 250, 139);
-            g.drawString("ok", 250, 166);
-         
-            g.setFont(new Font("Arial", Font.BOLD, 22));
-            g.drawString("Maze Level: ", 75, 274);
-            g.setFont(new Font("Arial", Font.PLAIN, 20));
-            g.drawString("ok", 250, 273);
-            g.drawString("ok", 250, 300);
-            g.drawString("ok", 250, 327);
-            g.drawString("ok", 250, 354);
-         
-            g.setFont(new Font("Arial", Font.BOLD, 22));
-            g.drawString("Escape Level: ", 75, 464);
-            g.setFont(new Font("Arial", Font.PLAIN, 20));
-            g.drawString("ok", 250, 463);
-            g.drawString("ok", 250, 490);
-            g.drawString("ok", 250, 517);
-            g.drawString("ok", 250, 544);
+            g.drawString("Created by Caleb Chue and Shiv Kanade", 295, 123);
+            g.drawString("Caleb Chue: Program Development and Graphics", 261, 151);
+            g.drawString("Shiv Kanade: Program Development and Graphics", 260, 179);
          } else if (state == 9 || state == 31) { // level complete screen
             g.setColor(new Color(127,127,255));
             g.drawRect(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
@@ -962,7 +946,7 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
             image("FocusForgeActionLevel.png", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 20, 1000, 700, g);
             g.setColor(Color.RED);
             g.setFont(new Font("Arial", Font.BOLD, 30));
-            g.drawString(score + " " + (time / 10), 30, 30);
+            g.drawString( (time / 10) + "                                                   " + score, 350, 28);
             time--;
             if (time <= 0) {
                state = 31;

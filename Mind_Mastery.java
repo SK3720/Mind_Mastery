@@ -952,7 +952,6 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
                }
             }
          } else if (state == 30) {
-            image("FocusForgeActionLevel.png", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 20, 1000, 700, g);
             for (Hitbox ob : obs) {
                if (ob instanceof Clickable) {
                   BufferedImage img = ((Clickable)ob).getImage();
@@ -960,6 +959,7 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
                   image(img, loc[0], loc[1], g);
                }
             }
+            image("FocusForgeActionLevel.png", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 20, 1000, 700, g);
             g.setColor(Color.RED);
             g.setFont(new Font("Arial", Font.BOLD, 30));
             g.drawString(score + " " + (time / 10), 30, 30);
@@ -971,7 +971,7 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
          }
          
          if (state == 31) {
-            g.drawString("Score: " + score, SCREEN_WIDTH/3, SCREEN_HEIGHT/2);
+            g.drawString("Score: " + score, 400, SCREEN_HEIGHT/2);
          }
       
          if (interacting > 0) {

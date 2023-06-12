@@ -14,7 +14,7 @@ public class Clickable extends Hitbox {
     int type;
     int[] vel;
     BufferedImage img;
-    final int SPEED = 8;
+    final int SPEED = 11;
     
     public Clickable(int xPos, int yPos, int wdt, int hgt, int typ, double mod, BufferedImage im) {
         super(xPos, yPos, wdt, hgt);

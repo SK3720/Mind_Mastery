@@ -83,7 +83,7 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
    boolean[] keysPressed;
    public int[] playerSize;
    final double MOVE_DISTANCE = 8;
-   final int NUM_CLICKABLES = 7, OBS_LIMIT = 10;
+   final int NUM_CLICKABLES = 7, OBS_LIMIT = 15;
 
    int score, time;
    int interacting;
@@ -617,7 +617,6 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
    }
 
    public void loadLeaderboard() {
-      dataListWriter();
       Leaderboard LeaderboardCurrent = new Leaderboard();
    }
 
@@ -974,6 +973,8 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
             time--;
             if (time <= 0) {
                state = 31;
+               username = JOptionPane.showInputDialog(null, "Enter your username: ", "Score Entry", JOptionPane.INFORMATION_MESSAGE);
+               dataListWriter();
                return;
             }
          }
@@ -981,7 +982,7 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
          if (state == 31) {
             g.drawString("Score: " + score, 400, SCREEN_HEIGHT/2);
          }
-      
+         
          if (interacting > 0) {
             System.out.println("inter " + interacting);
             String[] message = source.toString().split(" ");

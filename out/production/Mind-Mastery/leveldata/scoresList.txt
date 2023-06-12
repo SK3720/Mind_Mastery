@@ -1,4 +1,6 @@
 0.0
+null
+0.0
 null1
 0.0
 null2
@@ -6,5 +8,3 @@ null2
 null3
 0.0
 null4
-0.0
-null5

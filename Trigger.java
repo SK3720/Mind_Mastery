@@ -42,8 +42,8 @@ public class Trigger extends Hitbox {
         if (id == 9) return "Closed";
         if (id == 10) return "To progress, visit the Learning Centre";
         if (id == 11) return "To progress, visit the Blue House";
-        if (id == 12) return "Press 'E' to interact with James. \n This will help you learn about the impacts of\n Attention Disorders";
-        if (id == 13) return "Press 'E' to interact with Pamela. \n This will help you learn about Attention Disorders\n and solutions to surviving them.";
+        if (id == 12) return "Press 'E' to interact with James. \n Learn about the impacts of Attention Disorders";
+        if (id == 13) return "Press 'E' to interact with Pamela. \n Learn about Attention Disorders and solutions to surviving them.";
         
         
         return "";

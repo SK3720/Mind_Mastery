@@ -455,7 +455,7 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
          player = new double[]{445, 375};
          playerSize = new int[]{20, 50};
       } else if (state == 20) {
-         player = new double[]{150, 140};
+         player = new double[]{475, 579};
          playerSize = new int[]{20, 50};
       } else if (state == 30) {
          player = new double[]{150, 150};

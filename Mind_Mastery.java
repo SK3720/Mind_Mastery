@@ -622,7 +622,6 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
    }
 
    private void dataListWriter() {
-      score = 10;
       File scoreFile = new File("leveldata/scoresList.txt");
       if (scoreFile.exists())
       //checks if the text file scoresList exists

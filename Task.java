@@ -474,6 +474,7 @@ public class Task extends Hitbox {
         if (!getActive()) return "";
         if (type == 0) return "Open Agenda Planner";
         if (type == 1) return "Do Math Homework";
+        if (type == 2) return "Sweep the Floor";
         
         return "Unnamed Task";
     }
@@ -484,15 +485,5 @@ public class Task extends Hitbox {
     
     public JFrame getFrame() {
         return frame;
-    }
-    
-    public static void main(String[] args) {
-        Task t = new Task(0,0,0,0,0,new WindowAdapter() {
-            @Override 
-            public void windowClosed(WindowEvent e) {
-                System.out.println("Print thing");
-            }
-        });
-        t.interactedBehaviour();
     }
 }

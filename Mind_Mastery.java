@@ -82,7 +82,7 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
    ArrayList<Hitbox> obs;
    boolean[] keysPressed;
    public int[] playerSize;
-   final double MOVE_DISTANCE = 6;
+   final double MOVE_DISTANCE = 8;
    final int NUM_CLICKABLES = 7, OBS_LIMIT = 10;
 
    int score, time;
@@ -899,8 +899,8 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
             g.drawRect(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
             g.setColor(Color.BLACK);
             g.setFont(new Font("Arial", Font.BOLD, 32));
-            g.drawString("Level Complete!", 350, 200);
-            g.drawString("Click anywhere to continue...", 250, 450);
+            g.drawString("Level Complete!", 375, 200);
+            g.drawString("Click anywhere to continue...", 275, 450);
          } else if (state >= 10 && state < 30) {
             if (state < 20) {
                if (state == 10 || state == 13 || state == 14)

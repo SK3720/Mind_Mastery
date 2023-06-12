@@ -1,5 +1,8 @@
 // learning level: red house
 
+# sign
+550 530 75 45 12 3
+
 # bookshelf
 655 25 295 105 0
 
@@ -35,3 +38,6 @@
 
 # shelf
 23 230 43 135 0
+
+# laptop
+798 267 164 60 0

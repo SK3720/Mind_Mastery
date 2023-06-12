@@ -687,7 +687,7 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
     *
     */
    private void interact(Hitbox h) {
-      System.out.println("interacted with " + h);
+      // System.out.println("interacted with " + h);
       String original = h.interactedBehaviour();
       String[] ins = original.split(" ");
       if (ins.length == 0) 
@@ -697,6 +697,7 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
          state = Integer.parseInt(ins[1]);
          loadLevel();
       } else if (ins[0].equals("paragraph")) {
+         System.out.println("make para");
          ins = original.split("\n");
          interacting = ins.length - 1;
          source = h;
@@ -931,8 +932,9 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
                   g.setFont(new Font("Arial", Font.BOLD, 16));
                   System.out.println("interacted w/" + ob);
                   String[] mess = ob.proximityMessage().split("\n");
-                  for (int i = 0; i < mess.length; i++)
+                  for (int i = 0; i < mess.length; i++) {
                      g.drawString(mess[i], ob.x + ob.w / 2 - 4 * mess[i].length(), ob.y + ob.h - 60 + 20 * i);
+                  }
                }
             }
          } else if (state == 30) {
@@ -959,9 +961,7 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
          }
       
          if (interacting > 0) {
-            g.setColor(Color.WHITE);
-            g.setFont(new Font("Arial", Font.BOLD, 18));
-         
+            System.out.println("inter " + interacting);
             String[] message = source.toString().split(" ");
             int[] messageLoc = new int[4];
             for (int i = 0; i < 4; i++) messageLoc[i] = Integer.parseInt(message[i]);
@@ -969,9 +969,17 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
             message = source.interactedBehaviour().split("\n");
          
             String[] splitMessage = message[message.length - interacting].split(";");
-            for (int part = 0; part < splitMessage.length; part++) {
-               System.out.println(splitMessage[part]);
-               g.drawString(splitMessage[part], (messageLoc[0] + messageLoc[2] - splitMessage[part].length() * 9) / 2 + 200, messageLoc[1] + (part-splitMessage.length/2)*20);
+            
+            if (interacting != 1) {
+                g.setColor(new Color(0,0,0,127));
+                g.fillRect((messageLoc[0] + messageLoc[2])/2 - 100, messageLoc[1] - message.length*10, 500, 100);
+            }
+            
+            for (int part = 0; part < splitMessage.length; part++) {    
+                g.setColor(Color.WHITE);
+                g.setFont(new Font("Arial", Font.BOLD, 18));
+                System.out.println("message: " + splitMessage[part]);
+                g.drawString(splitMessage[part], (messageLoc[0] + messageLoc[2] - splitMessage[part].length() * 9) / 2 + 200, messageLoc[1] + (part-splitMessage.length/2)*20);
             }
          }
       }
@@ -1007,7 +1015,7 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
       private void drawPlayer(Graphics g) {
          //g.setColor(new Color(12, 50, 101));
          //g.fillRect((int)(player[0] - playerSize[0] / 2), (int)(player[1] - playerSize[1] / 2), playerSize[0], playerSize[1]);
-         System.out.println((int) (player[0] - playerSize[0] / 2) + " " + (int) (player[1] - playerSize[1] / 2) + " " + playerSize[0] + " " + playerSize[1]);
+         // System.out.println((int) (player[0] - playerSize[0] / 2) + " " + (int) (player[1] - playerSize[1] / 2) + " " + playerSize[0] + " " + playerSize[1]);
          //int pWid = 20, pHgt = 50;
          //if (state == 11 || state == 12) {
          //pWid = 40;

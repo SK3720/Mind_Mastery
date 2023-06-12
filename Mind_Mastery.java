@@ -610,7 +610,6 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
          if (debug) System.out.println("Action trigger");
       } else if (e.getSource() == levelButtons[3]) {
          state = 40;
-         draw.dataListWriter();
          loadLeaderboard();
       } else if (e.getSource() == draw) {
          draw.repaint();

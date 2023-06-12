@@ -617,7 +617,31 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
    }
 
    public void loadLeaderboard() {
+      dataListWriter();
       Leaderboard LeaderboardCurrent = new Leaderboard();
+   }
+
+   private void dataListWriter() {
+      score = 10;
+      File scoreFile = new File("leveldata/scoresList.txt");
+      if (scoreFile.exists())
+      //checks if the text file scoresList exists
+      {
+         try {
+            FileWriter fileWrite = new FileWriter("leveldata/scoresList.txt", true);
+            BufferedWriter output = new BufferedWriter(fileWrite);
+            //If scoreList already exists, it does not create a new text file and moves on to adding the new scores and usernames
+            output.write("\n");
+            output.write(String.valueOf(score) + "\n");
+            System.out.println("CHECK2");
+            output.write(username + "\n");
+            //This appends the scores and usernames of the two players who have just played the game to the end of the text file
+            output.close();
+            //closes file writer
+         } catch (IOException e) {
+         }
+         //This catches exception e
+      }
    }
 
    /**
@@ -982,27 +1006,7 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
             }
          }
       }
-   
-      public void dataListWriter() {
-         File scoreFile = new File("leveldata/scoresList.txt");
-         if (scoreFile.exists())
-         //checks if the text file scoresList exists
-         {
-            try {
-               FileWriter fileWrite = new FileWriter("leveldata/scoresList.txt", true);
-               BufferedWriter output = new BufferedWriter(fileWrite);
-               //If scoreList already exists, it does not create a new text file and moves on to adding the new scores and usernames
-               output.write("\n");
-               output.write(String.valueOf(score) + "\n");
-               output.write(username + "\n");
-               //This appends the scores and usernames of the two players who have just played the game to the end of the text file
-               output.close();
-               //closes file writer
-            } catch (IOException e) {
-            }
-            //This catches exception e
-         }
-      }
+
    
       public int rand(int lim) {
          return (int) (Math.random() * lim);

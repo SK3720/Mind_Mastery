@@ -123,7 +123,7 @@ public class Task extends Hitbox {
                     c.gridy = i*2 - 1;
                     rightPanel.add(new JLabel("Sort the tasks into important (above)"), c);
                     c.gridy = i*2;
-                    rightPanel.add(new JLabel("         and unimportant (below)."), c);
+                    rightPanel.add(new JLabel("            and unimportant (below)."), c);
                 }
                 c.gridy = i*2 + (i >= 2 ? 1 : 0);
                 texts[i] = new JLabel("");
@@ -493,10 +493,5 @@ public class Task extends Hitbox {
     
     public JFrame getFrame() {
         return frame;
-    }
-    
-    public static void main(String[] args) {
-        Task t = new Task(0,0,0,0,0,new WindowAdapter() {});
-        t.interactedBehaviour();
     }
 }

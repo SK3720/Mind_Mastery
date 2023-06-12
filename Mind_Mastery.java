@@ -965,10 +965,8 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
          
             String[] splitMessage = message[message.length - interacting].split(";");
             
-            if (interacting != 1) {
-                g.setColor(new Color(0,0,0,127));
-                g.fillRect((messageLoc[0] + messageLoc[2])/2 - 45, messageLoc[1] - splitMessage.length*10-40, 475, 80);
-            }
+            g.setColor(new Color(0,0,0,127));
+            g.fillRect((messageLoc[0] + messageLoc[2])/2 - 45, messageLoc[1] - splitMessage.length*10-40, 475, 80);
             
             for (int part = 0; part < splitMessage.length; part++) {    
                 g.setColor(Color.WHITE);

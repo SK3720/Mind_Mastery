@@ -81,7 +81,7 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
    ArrayList<Hitbox> obs;
    boolean[] keysPressed;
    public int[] playerSize;
-   final double MOVE_DISTANCE = 8;
+   final double MOVE_DISTANCE = 10;
    final int NUM_CLICKABLES = 7, OBS_LIMIT = 15;
 
    int score, time;
@@ -693,6 +693,8 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
     *
     */
    private void interact(Hitbox h) {
+      for (int i = 0; i < keysPressed.length; i++) keysPressed[i] = false;
+      String original = h.interactedBehaviour();
       String[] ins = original.split(" ");
       if (ins.length == 0) 
          return;

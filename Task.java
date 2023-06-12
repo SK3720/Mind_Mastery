@@ -54,7 +54,7 @@ public class Task extends Hitbox {
     Drawing draw;
     WindowAdapter window;
     
-    final int FRAME_WIDTH = 700, FRAME_HEIGHT = 500;
+    int frameWidth = 700, frameHeight = 500;
     
     final int boxW = 200, boxH = 50;
     
@@ -118,8 +118,14 @@ public class Task extends Hitbox {
             JPanel rightPanel = new JPanel();
             rightPanel.setLayout(new GridBagLayout());
             for (int i = 0; i < labels.length; i++) {
-                c.insets = new Insets(i == 2 ? boxH : i > 0 ? boxH/3 : 0, 0, 0, 0);
-                c.gridy = i*2;
+                c.insets = new Insets(i > 0 ? boxH/3 : 0, 0, 0, 0);
+                if (i == 2) {
+                    c.gridy = i*2 - 1;
+                    rightPanel.add(new JLabel("Sort the tasks into important (above)"), c);
+                    c.gridy = i*2;
+                    rightPanel.add(new JLabel("         and unimportant (below)."), c);
+                }
+                c.gridy = i*2 + (i >= 2 ? 1 : 0);
                 texts[i] = new JLabel("");
                 MouseHandler m = new MouseHandler();
                 
@@ -237,6 +243,8 @@ public class Task extends Hitbox {
             content.add(rightPanel, BorderLayout.LINE_END);
             content.add(checkButton, BorderLayout.PAGE_END);
             
+            frameHeight = 575;
+            
         } else if (type == 2) { // cleaning the floor
             frame = new JFrame("Sweeping the Floor");
             content = new JPanel();
@@ -246,7 +254,7 @@ public class Task extends Hitbox {
             MouseHandler m = new MouseHandler();
             draw.addMouseListener(m);
             draw.addMouseMotionListener(m);
-            draw.setPreferredSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
+            draw.setPreferredSize(new Dimension(frameWidth, frameHeight));
             
             floorGrid = new int[50][35];
             for (int row = 0; row < floorGrid.length; row++) {
@@ -263,7 +271,7 @@ public class Task extends Hitbox {
 
         frame.setContentPane(content);
         frame.addWindowListener(window);
-        frame.setSize(FRAME_WIDTH, FRAME_HEIGHT);
+        frame.setSize(frameWidth, frameHeight);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
         
@@ -485,5 +493,10 @@ public class Task extends Hitbox {
     
     public JFrame getFrame() {
         return frame;
+    }
+    
+    public static void main(String[] args) {
+        Task t = new Task(0,0,0,0,0,new WindowAdapter() {});
+        t.interactedBehaviour();
     }
 }

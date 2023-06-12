@@ -24,7 +24,6 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
    // JFrame to hold all content
    private JFrame frame;
    Drawing draw;
-   boolean debug = true;
    String username = "Shiv";
 
    /**
@@ -362,7 +361,6 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
          sleep(5);
       }
       sleep(1000);
-      // System.out.println("splash finished");
    }
 
 
@@ -495,11 +493,9 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
       } else if (c == 2) {
          for (Hitbox h : obs) {
             if (h instanceof Task && h.getActive()) {
-               System.out.println("failed end check: " + h);
                return;
             }
          }
-         System.out.println("end maze level");
          state = 9;
          loadLevel();
       }
@@ -518,12 +514,9 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
       handlePlayer();
       draw.repaint();
       sleep(100);
-   //          if (debug) System.out.println("Pressed: " + (keysPressed[0] ? "W " : "") + (keysPressed[1] ? "A " : "") + (keysPressed[2] ? "S " : "") + (keysPressed[3] ? "D " : ""));
       if (state == 30) { // action level
          while (obs.size() < OBS_LIMIT) {
-            // computer screen: 103, 50, 886, 490
             int[] params = {draw.rand(NUM_CLICKABLES)};
-         //                 int[] params = {draw.rand(2)};
             try {
                BufferedImage img = draw.getImage("clickable-" + params[0] + ".png");
                Clickable c = new Clickable(draw.rand(2)*1000, draw.rand(350)+50, img.getWidth(), img.getHeight(), params[0], 0.5+Math.random(), img);
@@ -597,17 +590,14 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
          state = 10;
          reset();
          loadLevel();
-         if (debug) System.out.println("Learning trigger");
       } else if (e.getSource() == levelButtons[1]) {
          state = 20;
          reset();
          loadLevel();
-         if (debug) System.out.println("Maze trigger");
       } else if (e.getSource() == levelButtons[2]) {
          state = 30;
          reset();
          loadLevel();
-         if (debug) System.out.println("Action trigger");
       } else if (e.getSource() == levelButtons[3]) {
          state = 40;
          loadLeaderboard();
@@ -631,7 +621,6 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
             //If scoreList already exists, it does not create a new text file and moves on to adding the new scores and usernames
             output.write("\n");
             output.write(String.valueOf(score) + "\n");
-            System.out.println("CHECK2");
             output.write(username + "\n");
             //This appends the scores and usernames of the two players who have just played the game to the end of the text file
             output.close();
@@ -655,7 +644,6 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
       public void mousePressed(MouseEvent e) {
          locx = e.getX();
          locy = e.getY();
-         if (debug) System.out.println(locx + " " + locy);
          if (state == 9 || state == 31) {
             state = 0;
             mainMenu();
@@ -663,7 +651,6 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
             for (int h = 0; h < obs.size(); h++) {
                Clickable temp;
                if (obs.get(h) instanceof Clickable && (temp = (Clickable)(obs.get(h))).colliding(locx, locy)) {
-                  System.out.println("clicked!");
                   String[] ins = temp.interactedBehaviour().split(" ");
                   if (ins[0].equals("add")) score += Integer.parseInt(ins[1]);
                   else if (ins[0].equals("deduct")) score -= Integer.parseInt(ins[1]);
@@ -689,10 +676,8 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
        */
       public void windowClosed(WindowEvent e) {
          JFrame fr;
-         System.out.println("closed" + e.getSource());
          for (Hitbox h : collidingHitboxes()) {
             if (h instanceof Task && e.getSource() == ((Task) h).getFrame()) {
-               System.out.println("ack");
                if (!h.getActive()) { // reward for completing task
                   score += 500;
                   checkWin();
@@ -708,8 +693,6 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
     *
     */
    private void interact(Hitbox h) {
-      // System.out.println("interacted with " + h);
-      String original = h.interactedBehaviour();
       String[] ins = original.split(" ");
       if (ins.length == 0) 
          return;
@@ -718,7 +701,6 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
          state = Integer.parseInt(ins[1]);
          loadLevel();
       } else if (ins[0].equals("paragraph")) {
-         System.out.println("make para");
          ins = original.split("\n");
          interacting = ins.length - 1;
          source = h;
@@ -748,15 +730,10 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
          return;
       char key = k.getKeyChar();
       handleKeys(key, true);
-      if (key == 'p') debug = !debug;
       if (key == 'e') {
          if (interacting > 0) interacting -= 1;
          else if (collidingHitboxes().size() > 0) interact(collidingHitboxes().get(0));
       }
-   
-      if (debug)
-         System.out.println("Pressed: " + (keysPressed[0] ? "W " : "") + (keysPressed[1] ? "A " : "") + (keysPressed[2] ? "S " : "") + (keysPressed[3] ? "D " : ""));
-   //         if (state > 9) handlePlayer();
       draw.repaint();
    }
 
@@ -942,16 +919,10 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
             ArrayList<Hitbox> playerColliding = collidingHitboxes();
          
             for (Hitbox ob : obs) {
-               if (debug) {
-                  g.setColor(new Color(rand(256), rand(256), rand(256), 128));
-                  // System.out.println(ob.x + " " + ob.y + " " + ob.w + " " + ob.h);
-                  g.fillRect(ob.x, ob.y, ob.w, ob.h);
-               }
             
                if (playerColliding.contains(ob) && interacting == 0) {
                   g.setColor(Color.WHITE);
                   g.setFont(new Font("Arial", Font.BOLD, 16));
-                  System.out.println("interacted w/" + ob);
                   String[] mess = ob.proximityMessage().split("\n");
                   for (int i = 0; i < mess.length; i++) {
                      g.drawString(mess[i], ob.x + ob.w / 2 - 4 * mess[i].length(), ob.y + ob.h - 60 + 20 * i);
@@ -984,7 +955,6 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
          }
          
          if (interacting > 0) {
-            System.out.println("inter " + interacting);
             String[] message = source.toString().split(" ");
             int[] messageLoc = new int[4];
             for (int i = 0; i < 4; i++) messageLoc[i] = Integer.parseInt(message[i]);
@@ -1001,7 +971,6 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
             for (int part = 0; part < splitMessage.length; part++) {    
                 g.setColor(Color.WHITE);
                 g.setFont(new Font("Arial", Font.BOLD, 18));
-                System.out.println("message: " + splitMessage[part]);
                 g.drawString(splitMessage[part], (messageLoc[0] + messageLoc[2] - splitMessage[part].length() * 9) / 2 + 200, messageLoc[1] + (part-splitMessage.length/2)*20);
             }
          }
@@ -1016,15 +985,6 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
        * Private method to draw the player on screen
        */
       private void drawPlayer(Graphics g) {
-         //g.setColor(new Color(12, 50, 101));
-         //g.fillRect((int)(player[0] - playerSize[0] / 2), (int)(player[1] - playerSize[1] / 2), playerSize[0], playerSize[1]);
-         // System.out.println((int) (player[0] - playerSize[0] / 2) + " " + (int) (player[1] - playerSize[1] / 2) + " " + playerSize[0] + " " + playerSize[1]);
-         //int pWid = 20, pHgt = 50;
-         //if (state == 11 || state == 12) {
-         //pWid = 40;
-         //pHgt = 125;
-         //}
-      
          image("FocusForgeMainCharacter.png", player[0], player[1], playerSize[0], playerSize[1], g);
       
          g.setColor(Color.RED);

@@ -74,8 +74,11 @@ public class Leaderboard implements ActionListener
                 username[3] = String.valueOf (text.readLine ());
                 scores[4] = Double.parseDouble (text.readLine ());
                 username[4] = String.valueOf (text.readLine ());
-                scores[5] = Double.parseDouble (text.readLine ());
-                username[5] = String.valueOf (text.readLine ());
+                String possibleNull = text.readLine();
+                if(possibleNull != null) {
+                    scores[5] = Double.parseDouble(possibleNull);
+                    username[5] = String.valueOf(text.readLine());
+                }
                 //Reads lines from the text file, storing the scores and usernames in variables
                 //declares array username
             }

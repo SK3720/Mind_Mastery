@@ -1,7 +1,11 @@
-// learning level main
+// learning level main: red house exit
 # sign
 115 135 65 15 0
 115 140 65 45 0 3
+
+# sign 2
+485 135 65 15 0
+485 140 65 45 10 3
 
 # red house
 370 25 110 85 0

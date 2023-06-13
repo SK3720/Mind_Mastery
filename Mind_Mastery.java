@@ -251,7 +251,7 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
     */
    private ArrayList<Hitbox> loadObstacles() {
       ArrayList<Hitbox> tobs = new ArrayList<Hitbox>();
-      if (state == 30) 
+      if (state == 31) 
          return tobs;
       ArrayList<String> strs = loadFromFile("leveldata/leveldata-" + (state / 10) + "-" + (state % 10) + ".txt");
       for (String s : strs) {

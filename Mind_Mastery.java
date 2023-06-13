@@ -514,7 +514,7 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
       handlePlayer();
       draw.repaint();
       sleep(100);
-      if (state == 30) { // action level
+      if (state == 31) { // action level
          while (obs.size() < OBS_LIMIT) {
             int[] params = {draw.rand(NUM_CLICKABLES)};
             try {

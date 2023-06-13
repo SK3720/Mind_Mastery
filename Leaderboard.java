@@ -1,3 +1,11 @@
+/**
+ * Authors: Focus Forge - Caleb Chue and Shiv Kanade
+ * Teacher: V. Krasteva
+ * Date: June 13, 2023
+ * Description: Leaderboard class to keep track of the top 5 high scores in the game. Creates a new seperate JPanel
+ *              that can be closed without closing the main program.
+ * Class and methods Created by: Shiv Kanade
+ */
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;

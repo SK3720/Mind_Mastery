@@ -3,7 +3,7 @@
  * Teacher: V. Krasteva
  * Date: May 29, 2023
  * Description: The final version of Focus Forge's game, Mind Mastery.
- * This version contains completed menus, GUI, mouse and 
+ * This version contains completed menus, GUI, mouse and
  * keyboard interactions, and three completed levels created
  * to guide the player through learning about and overcoming
  * attention disorders.
@@ -29,7 +29,7 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
    String username = "Shiv";
 
    /**
-    * 
+    *
     * Instance Variable Declaration
     * <p>
     * <-------May 24------->
@@ -97,10 +97,10 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
    public Mind_Mastery() {
       // loading all panels, buttons, content of the main menu
       load();
-   
+
       // showing the splashscreen
       splashScreen();
-   
+
       // displaying the main menu
       mainMenu();
    }
@@ -111,6 +111,8 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
     * level select, instruction, and credits screen, and buttons
     * for user navigation between pages
     * <p>
+    * <-------Shiv Kanade------->
+    * Formatted panel orders, Added Level Selection Panel, Fixed Leaderboard Button, Updated Level Selection Buttons.
     * <-------May 17------->
     * > added loading of drawing and drawing panel, main menu and associated buttons
     * > added loading of main frame, sizing, and display
@@ -135,44 +137,44 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
     * Contributor: Caleb Chue
     */
    private void load() {
-   
+
       // drawing
       draw = new Drawing();
       draw.addMouseListener(new ClickHandler());
       draw.addKeyListener(this);
-   
+
       // focusing on the drawing (source: https://stackoverflow.com/questions/10876491/how-to-use-keylistener)
       draw.setFocusable(true);
-   
+
       drawPanel = new JPanel();
       draw.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
       drawPanel.add(draw);
-   
+
       // main menu
       mainMenu = new JPanel();
       mainMenuButtons = new JPanel();
       mainMenuButtons.setLayout(new BoxLayout(mainMenuButtons, BoxLayout.Y_AXIS));
-   
+
       mainButtons = new JButton[]{new JButton("Begin Adventure"),
              new JButton("How To Play"),
              new JButton("Credits"),
              new JButton("Exit")};
-   
-   
+
+
       JLabel gameTitle = new JLabel("Mind Mastery");
       gameTitle.setFont(new Font("Verdana", Font.BOLD, 100));
       gameTitle.setForeground(Color.RED);
       gameTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
-      
+
       mainMenuButtons.add(Box.createVerticalStrut(SCREEN_HEIGHT / 15));
       mainMenuButtons.add(gameTitle);
       mainMenuButtons.add(Box.createVerticalGlue());
       mainMenuButtons.add(Box.createVerticalStrut(2 * SCREEN_HEIGHT / 17));
-   
+
       for (int i = 0; i < mainButtons.length; i++) loadMainButton(i);
-   
+
       mainMenu.add(mainMenuButtons);
-   
+
       // level selection menu
       levelPanel = new JPanel();
       levelMenuButtons = new JPanel();
@@ -180,49 +182,49 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
       Color levelMenuBG = new Color(61, 68, 128);
       levelMenuButtons.setBackground(levelMenuBG);
       levelPanel.setBackground(levelMenuBG);
-   
+
       levelButtons = new JButton[]{new JButton("Learning"),
              new JButton("Maze"),
              new JButton("Action"),
              new JButton("Leaderboard")};
-   
+
       gameTitle = new JLabel("Level Select");
       gameTitle.setFont(new Font("Verdana", Font.BOLD, 60));
       gameTitle.setForeground(Color.RED);
       gameTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
-      
+
       // aligning box elements (source: https://docs.oracle.com/javase/tutorial/uiswing/layout/box.html#alignment)
       levelMenuButtons.add(Box.createVerticalStrut(2 * SCREEN_HEIGHT / 17));
       levelMenuButtons.add(gameTitle);
       levelMenuButtons.add(Box.createVerticalGlue());
       levelMenuButtons.add(Box.createVerticalStrut(2 * SCREEN_HEIGHT / 17));
-   
+
       for (int i = 0; i < 4; i++) loadLevelButton(i);
-   
+
       levelPanel.add(levelMenuButtons);
       playerSize = new int[]{20, 50};
-   
+
       interacting = -1;
-   
+
       // movement keys
       keysPressed = new boolean[4];
-   
+
       // finish setup
       frame = new JFrame("Mind Mastery");
       frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-   
+
       frame.add(drawPanel);
       frame.add(mainMenu);
       frame.add(levelPanel);
       frame.addKeyListener(this);
       frame.setFocusTraversalKeysEnabled(false);
-   
+
       frame.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
       frame.setResizable(false);
       frame.setLocationRelativeTo(null);
       frame.setVisible(true);
       frame.setFocusable(true);
-   
+
       reset();
    }
 
@@ -271,12 +273,12 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
     */
    private ArrayList<Hitbox> loadObstacles() {
       ArrayList<Hitbox> tobs = new ArrayList<Hitbox>();
-      if (state == 31) 
+      if (state == 31)
          return tobs;
       ArrayList<String> strs = loadFromFile("leveldata/leveldata-" + (state / 10) + "-" + (state % 10) + ".txt");
       for (String s : strs) {
          String[] spl = s.strip().split(" ");
-         if (spl.length == 0 || spl[0].equals("") || spl[0].equals("//") || spl[0].equals("#")) 
+         if (spl.length == 0 || spl[0].equals("") || spl[0].equals("//") || spl[0].equals("#"))
             continue;
          int[] dat = new int[spl.length];
          for (int i = 0; i < spl.length; i++) dat[i] = Integer.parseInt(spl[i]);
@@ -293,7 +295,7 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
          o.setPlayerSize(playerSize);
          tobs.add(o);
       }
-   
+
       return tobs;
    }
 
@@ -335,6 +337,12 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
       mainMenuButtons.add(Box.createVerticalStrut(SCREEN_HEIGHT / 16));
    }
 
+   /**
+   <-------Shiv Kanade------->
+    * Implemented to simplify menu selection button.
+    *
+    * @param index The index of the button within the array of JButtons
+    */
    private void loadLevelButton(int index) {
       levelButtons[index].addActionListener(this);
       levelButtons[index].setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -373,7 +381,7 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
       frame.setContentPane(drawPanel);
       frame.getContentPane().setBackground(new Color(191, 215, 255));
       frame.setVisible(true);
-   
+
       draw.repaint();
       sleep(1000);
       for (; drawState < 255; drawState++) {
@@ -401,7 +409,7 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
       frame.revalidate();
       drawPanel.setVisible(false);
       mainMenu.setVisible(true);
-   
+
       // main menu bg col
       Color mainMenuBG = new Color(61, 68, 128);
       frame.getContentPane().setBackground(mainMenuBG);
@@ -418,6 +426,8 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
 
 
    /**
+    * <-------Shiv Kanade------->
+    * Loads the Credit Screen from the main menu
     * Private method to handle the display of the credits screen
     */
    private void credits() {
@@ -430,6 +440,8 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
 
 
    /**
+    * <-------Shiv Kanade------->
+    * Loads the Instruction Screen from the main menu
     * Private method to handle the display of the instructions screen
     */
    private void instructions() {
@@ -439,6 +451,7 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
       frame.getContentPane().setBackground(new Color(191, 215, 255));
       frame.setVisible(true);
    }
+
 
    /**
     * Private method to handle the display of each maze level
@@ -475,22 +488,22 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
       if (state % 10 != 9) obs = loadObstacles();
       else obs = new ArrayList<Hitbox>();
       interacting = 0;
-   
+
       frame.setContentPane(drawPanel);
       drawPanel.setVisible(true);
       draw.setVisible(true);
-   
+
       // making the drawing the focus (source: https://docs.oracle.com/javase/tutorial/uiswing/misc/focus.html)
       draw.requestFocusInWindow();
       draw.repaint();
-      
+
       run();
    }
 
-   /** 
+   /**
     * Private method to return an ArrayList of Hitboxes that the
     * player is currently colliding with
-   
+
     * @return An ArrayList of all the Hitboxes the player
               is colliding with
    */
@@ -501,15 +514,15 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
       }
       return out;
    }
-   
-   
+
+
    /**
-    * Private method to check whether the current state is a 
+    * Private method to check whether the current state is a
     * winning state, and to change states accordingly
-    */ 
+    */
    private void checkWin() {
       int c = state/10;
-      
+
       if (c == 2) {
          for (Hitbox h : obs) {
             if (h instanceof Task && h.getActive()) {
@@ -522,9 +535,9 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
    }
 
 
-   /** 
+   /**
     * Private method to handle the player's actions
-    */ 
+    */
    private void handlePlayer() {
       handleMovement();
    }
@@ -590,7 +603,7 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
     */
    public void actionPerformed(ActionEvent e) {
       // main menu
-   
+
       if (e.getSource() == mainButtons[0]) { // level select
          state = 2;
          reset();
@@ -607,7 +620,7 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
          frame.setVisible(false);
          frame.dispose();
          System.exit(0);
-      
+
          // level select
       } else if (e.getSource() == levelButtons[0]) {
          state = 10;
@@ -662,7 +675,7 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
     * Nested class to handle mouse events
     */
    class ClickHandler extends MouseAdapter {
-   
+
       /**
        * Public overridden method to log the location of the last mouse press
        *
@@ -683,7 +696,7 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
                   String[] ins = temp.interactedBehaviour().split(" ");
                   if (ins[0].equals("add")) score += Integer.parseInt(ins[1]);
                   else if (ins[0].equals("deduct")) score -= Integer.parseInt(ins[1]);
-                  
+
                   if (!temp.getActive()) {
                      obs.remove(h--);
                   }
@@ -697,7 +710,7 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
     * Nested class to handle mouse events
     */
    class WindowDetector extends WindowAdapter {
-   
+
       /**
        * Public overridden method to log the location of the last mouse click
        *
@@ -725,9 +738,9 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
       for (int i = 0; i < keysPressed.length; i++) keysPressed[i] = false;
       String original = h.interactedBehaviour();
       String[] ins = original.split(" ");
-      if (ins.length == 0) 
+      if (ins.length == 0)
          return;
-   
+
       if (ins[0].equals("goto")) {
          state = Integer.parseInt(ins[1]);
          loadLevel();
@@ -757,7 +770,7 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
             reset();
             mainMenu();
          }
-      } else if (state < 10) 
+      } else if (state < 10)
          return;
       char key = k.getKeyChar();
       handleKeys(key, true);
@@ -829,7 +842,7 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
     * Contributor: Caleb Chue
     */
    private boolean legalMove(double x, double y) {
-      if (x < 0 || x > SCREEN_WIDTH || y < 0 || y > SCREEN_HEIGHT) 
+      if (x < 0 || x > SCREEN_WIDTH || y < 0 || y > SCREEN_HEIGHT)
          return false;
       for (int i = 0; i < obs.size(); i++) {
          if (obs.get(i) instanceof Obstacle && obs.get(i).colliding(x, y)) {
@@ -849,7 +862,7 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
     * Contributor: Caleb Chue
     */
    class Drawing extends JComponent {
-   
+
       /**
        * <-------Shiv Kanade------->
        * Designed UI for levels, formatted text, and added clear instructions for users.
@@ -859,6 +872,10 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
        *
        * @param g The graphics Object to draw on
        *          <p>
+       *          <-------Shiv Kanade------->
+       *        Designed UI for levels, formatted text, and added clear instructions for users.
+       *        Public overridden method to paint the component, drawing
+       *        different contents based on the state of the program
        *          <-------May 16------->
        *          > added drawing of splashscreen, including displaying image
        *          > added placeholder main menu graphic
@@ -881,7 +898,7 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
             image("FocusForge Icon.png", g);
             g.setColor(new Color(0, 0, 0, drawState));
             g.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-            
+
          } else if (state == 3) { // instructions
             Color mainMenuBG = new Color(40, 87, 173);
             g.setColor(mainMenuBG);
@@ -890,17 +907,17 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
             g.setFont(new Font("Arial", Font.BOLD, 22));
             g.drawString("Mind Mastery", 425, 255);
             g.setFont(new Font("Arial", Font.PLAIN, 20));
-         
+
             g.drawString("Press Escape to return to the Main Menu", 315, 610);
             g.drawString("Created by Caleb Chue and Shiv Kanade", 295, 293);
             g.drawString("Caleb Chue: Program Development and Graphics", 261, 321);
             g.drawString("Shiv Kanade: Program Development and Graphics", 260, 349);
-         
+
             g.drawString("The Learning Level allows you to navigate the map (Using keyboard controls", 250, 83);
             g.drawString("W,A,S, & D). By interacting with characters on screen, an opportunity to", 250, 111);
             g.drawString("learn about the impacts of Attention Disorders is presented. Signs will also", 250, 139);
             g.drawString("be available around the map as a guide to locations as well as for instructions.", 250, 166);
-         
+
             g.setFont(new Font("Arial", Font.BOLD, 22));
             g.drawString("Maze Level: ", 75, 274);
             g.setFont(new Font("Arial", Font.PLAIN, 20));
@@ -908,7 +925,7 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
             g.drawString("the knowledge gained throughout the learning level. By navigating a maze", 250, 300);
             g.drawString("completed. Arrows will indicate the tasks within and completing tasks which", 250, 327);
             g.drawString("test knowledge acquired, the maze level can be the maze.", 250, 354);
-         
+
             g.setFont(new Font("Arial", Font.BOLD, 22));
             g.drawString("Escape Level: ", 75, 464);
             g.setFont(new Font("Arial", Font.PLAIN, 20));
@@ -917,7 +934,7 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
             g.drawString("travelling across the screen at different speeds, and the objects which are", 250, 517);
             g.drawString("beneficial should be selected, such as 'Creating a Schedule'. Objects such as", 250, 544);
             g.drawString("Objects such as a Phone will result in points being deducted.", 250, 571);
-            
+
          } else if (state == 4) { // credits
             Color mainMenuBG = new Color(40, 87, 173);
             g.setColor(mainMenuBG);
@@ -926,13 +943,13 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
             g.setFont(new Font("Arial", Font.BOLD, 22));
             g.drawString("Mind Mastery", 425, 85);
             g.setFont(new Font("Arial", Font.PLAIN, 20));
-         
+
             g.drawString("Press Escape to return to the Main Menu", 315, 610);
-         
+
             g.drawString("Created by Caleb Chue and Shiv Kanade", 295, 123);
             g.drawString("Caleb Chue: Program Development and Graphics", 261, 151);
             g.drawString("Shiv Kanade: Program Development and Graphics", 260, 179);
-            
+
          } else if (state == 9 || state == 32) { // level complete screen
             g.setColor(new Color(127,127,255));
             g.drawRect(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
@@ -940,7 +957,7 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
             g.setFont(new Font("Arial", Font.BOLD, 32));
             g.drawString("Level Complete!", 375, 200);
             g.drawString("Click anywhere to continue...", 275, 450);
-            
+
          } else if (state >= 10 && state < 30) { // levels
             if (state < 20) {
                if (state == 10 || state == 13 || state == 14)
@@ -956,11 +973,11 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
                   drawPlayer(g);
                }
             }
-         
+
             ArrayList<Hitbox> playerColliding = collidingHitboxes();
-         
+
             for (Hitbox ob : obs) {
-            
+
                if (playerColliding.contains(ob) && interacting == 0) {
                   g.setColor(Color.WHITE);
                   g.setFont(new Font("Arial", Font.BOLD, 16));
@@ -990,7 +1007,7 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
             image("clickable-5.png",840,275,g);
             g.drawString("Controls: To select a certain object, simply click on the object using a mouse pointer.", 135, 425);
             g.drawString("Click anywhere to continue to the Action Level.", 315, 610);   
-                  
+            
          } else if (state == 31) {
             for (Hitbox ob : obs) {
                if (ob instanceof Clickable) {
@@ -1012,31 +1029,31 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
                return;
             }
          }
-         
+
          if (state == 32) {
             g.drawString("Score: " + score, 400, SCREEN_HEIGHT/2);
          }
-         
+
          if (interacting > 0) {
             String[] message = source.toString().split(" ");
             int[] messageLoc = new int[4];
             for (int i = 0; i < 4; i++) messageLoc[i] = Integer.parseInt(message[i]);
-         
+
             message = source.interactedBehaviour().split("\n");
-         
+
             String[] splitMessage = message[message.length - interacting].split(";");
-            
+
             g.setColor(new Color(0,0,0,127));
             g.fillRect((messageLoc[0] + messageLoc[2])/2 - 45, messageLoc[1] - splitMessage.length*10-40, 475, 80);
-            
-            for (int part = 0; part < splitMessage.length; part++) {    
+
+            for (int part = 0; part < splitMessage.length; part++) {
                g.setColor(Color.WHITE);
                g.setFont(new Font("Arial", Font.BOLD, 18));
                g.drawString(splitMessage[part], (messageLoc[0] + messageLoc[2] - splitMessage[part].length() * 9) / 2 + 200, messageLoc[1] + (part-splitMessage.length/2)*20);
             }
          }
       }
-   
+
    
       public int rand(int lim) {
          return (int) (Math.random() * lim);

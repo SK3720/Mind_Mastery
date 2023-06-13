@@ -888,19 +888,16 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
             g.fillRoundRect(50, 30, 900, 600, 50, 50);
             g.setColor(Color.WHITE);
             g.setFont(new Font("Arial", Font.BOLD, 22));
-            g.drawString("Mind Mastery", 425, 255);
+            g.drawString("Learning Level: ", 75, 85);
             g.setFont(new Font("Arial", Font.PLAIN, 20));
-         
+
             g.drawString("Press Escape to return to the Main Menu", 315, 610);
-            g.drawString("Created by Caleb Chue and Shiv Kanade", 295, 293);
-            g.drawString("Caleb Chue: Program Development and Graphics", 261, 321);
-            g.drawString("Shiv Kanade: Program Development and Graphics", 260, 349);
-         
+
             g.drawString("The Learning Level allows you to navigate the map (Using keyboard controls", 250, 83);
             g.drawString("W,A,S, & D). By interacting with characters on screen, an opportunity to", 250, 111);
             g.drawString("learn about the impacts of Attention Disorders is presented. Signs will also", 250, 139);
             g.drawString("be available around the map as a guide to locations as well as for instructions.", 250, 166);
-         
+
             g.setFont(new Font("Arial", Font.BOLD, 22));
             g.drawString("Maze Level: ", 75, 274);
             g.setFont(new Font("Arial", Font.PLAIN, 20));
@@ -908,7 +905,7 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
             g.drawString("the knowledge gained throughout the learning level. By navigating a maze", 250, 300);
             g.drawString("completed. Arrows will indicate the tasks within and completing tasks which", 250, 327);
             g.drawString("test knowledge acquired, the maze level can be the maze.", 250, 354);
-         
+
             g.setFont(new Font("Arial", Font.BOLD, 22));
             g.drawString("Escape Level: ", 75, 464);
             g.setFont(new Font("Arial", Font.PLAIN, 20));
@@ -924,15 +921,14 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
             g.fillRoundRect(50, 30, 900, 600, 50, 50);
             g.setColor(Color.WHITE);
             g.setFont(new Font("Arial", Font.BOLD, 22));
-            g.drawString("Mind Mastery", 425, 85);
+            g.drawString("Mind Mastery", 425, 255);
             g.setFont(new Font("Arial", Font.PLAIN, 20));
-         
+
             g.drawString("Press Escape to return to the Main Menu", 315, 610);
-         
-            g.drawString("Created by Caleb Chue and Shiv Kanade", 295, 123);
-            g.drawString("Caleb Chue: Program Development and Graphics", 261, 151);
-            g.drawString("Shiv Kanade: Program Development and Graphics", 260, 179);
-            
+
+            g.drawString("Created by Caleb Chue and Shiv Kanade", 295, 293);
+            g.drawString("Caleb Chue: Program Development and Graphics", 261, 321);
+            g.drawString("Shiv Kanade: Program Development and Graphics", 260, 349);
          } else if (state == 9 || state == 32) { // level complete screen
             g.setColor(new Color(127,127,255));
             g.drawRect(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);

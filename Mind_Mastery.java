@@ -633,7 +633,11 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
       Leaderboard LeaderboardCurrent = new Leaderboard();
    }
 
-   private void dataListWriter() {
+      /**
+       <-------Shiv Kanade------->
+       * Created a method to write to the scores list file to keep track of the high scores.
+       */
+      private void dataListWriter() {
       File scoreFile = new File("leveldata/scoresList.txt");
       if (scoreFile.exists())
       //checks if the text file scoresList exists
@@ -847,6 +851,9 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
    class Drawing extends JComponent {
    
       /**
+       * <-------Shiv Kanade------->
+       * Designed UI for levels, formatted text, and added clear instructions for users.
+       *
        * Public overridden method to paint the component, drawing
        * different contents based on the state of the program
        *
@@ -881,10 +888,13 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
             g.fillRoundRect(50, 30, 900, 600, 50, 50);
             g.setColor(Color.WHITE);
             g.setFont(new Font("Arial", Font.BOLD, 22));
-            g.drawString("Learning Level: ", 75, 85);
+            g.drawString("Mind Mastery", 425, 255);
             g.setFont(new Font("Arial", Font.PLAIN, 20));
          
             g.drawString("Press Escape to return to the Main Menu", 315, 610);
+            g.drawString("Created by Caleb Chue and Shiv Kanade", 295, 293);
+            g.drawString("Caleb Chue: Program Development and Graphics", 261, 321);
+            g.drawString("Shiv Kanade: Program Development and Graphics", 260, 349);
          
             g.drawString("The Learning Level allows you to navigate the map (Using keyboard controls", 250, 83);
             g.drawString("W,A,S, & D). By interacting with characters on screen, an opportunity to", 250, 111);
@@ -962,7 +972,25 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
             }
          } else if (state == 30) { // action level instructions screen
             // instructions here
-         
+            Color mainMenuBG = new Color(40, 87, 173);
+            g.setColor(mainMenuBG);
+            g.fillRoundRect(50, 30, 900, 600, 50, 50);
+            g.setColor(Color.WHITE);
+            g.setFont(new Font("Arial", Font.BOLD, 30));
+            g.drawString("Action Level Instructions", 325, 75);
+            g.setFont(new Font("Arial", Font.PLAIN, 18));
+            g.drawString("Level Goal: In this level, you must apply effective decision and focus", 100, 175);
+            g.drawString("and focus skills in order to select certain objects. These objects,",100, 200);
+            g.drawString("shown on the right, represent beneficial activities, such as 'Creating",100,225);
+            g.drawString("a Schedule'. By selecting these objects, points are added to the ",100,250);
+            g.drawString("counter located at the top right. Remember,there is a timer counting",100,275);
+            g.drawString("down! Make sure to select as many correct object as possible.", 100, 300);
+            image("clickable-4.png",730, 255, g);
+            image("clickable-2.png", 835, 190, g);
+            image("clickable-5.png",840,275,g);
+            g.drawString("Controls: To select a certain object, simply click on the object using a mouse pointer.", 135, 425);
+            g.drawString("Click anywhere to continue to the Action Level.", 315, 610);   
+                  
          } else if (state == 31) {
             for (Hitbox ob : obs) {
                if (ob instanceof Clickable) {

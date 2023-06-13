@@ -3,27 +3,39 @@ import java.awt.event.*;
 import javax.swing.*;
 import java.io.*;
 
-public class Leaderboard implements ActionListener
+
+public class Leaderboard implements ActionListener, KeyListener
 {
     static String name1, name2, name3, name4, name5, name6;
     String username[] = new String[6];
     double scores[] = new double [6];
     static double score1, score2, score3, score4, score5, score6;
+    JFrame frame;
 
     Drawing draw = new Drawing();
     public Leaderboard()
     {
-        JFrame frame = new JFrame("Leaderboard");
+        frame = new JFrame("Leaderboard");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         JPanel panel = new JPanel();
         frame.add(draw);
         frame.setSize(800,500);
         frame.setResizable(false);
         frame.setLocationRelativeTo(null);
+        frame.addKeyListener(this);
         frame.setVisible(true);
         frame.setFocusable(true);
 
     }
+    public void keyTyped(KeyEvent k) {}
+    public void keyPressed(KeyEvent k) {
+        if (k.getKeyCode() == KeyEvent.VK_ESCAPE) {
+            frame.setVisible(false);
+            frame.dispose();
+        }
+    }
+    public void keyReleased(KeyEvent k) {}
+    
     public void actionPerformed(ActionEvent e)
     {
     }

@@ -156,7 +156,16 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
              new JButton("Credits"),
              new JButton("Exit")};
    
-      mainMenuButtons.add(Box.createVerticalStrut(6 * SCREEN_HEIGHT / 17));
+   
+      JLabel gameTitle = new JLabel("Mind Mastery");
+      gameTitle.setFont(new Font("Verdana", Font.BOLD, 100));
+      gameTitle.setForeground(Color.RED);
+      gameTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
+      
+      mainMenuButtons.add(Box.createVerticalStrut(SCREEN_HEIGHT / 15));
+      mainMenuButtons.add(gameTitle);
+      mainMenuButtons.add(Box.createVerticalGlue());
+      mainMenuButtons.add(Box.createVerticalStrut(2 * SCREEN_HEIGHT / 17));
    
       for (int i = 0; i < mainButtons.length; i++) loadMainButton(i);
    
@@ -175,7 +184,15 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
              new JButton("Action"),
              new JButton("Leaderboard")};
    
-      levelMenuButtons.add(Box.createVerticalStrut(6 * SCREEN_HEIGHT / 17));
+      gameTitle = new JLabel("Level Select");
+      gameTitle.setFont(new Font("Verdana", Font.BOLD, 60));
+      gameTitle.setForeground(Color.RED);
+      gameTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
+      
+      levelMenuButtons.add(Box.createVerticalStrut(2 * SCREEN_HEIGHT / 17));
+      levelMenuButtons.add(gameTitle);
+      levelMenuButtons.add(Box.createVerticalGlue());
+      levelMenuButtons.add(Box.createVerticalStrut(2 * SCREEN_HEIGHT / 17));
    
       for (int i = 0; i < 4; i++) loadLevelButton(i);
    
@@ -991,9 +1008,6 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
        */
       private void drawPlayer(Graphics g) {
          image("FocusForgeMainCharacter.png", player[0], player[1], playerSize[0], playerSize[1], g);
-      
-         g.setColor(Color.RED);
-         g.fillRect((int) player[0], (int) player[1], 5, 5);
       }
    
    

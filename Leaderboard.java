@@ -38,6 +38,11 @@ public class Leaderboard implements ActionListener
             g.fillRect(0,0,800,500);
             g.setColor(mainMenuBG);
             g.fillRoundRect (25, 55, 750, 400,50, 50);
+            //Title
+            g.setFont(new Font("Verdana", Font.BOLD, 40));
+            g.setColor (Color.RED);
+            g.drawString("Leaderboard", 250, 35);
+            
             //Creates empty boxes outlining filled boxes
             g.setColor (Color.white);
             for(int i = 0; i<6; i++) {

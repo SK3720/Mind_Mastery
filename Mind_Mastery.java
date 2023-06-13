@@ -27,7 +27,7 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
    String username = "Shiv";
 
    /**
-    * /**
+    * 
     * Instance Variable Declaration
     * <p>
     * <-------May 24------->
@@ -82,7 +82,7 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
    boolean[] keysPressed;
    public int[] playerSize;
    final double MOVE_DISTANCE = 10;
-   final int NUM_CLICKABLES = 7, OBS_LIMIT = 15;
+   final int NUM_CLICKABLES = 7, OBS_LIMIT = 18;
 
    int score, time;
    int interacting;
@@ -644,10 +644,12 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
       public void mousePressed(MouseEvent e) {
          locx = e.getX();
          locy = e.getY();
-         if (state == 9 || state == 31) {
+         if (state == 9 || state == 32) {
             state = 0;
             mainMenu();
          } else if (state == 30) {
+            state = 31;
+         } else if (state == 31) {
             for (int h = 0; h < obs.size(); h++) {
                Clickable temp;
                if (obs.get(h) instanceof Clickable && (temp = (Clickable)(obs.get(h))).colliding(locx, locy)) {
@@ -895,7 +897,7 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
             g.drawString("Created by Caleb Chue and Shiv Kanade", 295, 123);
             g.drawString("Caleb Chue: Program Development and Graphics", 261, 151);
             g.drawString("Shiv Kanade: Program Development and Graphics", 260, 179);
-         } else if (state == 9 || state == 31) { // level complete screen
+         } else if (state == 9 || state == 32) { // level complete screen
             g.setColor(new Color(127,127,255));
             g.drawRect(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
             g.setColor(Color.BLACK);
@@ -931,7 +933,10 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
                   }
                }
             }
-         } else if (state == 30) {
+         } else if (state == 30) { // action level instructions screen
+            // instructions here
+         
+         } else if (state == 31) {
             for (Hitbox ob : obs) {
                if (ob instanceof Clickable) {
                   BufferedImage img = ((Clickable)ob).getImage();
@@ -945,14 +950,14 @@ public class Mind_Mastery extends TimerTask implements KeyListener, ActionListen
             g.drawString( (time / 10) + "                                                   " + score, 350, 28);
             time--;
             if (time <= 0) {
-               state = 31;
+               state = 32;
                username = JOptionPane.showInputDialog(null, "Enter your username: ", "Score Entry", JOptionPane.INFORMATION_MESSAGE);
                dataListWriter();
                return;
             }
          }
          
-         if (state == 31) {
+         if (state == 32) {
             g.drawString("Score: " + score, 400, SCREEN_HEIGHT/2);
          }
          
